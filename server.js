@@ -44,6 +44,9 @@ app.use(express.urlencoded({ extended: true, limit: '8mb' }));
 /* ─────────────────────────────────────────────────────────────
    Sessions. Production requires a real secret; cookie flags:
    httpOnly + SameSite=Lax (CSRF mitigation) + Secure in prod.
+   When Mongo is configured, sessions persist in the database so
+   serverless instances (Vercel) don't lose logged-in users on
+   cold starts. Falls back to in-memory without a DB.
    ───────────────────────────────────────────────────────────── */
 const sessionSecret = process.env.SESSION_SECRET;
 const configError =
@@ -72,11 +75,22 @@ if (configError) {
   return;
 }
 
+const { MongoStore } = require('connect-mongo');
+
+const sessionStore = process.env.MONGODB_URI
+  ? MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      collectionName: 'sessions',
+      ttl: 24 * 60 * 60
+    })
+  : undefined;
+
 app.use(
   session({
     secret: sessionSecret || 'gold-mithra-dev-secret',
     resave: false,
     saveUninitialized: false,
+    store: sessionStore,
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
