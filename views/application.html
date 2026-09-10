@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0A0F1C" />
+  <title>New Application · Gold Mitra</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/application.css" />
+</head>
+<body class="app-page">
+
+  <header class="app-page__topbar">
+    <a class="back-btn" href="/" aria-label="Back to dashboard">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </a>
+    <h1 class="app-page__topbar-title">New Application</h1>
+    <span class="badge badge--gold" id="draftBadge">Draft</span>
+  </header>
+
+  <main>
+    <form class="app-form" id="applicationForm" novalidate>
+
+      <!-- Alert zone -->
+      <div class="app-alerts" id="appAlerts"></div>
+
+      <!-- ===== 01 · Customer ===== -->
+      <section class="form-step animate-in">
+        <div class="form-step__head">
+          <span class="form-step__num">01</span>
+          <div class="form-step__titles">
+            <h2 class="form-step__title">Customer</h2>
+            <p class="form-step__hint">Who is pledging the gold?</p>
+          </div>
+          <span class="badge badge--neutral form-step__badge" id="customerDone">Incomplete</span>
+        </div>
+
+        <div class="form-step__body">
+          <!-- Customer photo -->
+          <div class="photo-upload" id="customerPhoto">
+            <input type="file" id="customerPhotoInput" accept="image/*" capture="environment" />
+            <div class="photo-upload__empty">
+              <span class="photo-upload__icon">◉</span>
+              <span class="photo-upload__label">Customer photo</span>
+              <span class="photo-upload__sub">Tap to take a photo · required</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="custName">Full name</label>
+            <input class="field__input" type="text" id="custName" name="customerName" inputmode="text" autocomplete="name" placeholder="e.g. Ramesh Kumar" />
+            <span class="field__error">Customer name is required.</span>
+          </div>
+
+          <div class="item-grid">
+            <div class="field">
+              <label class="field__label" for="custMobile">Mobile number</label>
+              <input class="field__input" type="tel" id="custMobile" name="customerMobile" inputmode="numeric" maxlength="10" autocomplete="tel-national" placeholder="10-digit mobile" />
+              <span class="field__error">Enter a valid 10-digit mobile number.</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="custAadhaar">Aadhaar number</label>
+              <input class="field__input" type="tel" id="custAadhaar" name="customerAadhaar" inputmode="numeric" maxlength="12" placeholder="12-digit Aadhaar" />
+              <span class="field__error">Aadhaar must be 12 digits.</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="custAddress">Address</label>
+            <textarea class="field__textarea" id="custAddress" name="customerAddress" rows="3" placeholder="Door no, street, city, pincode"></textarea>
+            <span class="field__error">Customer address is required.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 02 · Jewellery ===== -->
+      <section class="form-step animate-in animate-in-delay-1">
+        <div class="form-step__head">
+          <span class="form-step__num">02</span>
+          <div class="form-step__titles">
+            <h2 class="form-step__title">Gold / Jewellery</h2>
+            <p class="form-step__hint">Add every piece being pledged</p>
+          </div>
+          <span class="form-step__badge" id="jewelleryCount"></span>
+        </div>
+
+        <div class="form-step__body">
+          <div class="jewellery-list" id="itemsList"></div>
+
+          <button type="button" class="item-add" id="addItemBtn">
+            <span class="icon">＋</span>
+            Add another item
+          </button>
+
+          <div class="jewellery-total" id="totalSummary">
+            <div>
+              <div class="jewellery-total__label">Total weight</div>
+              <div class="jewellery-total__value" id="totalWeight">0.000 <span style="font-size:var(--fs-xs); color:var(--text-muted); font-weight:var(--fw-medium)">g</span></div>
+            </div>
+            <div class="jewellery-total__count" id="totalCountText">0 items</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 03 · Loan ===== -->
+      <section class="form-step animate-in animate-in-delay-2">
+        <div class="form-step__head">
+          <span class="form-step__num">03</span>
+          <div class="form-step__titles">
+            <h2 class="form-step__title">Loan details</h2>
+            <p class="form-step__hint">Amount, disbursal mode and date</p>
+          </div>
+        </div>
+
+        <div class="form-step__body">
+          <div class="field">
+            <label class="field__label" for="loanAmount">Loan amount</label>
+            <div class="amount-input-wrap">
+              <span class="currency">₹</span>
+              <input class="field__input" type="number" id="loanAmount" name="loanAmount" inputmode="decimal" min="1" step="1" placeholder="0" />
+            </div>
+            <span class="field__error">Enter the loan amount.</span>
+          </div>
+
+          <div class="field">
+            <span class="field__label">Payment mode</span>
+            <div class="segmented" role="radiogroup" aria-label="Payment mode">
+              <button type="button" class="segmented__btn is-active" data-mode="cash" role="radio" aria-checked="true">
+                <span class="icon">💵</span><span>Cash</span>
+              </button>
+              <button type="button" class="segmented__btn" data-mode="account" role="radio" aria-checked="false">
+                <span class="icon">🏦</span><span>Account</span>
+              </button>
+            </div>
+            <span class="field__error">Choose a payment mode.</span>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="loanDate">Loan date</label>
+            <input class="field__input" type="date" id="loanDate" name="loanDate" />
+            <span class="field__error">Choose the loan date.</span>
+          </div>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <!-- ===== Sticky save bar ===== -->
+  <footer class="save-bar">
+    <div class="save-bar__inner">
+      <div class="save-bar__summary">
+        <div class="save-bar__label">Application summary</div>
+        <div class="save-bar__summary-row">
+          <span class="save-bar__total" id="saveBarAmount">₹0</span>
+          <span class="badge badge--neutral" id="saveBarWeight">0 g</span>
+        </div>
+      </div>
+      <button class="btn btn--primary btn--lg save-bar__btn" type="submit" form="applicationForm" id="saveBtn">
+        <span>Save Application</span>
+        <span class="icon">→</span>
+      </button>
+    </div>
+  </footer>
+
+  <script src="/js/ui.js"></script>
+  <script src="/js/application.js"></script>
+</body>
+</html>

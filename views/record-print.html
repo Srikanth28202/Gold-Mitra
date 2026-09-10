@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0A0F1C" />
+  <title>Print Application · Gold Mitra</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/print.css" />
+</head>
+<body class="print-page">
+
+  <!-- Screen toolbar — never printed -->
+  <div class="print-toolbar no-print">
+    <div class="print-toolbar__brand">
+      <span class="brand__mark">GM</span>
+      <span>Gold Mitra · A4 Print</span>
+    </div>
+    <div class="print-toolbar__actions">
+      <a class="btn btn--ghost" href="#" id="backBtn">← Back to record</a>
+      <button class="btn btn--primary" id="printBtn">
+        <span class="icon">🖨</span><span>Print / Save PDF</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Paper -->
+  <div class="print-stage">
+    <article class="print-doc" id="printDoc">
+      <div class="pd-header">
+        <div class="pd-brand">
+          <span class="pd-brand__mark">GM</span>
+          <span>
+            <div class="pd-brand__name">GOLD MITRA</div>
+            <div class="pd-brand__tagline">Field Loan Suite</div>
+          </span>
+        </div>
+        <div class="pd-heading">
+          <div class="pd-kicker">Document · Hard Copy</div>
+          <div class="pd-title">Gold Loan Application</div>
+          <span class="pd-no">Loading…</span>
+        </div>
+      </div>
+      <div class="pd-rule"></div>
+      <div class="skeleton skeleton--line" style="height:120px;width:100%"></div>
+      <div class="skeleton skeleton--line mt-3" style="height:160px;width:100%"></div>
+    </article>
+  </div>
+
+  <script src="/js/ui.js"></script>
+  <script src="/js/record-print.js"></script>
+</body>
+</html>

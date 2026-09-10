@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0A0F1C" />
+  <title>Dashboard · Gold Mitra</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar" aria-label="Primary">
+      <div class="sidebar__brand">
+        <span class="brand__mark">GM</span>
+        <span>
+          <span class="brand__name">Gold Mitra</span>
+          <span class="brand__tagline">Field Loan Suite</span>
+        </span>
+      </div>
+
+      <nav class="sidebar__nav">
+        <div class="nav-group__label">Overview</div>
+        <a class="nav-item is-active" href="/" data-nav-link>
+          <span class="nav-item__icon">◈</span>
+          Dashboard
+        </a>
+        <a class="nav-item" href="/applications/new" data-nav-link>
+          <span class="nav-item__icon">＋</span>
+          New Application
+        </a>
+        <a class="nav-item" href="/records" data-nav-link>
+          <span class="nav-item__icon">▤</span>
+          Records
+        </a>
+        
+
+        <div class="nav-group__label">System</div>
+        <a class="nav-item" href="/settings" data-nav-link data-admin-only>
+          <span class="nav-item__icon">⚙</span>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="avatar avatar--gold" data-user-initials>GM</div>
+        <div class="sidebar__user">
+          <div class="sidebar__user-name" data-user-full>Loading…</div>
+          <div class="sidebar__user-role" data-user-role>field officer</div>
+        </div>
+        <button class="logout-btn" id="logoutBtn" title="Sign out" aria-label="Sign out">⏻</button>
+      </div>
+    </aside>
+
+    <div class="sidebar__scrim"></div>
+
+    <!-- ===== Mobile bottom navigation ===== -->
+    <nav class="mobile-nav" aria-label="Mobile">
+      <ul class="mobile-nav__list">
+        <li>
+          <a class="mobile-nav__link is-active" href="/">
+            <span class="nav-item__icon">◈</span>
+            Home
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav__link" href="/applications/new">
+            <span class="nav-item__icon">＋</span>
+            New
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav__link" href="/records">
+            <span class="nav-item__icon">▤</span>
+            Records
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav__link" href="#">
+            <span class="nav-item__icon">◉</span>
+            Visits
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav__link" href="#">
+            <span class="nav-item__icon">Σ</span>
+            Reports
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- ===== Main ===== -->
+    <div class="main">
+      <header class="topbar">
+        <button class="topbar__hamburger" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 6h16M4 12h16M4 18h10"/>
+          </svg>
+        </button>
+        <h1 class="topbar__title">Dashboard</h1>
+        <div class="topbar__actions">
+          <span class="badge badge--neutral topbar__sync-label">Updated just now</span>
+          <button class="icon-btn" aria-label="Notifications">
+            <span>🔔</span>
+            <span class="icon-btn__dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="main__inner">
+        <!-- Welcome banner -->
+        <section class="dash-welcome">
+          <div class="dash-welcome__eyebrow">Field Operations · Today</div>
+          <h2 class="dash-welcome__title" id="dashGreeting">Good day!</h2>
+          <p class="dash-welcome__sub">
+            Here's what's happening across your loan portfolio and field team today.
+          </p>
+          <div class="dash-welcome__badges">
+            <span class="badge badge--gold" id="periodBadge"></span>
+            <span class="badge badge--neutral">Updated live</span>
+          </div>
+        </section>
+
+        <!-- Stats -->
+        <div class="grid-stats" id="statsGrid">
+          <div class="skeleton skeleton--card" id="statsSkeleton"></div>
+          <div class="skeleton skeleton--card"></div>
+          <div class="skeleton skeleton--card"></div>
+          <div class="skeleton skeleton--card"></div>
+          <div class="card hidden" id="statsEmpty">
+            <div class="empty-state">
+              <div class="empty-state__icon">◈</div>
+              <div class="empty-state__title">Could not load stats</div>
+              <div class="empty-state__text"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="quick-actions">
+          <a class="quick-action" href="/applications/new">
+            <span class="quick-action__icon">◆</span>
+            <span class="quick-action__label">New Loan</span>
+            <span class="quick-action__hint">Register a gold loan</span>
+          </a>
+        </div>
+
+        <!-- Split grid: chart + activity -->
+        <div class="grid-3">
+          <section class="stack">
+            <article class="card">
+              <div class="card__header">
+                <h3 class="card__title">Disbursals · last 7 days</h3>
+                <span class="badge badge--gold">This week</span>
+              </div>
+              <div class="card__body">
+                <div id="weeklyChart">
+                  <div class="mini-chart">
+                    <div class="skeleton skeleton--line" style="width:100%; height:90px; align-self:flex-start"></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="card dash-table">
+              <div class="card__header">
+                <h3 class="card__title">Recent applications</h3>
+                <a class="btn btn--ghost btn--sm" href="/records">View all →</a>
+              </div>
+              <div class="card__body--flush table-wrap" style="border:none">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Loan ID</th>
+                      <th>Customer</th>
+                      <th>Principal</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentTable"></tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <section class="stack">
+            <article class="card">
+              <div class="card__header">
+                <h3 class="card__title">Field activity</h3>
+                <span class="badge badge--neutral">Live</span>
+              </div>
+              <div class="card__body--flush">
+                <div class="activity" id="activityFeed">
+                  <div class="empty-state">
+                    <div class="empty-state__icon">◠</div>
+                    <div class="empty-state__text">Loading activity…</div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card__header">
+                <h3 class="card__title">Team today</h3>
+                <a class="btn btn--ghost btn--sm" href="/settings">Detail →</a>
+              </div>
+              <div class="card__body--flush" id="teamList">
+                <div class="list-row">
+                  <div class="skeleton skeleton--line" style="width:100%"></div>
+                </div>
+                <div class="list-row">
+                  <div class="skeleton skeleton--line" style="width:100%"></div>
+                </div>
+              </div>
+            </article>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/ui.js"></script>
+  <script src="/js/nav.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    (function () {
+      document.getElementById('logoutBtn').addEventListener('click', async function () {
+        try {
+          await GM.api('/api/auth/logout', { method: 'POST' });
+        } catch (e) {}
+        location.href = '/login';
+      });
+    })();
+  </script>
+</body>
+</html>

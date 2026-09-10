@@ -1,0 +1,225 @@
+/* ============================================
+   Gold Mitra — Login
+   ============================================ */
+
+.login {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  background: var(--surface);
+}
+
+.login__visual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(28px, 5vw, 64px);
+  background:
+    radial-gradient(900px 520px at 12% -8%, rgba(200, 155, 44, 0.22), transparent 60%),
+    radial-gradient(720px 540px at 100% 110%, rgba(168, 127, 31, 0.16), transparent 55%),
+    var(--ink-950);
+  color: #FFF;
+  overflow: hidden;
+  min-height: 100dvh;
+}
+
+.login__visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.login__visual-glow {
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  right: -120px;
+  top: 8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 155, 44, 0.3), transparent 65%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.login__content { position: relative; z-index: 1; max-width: 460px; }
+
+.login__headline {
+  font-size: clamp(var(--fs-xl), 3.2vw, var(--fs-2xl));
+  font-weight: var(--fw-bold);
+  color: #FFF;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+}
+
+.login__headline em {
+  font-style: normal;
+  color: var(--gold-300);
+}
+
+.login__sub {
+  margin-top: 14px;
+  color: #A9B2C4;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  max-width: 40ch;
+}
+
+.login__feature-list {
+  list-style: none;
+  margin-top: 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login__feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--fs-sm);
+  color: #D5DAE4;
+}
+
+.login__feature-tick {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(200, 155, 44, 0.18);
+  border: 1px solid rgba(200, 155, 44, 0.45);
+  color: var(--gold-300);
+  font-size: var(--fs-xs);
+}
+
+.login__panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(28px, 5vw, 60px);
+  background:
+    radial-gradient(520px 420px at 100% 0%, rgba(200, 155, 44, 0.08), transparent 60%),
+    var(--paper);
+  min-height: 100dvh;
+}
+
+.login__card {
+  width: 100%;
+  max-width: 420px;
+  animation: fadeInUp var(--speed-slow) var(--ease-out) both;
+}
+
+.login__card-head { margin-bottom: 26px; }
+
+.login__card-title {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  margin-top: 18px;
+}
+
+.login__card-sub {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.login__form { display: flex; flex-direction: column; gap: 18px; }
+
+.login__options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs-sm);
+}
+
+.login__remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-body);
+  cursor: pointer;
+}
+
+.check {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--ink-300);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  transition: background var(--speed) ease, border-color var(--speed) ease;
+  color: transparent;
+  flex-shrink: 0;
+}
+
+.login__remember input { display: none; }
+.login__remember input:checked + .check {
+  background: var(--gold-500);
+  border-color: var(--gold-500);
+  color: #FFF;
+}
+.login__remember input:checked + .check svg { display: block; }
+
+.login__link {
+  font-weight: var(--fw-semibold);
+}
+
+.login__error { display: none; }
+
+.login__error.is-visible { display: flex; }
+
+.login__footer {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.login__db-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--ink-100);
+  color: var(--ink-500);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+}
+
+.login__db-status.is-live {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.login__db-status.is-down {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 920px) {
+  .login { grid-template-columns: 1fr; }
+  .login__visual {
+    display: none;
+    min-height: 0;
+  }
+  .login__panel { min-height: 100dvh; }
+}
+
+@media (max-width: 420px) {
+  .login__footer { flex-direction: column; align-items: flex-start; }
+}

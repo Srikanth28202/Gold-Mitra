@@ -1,0 +1,252 @@
+/* ============================================
+   Gold Mitra — Dashboard
+   ============================================ */
+
+.dash-welcome {
+  background:
+    radial-gradient(620px 300px at 108% -20%, rgba(200, 155, 44, 0.24), transparent 62%),
+    linear-gradient(140deg, var(--ink-900), var(--ink-800) 70%);
+  border-radius: var(--radius-lg);
+  color: #FFF;
+  padding: clamp(22px, 3vw, 34px);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+  animation: fadeInUp var(--speed-slow) var(--ease-out) both;
+}
+
+.dash-welcome::after {
+  content: '';
+  position: absolute;
+  right: -60px;
+  top: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(200, 155, 44, 0.3);
+  pointer-events: none;
+}
+
+.dash-welcome::before {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(200, 155, 44, 0.22);
+  pointer-events: none;
+}
+
+.dash-welcome__eyebrow {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--gold-300);
+  font-weight: var(--fw-semibold);
+  margin-bottom: 10px;
+}
+
+.dash-welcome__title {
+  font-size: clamp(var(--fs-lg), 2.6vw, var(--fs-xl));
+  color: #FFF;
+  font-weight: var(--fw-bold);
+}
+
+.dash-welcome__title span { color: var(--gold-300); }
+
+.dash-welcome__sub {
+  margin-top: 8px;
+  color: #A9B2C4;
+  font-size: var(--fs-sm);
+  max-width: 46ch;
+}
+
+.dash-welcome__badges {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dash-welcome .stat__icon {
+  position: absolute;
+  right: 22px;
+  bottom: 22px;
+  width: 54px;
+  height: 54px;
+  font-size: 1.6rem;
+  background: rgba(200, 155, 44, 0.16);
+  color: var(--gold-300);
+  border: 1px solid rgba(200, 155, 44, 0.35);
+}
+
+/* ---- Loan overview table ---- */
+
+.dash-table .table__loan-id {
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  color: var(--text-strong);
+  font-size: var(--fs-sm);
+}
+
+.dash-table .table__loan-id small {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: var(--fw-regular);
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+}
+
+/* ---- Activity feed ---- */
+
+.activity {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity__item {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  position: relative;
+}
+
+.activity__item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 44px;
+  bottom: 0;
+  width: 1.5px;
+  background: var(--border);
+}
+
+.activity__dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-sm);
+  background: var(--gold-50);
+  color: var(--gold-600);
+  border: 1px solid var(--gold-100);
+  z-index: 1;
+}
+
+.activity__dot--green { background: var(--success-bg); color: var(--success); border-color: var(--success-bg); }
+.activity__dot--red   { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-bg); }
+.activity__dot--blue  { background: var(--info-bg); color: var(--info); border-color: var(--info-bg); }
+
+.activity__text { font-size: var(--fs-sm); color: var(--text-body); line-height: 1.4; }
+.activity__text strong { color: var(--text-strong); font-weight: var(--fw-semibold); }
+.activity__time { display: block; margin-top: 3px; font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* ---- Mini chart / bars ---- */
+
+.mini-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 120px;
+  padding-top: 8px;
+}
+
+.mini-chart__bar {
+  flex: 1;
+  border-radius: var(--radius-sm) var(--radius-sm) 4px 4px;
+  background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+  min-height: 6px;
+  transition: transform var(--speed) var(--ease-out), opacity var(--speed) ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.mini-chart__bar:hover {
+  transform: scaleY(1.04);
+  opacity: 0.9;
+}
+
+.mini-chart__bar--muted {
+  background: linear-gradient(180deg, var(--ink-200), var(--ink-300));
+}
+
+.mini-chart__labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+/* ---- Quick actions ---- */
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--speed) var(--ease-out), box-shadow var(--speed) var(--ease-out), border-color var(--speed) ease;
+  text-align: left;
+}
+
+.quick-action:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--gold-300);
+}
+
+.quick-action__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  background: var(--gold-50);
+  color: var(--gold-600);
+  transition: background var(--speed) ease, color var(--speed) ease;
+}
+
+.quick-action:hover .quick-action__icon {
+  background: linear-gradient(150deg, var(--gold-400), var(--gold-600));
+  color: #FFF;
+  box-shadow: var(--shadow-gold);
+}
+
+.quick-action__label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-strong);
+}
+
+.quick-action__hint {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+@media (max-width: 1100px) {
+  .quick-actions { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 460px) {
+  .quick-actions { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .quick-action { padding: 14px; }
+}

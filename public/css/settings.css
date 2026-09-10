@@ -1,0 +1,130 @@
+/* ============================================
+   Gold Mitra — Settings page
+   Field team list + create field employee
+   ============================================ */
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------- Staff list rows ---------------- */
+
+.staff-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton--list {
+  height: 58px;
+  border-radius: var(--radius-md);
+}
+
+.skeleton--list + .skeleton--list {
+  margin-top: 10px;
+}
+
+.staff-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.staff-row:last-child {
+  border-bottom: none;
+}
+
+.staff-row__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 0.82rem;
+  color: var(--ink-900);
+  background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+}
+
+.staff-row__meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.staff-row__name {
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-base);
+  color: var(--text-body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.staff-row__sub {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.staff-row__badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.staff-row__toggle {
+  flex-shrink: 0;
+}
+
+.btn--toggle {
+  padding: 6px 12px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  border-radius: 999px;
+}
+
+/* Inactive member */
+.staff-row.is-inactive {
+  opacity: 0.62;
+  background: var(--paper);
+}
+
+.staff-row.is-inactive .staff-row__name {
+  text-decoration: line-through;
+}
+
+/* ---------------- Create-user form ---------------- */
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 12px;
+}
+
+@media (max-width: 420px) {
+  .settings-form__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,442 @@
+/* ============================================
+   Gold Mitra — New Application (field form)
+   ============================================ */
+
+.app-page {
+  background: var(--paper);
+  min-height: 100dvh;
+}
+
+.app-page__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: var(--topbar-h);
+  padding-inline: var(--gutter);
+  background: rgba(246, 244, 239, 0.85);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(235, 231, 222, 0.85);
+}
+
+.app-page__topbar-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--text-strong);
+  flex: 1;
+}
+
+.back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  color: var(--text-strong);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: background var(--speed) ease, border-color var(--speed) ease, transform var(--speed) ease;
+}
+
+.back-btn:hover { border-color: var(--gold-300); transform: translateX(-1px); }
+.back-btn:active { transform: translateX(-1px) scale(0.94); }
+
+/* ---------------- Sections ---------------- */
+
+.app-form {
+  max-width: 720px;
+  margin-inline: auto;
+  padding: 20px var(--gutter) calc(96px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.app-alerts { display: flex; flex-direction: column; gap: 10px; }
+
+.form-step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.form-step__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(251, 249, 244, 0.5), transparent);
+}
+
+.form-step__num {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 0.9rem;
+  background: linear-gradient(150deg, var(--gold-100), var(--gold-200));
+  color: var(--gold-700);
+}
+
+.form-step__titles { flex: 1; min-width: 0; }
+.form-step__title { font-size: var(--fs-md); font-weight: var(--fw-semibold); }
+.form-step__hint { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
+
+.form-step__badge {
+  flex-shrink: 0;
+}
+
+.form-step__body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---------------- Photo upload ---------------- */
+
+.photo-upload {
+  position: relative;
+  border: 2px dashed var(--ink-200);
+  border-radius: var(--radius-md);
+  background: var(--paper-2);
+  transition: border-color var(--speed) ease, box-shadow var(--speed) ease;
+  text-align: center;
+}
+
+.photo-upload:not(.photo-upload--filled):hover {
+  border-color: var(--gold-400);
+  box-shadow: var(--shadow-sm);
+}
+
+.photo-upload input[type='file'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.photo-upload__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 26px 16px;
+  pointer-events: none;
+}
+
+.photo-upload__icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  color: var(--gold-600);
+  background: var(--gold-50);
+  border: 1px solid var(--gold-100);
+}
+
+.photo-upload__label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-strong);
+}
+
+.photo-upload__sub {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.photo-upload--filled { border-style: solid; border-color: var(--gold-200); }
+
+.photo-upload__preview-wrap {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.photo-upload__preview {
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-upload__actions {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  background: linear-gradient(transparent, rgba(10, 15, 28, 0.55));
+}
+
+.photo-upload__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: #FFF;
+  background: rgba(15, 22, 38, 0.75);
+  backdrop-filter: blur(6px);
+  transition: background var(--speed) ease, transform var(--speed) ease;
+}
+
+.photo-upload__action:active { transform: scale(0.95); }
+.photo-upload__action--danger { background: rgba(214, 69, 69, 0.85); }
+
+/* ---------------- Jewellery items ---------------- */
+
+.jewellery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.item-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: border-color var(--speed) ease, box-shadow var(--speed) ease;
+  animation: fadeInUp var(--speed-slow) var(--ease-out) both;
+}
+
+.item-card.is-invalid { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(214, 69, 69, 0.1); }
+
+.item-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-card__title-wrap { display: flex; align-items: center; gap: 10px; }
+.item-card__chip {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  color: var(--gold-700);
+  background: var(--gold-50);
+  border: 1px solid var(--gold-100);
+}
+
+.item-card__title { font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-strong); }
+
+.item-card__remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--danger);
+  background: var(--danger-bg);
+  transition: background var(--speed) ease, color var(--speed) ease, transform var(--speed) ease;
+}
+.item-card__remove:active { transform: scale(0.95); }
+.item-card__remove:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.item-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.item-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  width: 100%;
+  border: 1.5px dashed var(--ink-200);
+  border-radius: var(--radius-md);
+  color: var(--gold-700);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  background: var(--paper-2);
+  transition: border-color var(--speed) ease, background var(--speed) ease;
+}
+.item-add:hover { border-color: var(--gold-400); background: var(--gold-50); }
+
+/* Total summary chip-row */
+.jewellery-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(150deg, var(--gold-50), var(--paper-2));
+  border: 1px solid var(--gold-100);
+}
+
+.jewellery-total__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gold-700);
+}
+
+.jewellery-total__value {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--ink-900);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.jewellery-total__count { font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0; }
+
+/* ---------------- Weight input with unit ---------------- */
+
+.input-unit {
+  position: relative;
+}
+
+.input-unit input {
+  padding-right: 46px;
+}
+
+.input-unit__unit {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--ink-400);
+  pointer-events: none;
+}
+
+/* ---------------- Segmented control ---------------- */
+
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  background: var(--paper-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.segmented__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: calc(var(--radius-md) - 4px);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-muted);
+  transition: all var(--speed) var(--ease-out);
+}
+
+.segmented__btn .icon { font-size: 1.05rem; }
+
+.segmented__btn.is-active {
+  background: linear-gradient(150deg, var(--gold-400), var(--gold-500) 60%, var(--gold-600));
+  color: #FFF;
+  box-shadow: 0 4px 12px -4px rgba(168, 127, 31, 0.55);
+}
+
+/* ---------------- Amount field ---------------- */
+
+.amount-input-wrap { position: relative; }
+
+.amount-input-wrap .currency {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-lg);
+  color: var(--gold-600);
+  pointer-events: none;
+}
+
+.amount-input-wrap input {
+  padding-left: 44px;
+  font-size: var(--fs-lg);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+}
+
+/* ---------------- Sticky save bar ---------------- */
+
+.save-bar {
+  position: fixed;
+  z-index: 85;
+  inset-inline: 0;
+  bottom: 0;
+  left: 0;
+  padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -8px 24px -16px rgba(15, 22, 38, 0.25);
+}
+
+.save-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.save-bar__summary { flex: 1; min-width: 0; }
+.save-bar__summary-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.save-bar__label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; font-weight: var(--fw-semibold); color: var(--text-muted); }
+.save-bar__total { font-family: var(--font-display); font-size: var(--fs-md); font-weight: var(--fw-bold); color: var(--ink-900); }
+
+.save-bar__btn {
+  min-width: 150px;
+}
+
+/* ---------------- Desktop ---------------- */
+
+@media (min-width: 768px) {
+  .save-bar { left: var(--sidebar-w); }
+}
+
+@media (min-width: 1024px) {
+  .app-page__topbar { display: none; }
+  .app-form { padding-top: 34px; }
+}
+
+@media (max-width: 420px) {
+  .item-grid { grid-template-columns: 1fr; }
+  .save-bar__btn { flex: 1; }
+  .save-bar__label { display: none; }
+  .save-bar__total { font-size: 1rem; }
+}
