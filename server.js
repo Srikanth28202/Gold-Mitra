@@ -46,9 +46,30 @@ app.use(express.urlencoded({ extended: true, limit: '8mb' }));
    httpOnly + SameSite=Lax (CSRF mitigation) + Secure in prod.
    ───────────────────────────────────────────────────────────── */
 const sessionSecret = process.env.SESSION_SECRET;
-if (isProduction() && (!sessionSecret || sessionSecret.length < 24)) {
+const configError =
+  isProduction() && (!sessionSecret || sessionSecret.length < 24)
+    ? 'SESSION_SECRET must be set to at least 24 characters in production.'
+    : null;
+
+if (configError && require.main === module) {
   console.error('Set a strong SESSION_SECRET (≥24 chars) before running in production.');
-  throw new Error('SESSION_SECRET is required in production');
+  throw new Error(configError);
+}
+
+/* Serverless (Vercel) cold starts can crash with an unhelpful 500 if the
+   module throws at load. Instead, answer every request with a clear error
+   until the environment is configured correctly. */
+if (configError) {
+  app.use((req, res) => {
+    if (req.path.startsWith('/api/')) {
+      return res.status(500).json({ error: configError });
+    }
+    res.status(500).type('html').send(
+      `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Gold Mitra · Not configured</title></head><body style="font-family:system-ui;background:#0A0F1C;color:#E8E6E1;display:grid;place-items:center;min-height:100dvh;margin:0;text-align:center;padding:24px"><div style="max-width:440px"><h1 style="color:#D4AF37;margin:0 0 8px">Server not configured</h1><p style="color:#8B93A3;margin:0">${configError}<br/><br/>Add it to your Vercel <b>Environment Variables</b> and redeploy.</p></div></body></html>`
+    );
+  });
+  module.exports = app;
+  return;
 }
 
 app.use(
@@ -134,8 +155,18 @@ app.use('/api/auth/login', (req, res, next) => {
 let adminBootstrapped = false;
 
 app.use('/api', async (req, res, next) => {
-  if (mongoose.connection.readyState !== 1 && process.env.MONGODB_URI) {
+  if (!process.env.MONGODB_URI) {
+    return res
+      .status(503)
+      .json({ error: 'Database not configured. Set MONGODB_URI in your environment.' });
+  }
+  if (mongoose.connection.readyState !== 1) {
     const ok = await connectDB();
+    if (!ok && mongoose.connection.readyState !== 1) {
+      return res
+        .status(503)
+        .json({ error: 'Database unavailable. Check the MONGODB_URI / Atlas connection and try again.' });
+    }
     if (ok && !adminBootstrapped) {
       adminBootstrapped = true;
       await bootstrapAdmin();
