@@ -1,5 +1,5 @@
 /* ============================================
-   Gold Mitra — A4 Print document
+   Gold Mitra — A4 Loan Application document
    Dedicated print layout. The normal app UI is
    never used here; only the paper document prints.
    ============================================ */
@@ -50,11 +50,12 @@
 /* ---------------- Screen: paper preview ---------------- */
 
 .print-doc {
+  position: relative;
   background: #FFF;
   color: #161B22;
   width: 190mm;
   max-width: 100%;
-  padding: 11mm 12mm;
+  padding: 11mm 12mm 13mm;
   box-shadow: var(--shadow-lg);
   print-color-adjust: exact;
   -webkit-print-color-adjust: exact;
@@ -63,6 +64,26 @@
 /* =========================================================
    Document content (shared screen + print)
    ========================================================= */
+
+/* Watermark */
+.pd-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-28deg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 46pt;
+  letter-spacing: 0.22em;
+  color: rgba(168, 127, 31, 0.06);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.pd-header, .pd-meta, .pd-section, .pd-footer { position: relative; z-index: 1; }
 
 .pd-rule {
   height: 2px;
@@ -83,36 +104,46 @@
 .pd-brand { display: flex; align-items: center; gap: 4mm; }
 
 .pd-brand__mark {
-  width: 13mm;
-  height: 13mm;
-  border-radius: 3mm;
+  width: 15mm;
+  height: 15mm;
+  border-radius: 3.5mm;
   background: linear-gradient(150deg, var(--gold-300), var(--gold-500) 55%, var(--gold-600));
   display: grid;
   place-items: center;
   font-family: var(--font-display);
   font-weight: var(--fw-bold);
+  font-size: 5mm;
   color: var(--ink-900);
   box-shadow: 0 2px 10px -3px rgba(168, 127, 31, 0.6);
   print-color-adjust: exact;
   -webkit-print-color-adjust: exact;
 }
 
+.pd-brand__text { display: flex; flex-direction: column; }
+
 .pd-brand__name {
   font-family: var(--font-display);
   font-weight: var(--fw-bold);
-  font-size: 15pt;
+  font-size: 16pt;
   color: #12161D;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
   line-height: 1;
 }
 
 .pd-brand__tagline {
-  font-size: 6.2pt;
+  font-size: 6.4pt;
   font-weight: var(--fw-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   color: var(--gold-600);
   margin-top: 2.5pt;
+}
+
+.pd-brand__addr {
+  font-size: 6.4pt;
+  color: var(--ink-400);
+  margin-top: 1.5pt;
+  letter-spacing: 0.03em;
 }
 
 .pd-heading { text-align: right; }
@@ -150,9 +181,12 @@
   -webkit-print-color-adjust: exact;
 }
 
+/* ---------------- Meta strip ---------------- */
+
 .pd-meta {
   display: flex;
-  gap: 8mm;
+  align-items: center;
+  gap: 7mm;
   flex-wrap: wrap;
   margin: 4mm 0 0;
   padding: 3mm 4mm;
@@ -165,7 +199,15 @@
 
 .pd-meta__item { display: flex; align-items: baseline; gap: 3pt; }
 
-.pd-meta__label { font-weight: var(--fw-semibold); color: var(--ink-500); text-transform: uppercase; font-size: 6.8pt; letter-spacing: 0.06em; }
+.pd-meta__item--push { margin-left: auto; }
+
+.pd-meta__label {
+  font-weight: var(--fw-semibold);
+  color: var(--ink-500);
+  text-transform: uppercase;
+  font-size: 6.8pt;
+  letter-spacing: 0.06em;
+}
 
 .pd-meta__value { font-weight: var(--fw-semibold); color: #161B22; }
 
@@ -195,7 +237,7 @@
 
 /* ---------------- Sections ---------------- */
 
-.pd-section { margin-top: 6mm; }
+.pd-section { margin-top: 6mm; break-inside: auto; }
 
 .pd-section__title {
   display: flex;
@@ -231,15 +273,26 @@
   grid-template-columns: 38mm 1fr;
   gap: 6mm;
   align-items: start;
+  break-inside: avoid;
 }
 
 .pd-customer__photo {
   width: 38mm;
-  height: 40mm;
+  height: 42mm;
   object-fit: cover;
   border: 1px solid var(--ink-200);
   border-radius: 2mm;
   background: #F1EFEA;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.pd-customer__photo--empty {
+  display: grid;
+  place-items: center;
+  color: #B9BEC9;
+  font-size: 16pt;
+  background: #F4F2ED;
 }
 
 .pd-customer__fields { display: flex; flex-direction: column; }
@@ -262,6 +315,16 @@
   color: #161B22;
   line-height: 1.35;
   margin-top: 0.5mm;
+}
+
+.pd-field__line {
+  margin-top: 9mm;
+  border-top: 1px solid #8D95A3;
+  padding-top: 1mm;
+  font-size: 6.8pt;
+  color: var(--ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .pd-field__grid {
@@ -323,6 +386,12 @@
   -webkit-print-color-adjust: exact;
 }
 
+.pd-table__thumb--empty {
+  display: inline-grid;
+  place-items: center;
+  color: #B9BEC9;
+}
+
 .pd-table__item-name { font-weight: var(--fw-semibold); color: #161B22; }
 .pd-table__item-desc { font-size: 6.8pt; color: var(--ink-500); margin-top: 1pt; }
 
@@ -351,8 +420,9 @@
 
 .pd-loan {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-columns: 1.6fr 1fr 1fr;
   gap: 4mm;
+  break-inside: avoid;
 }
 
 .pd-loan__box {
@@ -392,6 +462,36 @@
   font-weight: var(--fw-semibold);
 }
 
+.pd-amount-words {
+  display: flex;
+  gap: 3mm;
+  align-items: baseline;
+  margin-top: 3mm;
+  padding: 2.5mm 4mm;
+  border: 1px dashed var(--gold-300);
+  border-radius: 2mm;
+  background: var(--gold-50);
+  break-inside: avoid;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.pd-amount-words__label {
+  flex-shrink: 0;
+  font-size: 6.8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: var(--fw-semibold);
+  color: var(--ink-400);
+}
+
+.pd-amount-words__value {
+  font-size: 9pt;
+  font-weight: var(--fw-semibold);
+  color: #12161D;
+  font-variant-numeric: tabular-nums;
+}
+
 .pd-account {
   margin-top: 3mm;
   border: 1px solid var(--ink-200);
@@ -423,11 +523,41 @@
   color: #12161D;
 }
 
+/* ---------------- Terms ---------------- */
+
+.pd-terms {
+  border: 1px solid var(--ink-200);
+  border-radius: 2mm;
+  padding: 2.5mm 4mm;
+  background: #FCFBF8;
+  break-inside: auto;
+}
+
+.pd-term {
+  display: flex;
+  gap: 2.5mm;
+  padding: 1.6mm 0;
+  border-bottom: 1px dotted var(--ink-200);
+  font-size: 7.5pt;
+  line-height: 1.45;
+  color: #2A303A;
+  break-inside: avoid;
+}
+
+.pd-term:last-child { border-bottom: none; }
+
+.pd-term__num {
+  flex-shrink: 0;
+  font-weight: var(--fw-bold);
+  color: var(--gold-700);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------------- Declaration & signatures ---------------- */
 
 .pd-declaration {
   font-size: 8.5pt;
-  line-height: 1.5;
+  line-height: 1.55;
   color: #2A303A;
   padding: 3.5mm 4mm;
   border: 1px solid var(--ink-200);
@@ -438,11 +568,29 @@
 
 .pd-declaration strong { color: #161B22; }
 
+.pd-place-date {
+  display: flex;
+  gap: 14mm;
+  margin-top: 7mm;
+  break-inside: avoid;
+}
+
+.pd-place-date__item { display: flex; flex-direction: column; gap: 0.5mm; }
+.pd-place-date__item > span:last-child {
+  font-size: 9.5pt;
+  font-weight: var(--fw-semibold);
+  color: #161B22;
+  border-bottom: 1px solid #8D95A3;
+  padding-bottom: 0.5mm;
+  min-width: 34mm;
+}
+
 .pd-sig-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 6mm;
-  margin-top: 8mm;
+  margin-top: 10mm;
+  break-inside: avoid;
 }
 
 .pd-sig {
@@ -457,7 +605,7 @@
   color: #3A414D;
   border-bottom: 1px solid var(--ink-200);
   padding-bottom: 1.5mm;
-  margin-bottom: 14mm;
+  margin-bottom: 15mm;
 }
 
 .pd-sig__name {
@@ -466,7 +614,7 @@
   color: #161B22;
 }
 
-.pd-sig__role { font-size: 7pt; color: var(--ink-500); margin-top: 0.5mm; }
+.pd-sig__role { font-size: 7pt; color: var(--ink-500); margin-top: 0.5mm; min-height: 3mm; }
 
 .pd-sig__line {
   margin-top: 6mm;
@@ -484,29 +632,6 @@
   font-size: 7pt;
   font-style: italic;
   color: var(--ink-400);
-}
-
-.pd-acknowledgement {
-  margin-top: 8mm;
-  padding: 3.5mm 4mm;
-  border: 1px solid var(--ink-200);
-  border-radius: 2mm;
-  background: #FCFBF8;
-  font-size: 8pt;
-  color: #2A303A;
-  line-height: 1.55;
-  break-inside: avoid;
-}
-
-.pd-acknowledgement .pd-field__line {
-  margin-top: 9mm;
-  border-top: 1px solid #8D95A3;
-  padding-top: 1mm;
-  font-size: 6.8pt;
-  color: var(--ink-500);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  width: 45%;
 }
 
 /* ---------------- Footer ---------------- */
@@ -547,8 +672,8 @@
    ========================================================= */
 
 @page {
-  size: A4;
-  margin: 13mm 11mm 15mm;
+  size: A4 portrait;
+  margin: 12mm 10mm 14mm;
 }
 
 @media print {
@@ -568,8 +693,8 @@
   }
 
   .pd-section { break-inside: auto; }
-  .pd-customer, .pd-loan, .pd-sig-grid, .pd-declaration,
-  .pd-acknowledgement, .pd-meta, .pd-table tr { break-inside: avoid; }
+  .pd-customer, .pd-loan, .pd-amount-words, .pd-term, .pd-sig-grid, .pd-declaration,
+  .pd-place-date, .pd-meta, .pd-table tr { break-inside: avoid; }
 
   thead { display: table-header-group; }
   .pd-table { page-break-inside: auto; }
@@ -587,4 +712,6 @@
   .pd-customer { grid-template-columns: 1fr; }
   .pd-customer__photo { width: 100%; height: 90mm; }
   .print-toolbar { flex-wrap: wrap; }
+  .pd-watermark { font-size: 30pt; }
+  .pd-meta__item--push { margin-left: 0; }
 }
