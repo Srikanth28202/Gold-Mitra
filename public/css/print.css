@@ -38,6 +38,29 @@
 
 .print-toolbar__actions { display: flex; align-items: center; gap: 10px; }
 
+.print-toolbar__lang {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+}
+
+.lang-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: #C7CDDB;
+  transition: all var(--speed) var(--ease-out);
+}
+
+.lang-btn.is-active {
+  background: linear-gradient(150deg, var(--gold-400), var(--gold-600));
+  color: #FFF;
+}
+
 .print-toolbar .btn--ghost { color: #C7CDDB; }
 .print-toolbar .btn--ghost:hover { background: rgba(255, 255, 255, 0.08); color: #FFF; }
 
