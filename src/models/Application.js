@@ -48,7 +48,13 @@ const applicationSchema = new mongoose.Schema(
     loan: {
       amount: { type: Number, required: true, min: 1 },
       paymentMode: { type: String, enum: ['cash', 'account'], required: true },
-      date: { type: Date, required: true }
+      date: { type: Date, required: true },
+      accountDetails: {
+        holderName: { type: String, default: '', trim: true },
+        accountNumber: { type: String, default: '', trim: true },
+        ifsc: { type: String, default: '', trim: true },
+        _id: false
+      }
     }
   },
   { timestamps: true }

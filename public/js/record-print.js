@@ -200,6 +200,21 @@
             <div class="pd-loan__value pd-loan__value--small">${esc(formatDate(a.loan.date))}</div>
           </div>
         </div>
+        ${a.loan.paymentMode === 'account' && (a.loan.accountDetails || {}).holderName ? `
+          <div class="pd-account">
+            <div class="pd-account__row">
+              <span class="pd-account__label">Account holder</span>
+              <span class="pd-account__value">${esc(a.loan.accountDetails.holderName)}</span>
+            </div>
+            <div class="pd-account__row">
+              <span class="pd-account__label">Account number</span>
+              <span class="pd-account__value">${esc(a.loan.accountDetails.accountNumber || '—')}</span>
+            </div>
+            <div class="pd-account__row">
+              <span class="pd-account__label">IFSC</span>
+              <span class="pd-account__value">${esc(a.loan.accountDetails.ifsc || '—')}</span>
+            </div>
+          </div>` : ''}
       </section>
 
       <!-- 4. Declaration -->

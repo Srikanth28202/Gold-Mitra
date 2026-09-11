@@ -183,7 +183,12 @@ async function main() {
       jewelleryItems: [
         { ...payload.jewelleryItems[0], weightGrams: 30 }
       ],
-      loan: { ...payload.loan, amount: 200000, paymentMode: 'account' }
+      loan: {
+        ...payload.loan,
+        amount: 200000,
+        paymentMode: 'account',
+        accountDetails: { holderName: 'Renamed Customer', accountNumber: '987654321098', ifsc: 'HDFC0001234' }
+      }
     }
   });
   if (updated.ok && updated.data.success && updated.data.application.totalWeightGrams === 30) {

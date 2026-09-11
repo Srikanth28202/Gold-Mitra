@@ -145,6 +145,12 @@
             <div class="kv">
               ${kv('Payment mode', a.loan.paymentMode === 'cash' ? 'Cash' : 'Account', 'kv__value--small')}
               ${kv('Disbursal date', fmtDate(a.loan.date), 'kv__value--small')}
+              ${a.loan.paymentMode === 'account' && (a.loan.accountDetails || {}).holderName ? `
+                <hr class="divider" />
+                ${kv('Account holder', GM.escapeHtml(a.loan.accountDetails.holderName), 'kv__value--small')}
+                ${kv('Account number', GM.escapeHtml(a.loan.accountDetails.accountNumber || '—'), 'kv__value--small')}
+                ${kv('IFSC', GM.escapeHtml(a.loan.accountDetails.ifsc || '—'), 'kv__value--small')}
+              ` : ''}
             </div>
           </div>
         </section>

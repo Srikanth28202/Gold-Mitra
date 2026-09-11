@@ -144,6 +144,27 @@
             <span class="field__error">Choose a payment mode.</span>
           </div>
 
+          <div class="bank-details" id="bankDetailsBox" hidden>
+            <div class="bank-details__head">
+              <span class="bank-details__label">Bank account details</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="acctHolderName">Account holder name</label>
+              <input class="field__input" type="text" id="acctHolderName" autocomplete="off" placeholder="Name on the account" />
+              <span class="field__error">Account holder name is required for bank transfer.</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="acctNumber">Account number</label>
+              <input class="field__input" type="text" id="acctNumber" inputmode="numeric" autocomplete="off" placeholder="9–18 digit account number" />
+              <span class="field__error">Enter a valid 9–18 digit account number.</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="acctIfsc">IFSC code</label>
+              <input class="field__input" type="text" id="acctIfsc" autocomplete="off" maxlength="11" style="text-transform:uppercase" placeholder="e.g. HDFC0001234" />
+              <span class="field__error">Enter a valid IFSC code (e.g. HDFC0001234).</span>
+            </div>
+          </div>
+
           <div class="field">
             <label class="field__label" for="loanDate">Loan date</label>
             <input class="field__input" type="date" id="loanDate" name="loanDate" />

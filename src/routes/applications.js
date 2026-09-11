@@ -11,9 +11,12 @@ const clean = (v) => String(v ?? '').trim();
 
 const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-const canAccess = (application, req) =>
-  req.session.role === 'admin' ||
-  String(application.staff) === String(req.session.userId);
+const canAccess = (application, req) => {
+  if (req.session.role === 'admin') return true;
+  const staff = application.staff;
+  const staffId = staff && staff._id ? staff._id : staff;
+  return String(staffId) === String(req.session.userId);
+};
 
 function buildApplicationFields(b) {
   const items = b.jewelleryItems.map((item) => ({
@@ -39,7 +42,12 @@ function buildApplicationFields(b) {
     loan: {
       amount: Number(b.loan.amount),
       paymentMode: b.loan.paymentMode,
-      date: new Date(b.loan.date)
+      date: new Date(b.loan.date),
+      accountDetails: {
+        holderName: clean(b.loan.accountDetails?.holderName),
+        accountNumber: clean(b.loan.accountDetails?.accountNumber).replace(/\s+/g, ''),
+        ifsc: clean(b.loan.accountDetails?.ifsc).toUpperCase().replace(/\s+/g, '')
+      }
     }
   };
 }
@@ -84,6 +92,17 @@ function validatePayload(body) {
   const d = new Date(body.loan?.date);
   if (Number.isNaN(d.getTime())) {
     errors.push('Loan date is required');
+  }
+
+  if (body.loan?.paymentMode === 'account') {
+    const ad = body.loan.accountDetails || {};
+    if (!clean(ad.holderName)) errors.push('Account holder name is required for bank transfer');
+    if (!/^\d{9,18}$/.test(clean(ad.accountNumber).replace(/\s+/g, ''))) {
+      errors.push('Enter a valid 9–18 digit account number');
+    }
+    if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(clean(ad.ifsc).toUpperCase())) {
+      errors.push('Enter a valid IFSC code');
+    }
   }
 
   return errors;

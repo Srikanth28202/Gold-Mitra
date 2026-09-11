@@ -419,6 +419,22 @@
     if (!state.loanDate) { setFieldError('#loanDate', true); ok = false; firstInvalid.push('#loanDate'); }
     else setFieldError('#loanDate', false);
 
+    if (state.paymentMode === 'account') {
+      const holder = $('#acctHolderName').value.trim();
+      const acct = $('#acctNumber').value.replace(/\s+/g, '');
+      const ifsc = $('#acctIfsc').value.trim().toUpperCase();
+      if (!holder) { setFieldError('#acctHolderName', true); ok = false; firstInvalid.push('#acctHolderName'); }
+      else setFieldError('#acctHolderName', false);
+      if (!/^\d{9,18}$/.test(acct)) { setFieldError('#acctNumber', true); ok = false; firstInvalid.push('#acctNumber'); }
+      else setFieldError('#acctNumber', false);
+      if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) { setFieldError('#acctIfsc', true); ok = false; firstInvalid.push('#acctIfsc'); }
+      else setFieldError('#acctIfsc', false);
+    } else {
+      setFieldError('#acctHolderName', false);
+      setFieldError('#acctNumber', false);
+      setFieldError('#acctIfsc', false);
+    }
+
     if (ok) clearAlerts();
     else {
       showAlert('Please complete the highlighted fields before saving.', 'danger');
@@ -459,7 +475,14 @@
       loan: {
         amount: parseFloat($('#loanAmount').value),
         paymentMode: state.paymentMode,
-        date: state.loanDate
+        date: state.loanDate,
+        accountDetails: state.paymentMode === 'account'
+          ? {
+              holderName: $('#acctHolderName').value.trim(),
+              accountNumber: $('#acctNumber').value.replace(/\s+/g, ''),
+              ifsc: $('#acctIfsc').value.trim().toUpperCase()
+            }
+          : {}
       }
     };
 
@@ -529,6 +552,10 @@
         recalcAmount();
       }
       setPaymentMode(a.loan.paymentMode || 'cash');
+      const ad = a.loan.accountDetails || {};
+      $('#acctHolderName').value = ad.holderName || '';
+      $('#acctNumber').value = ad.accountNumber || '';
+      $('#acctIfsc').value = ad.ifsc || '';
       if (a.loan.date) {
         const d = new Date(a.loan.date);
         const pad = (n) => String(n).padStart(2, '0');
@@ -555,6 +582,8 @@
       b.classList.toggle('is-active', active);
       b.setAttribute('aria-checked', active ? 'true' : 'false');
     });
+    const box = $('#bankDetailsBox');
+    if (box) box.hidden = mode !== 'account';
   }
 
   function init() {
@@ -588,6 +617,16 @@
 
     /* customer: clear field-level errors live */
     ['#custName', '#custMobile', '#custAadhaar', '#custAddress', '#loanAmount'].forEach((sel) => {
+      const el = document.querySelector(sel);
+      if (el) el.addEventListener('input', () => setFieldError(sel, false));
+    });
+
+    /* bank details: auto-uppercase IFSC + clear errors live */
+    $('#acctIfsc').addEventListener('input', () => {
+      $('#acctIfsc').value = $('#acctIfsc').value.toUpperCase();
+      setFieldError('#acctIfsc', false);
+    });
+    ['#acctHolderName', '#acctNumber', '#acctIfsc'].forEach((sel) => {
       const el = document.querySelector(sel);
       if (el) el.addEventListener('input', () => setFieldError(sel, false));
     });

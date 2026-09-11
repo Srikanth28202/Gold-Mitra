@@ -392,6 +392,37 @@
   font-weight: var(--fw-semibold);
 }
 
+.pd-account {
+  margin-top: 3mm;
+  border: 1px solid var(--ink-200);
+  border-radius: 2mm;
+  break-inside: avoid;
+}
+
+.pd-account__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 4mm;
+  padding: 2.4mm 4mm;
+  border-bottom: 1px solid var(--ink-100);
+}
+
+.pd-account__row:last-child { border-bottom: none; }
+
+.pd-account__label {
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-400);
+  font-weight: var(--fw-semibold);
+}
+
+.pd-account__value {
+  font-size: 9pt;
+  font-weight: var(--fw-semibold);
+  color: #12161D;
+}
+
 /* ---------------- Declaration & signatures ---------------- */
 
 .pd-declaration {

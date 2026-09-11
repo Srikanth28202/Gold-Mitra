@@ -368,6 +368,26 @@
   box-shadow: 0 4px 12px -4px rgba(168, 127, 31, 0.55);
 }
 
+/* ---------------- Bank details ---------------- */
+
+.bank-details {
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--paper-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.bank-details__label {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
 /* ---------------- Amount field ---------------- */
 
 .amount-input-wrap { position: relative; }
