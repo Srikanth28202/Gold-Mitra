@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics - Gold Mitra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/analytics.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Primary">
+      <div class="sidebar__brand">
+        <span class="brand__mark">GM</span>
+        <span>
+          <span class="brand__name">Gold Mitra</span>
+          <span class="brand__tagline">Field Loan Suite</span>
+        </span>
+      </div>
+
+      <nav class="sidebar__nav">
+        <div class="nav-group__label">Overview</div>
+        <a class="nav-item" href="/" data-nav-link>
+          <span class="nav-item__icon">?</span>
+          Dashboard
+        </a>
+        <a class="nav-item" href="/applications/new" data-nav-link>
+          <span class="nav-item__icon">+</span>
+          New Application
+        </a>
+        <a class="nav-item" href="/records" data-nav-link>
+          <span class="nav-item__icon">?</span>
+          Records
+        </a>
+        <a class="nav-item is-active" href="/analytics" data-nav-link>
+          <span class="nav-item__icon">?</span>
+          Analytics
+        </a>
+
+        <div class="nav-group__label">System</div>
+        <a class="nav-item" href="/settings" data-nav-link>
+          <span class="nav-item__icon">?</span>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="avatar avatar--gold" data-user-initials>GM</div>
+        <div class="sidebar__user">
+          <div class="sidebar__user-name" data-user-full>Loading...</div>
+          <div class="sidebar__user-role" data-user-role>field officer</div>
+        </div>
+        <button class="logout-btn" id="logoutBtn" title="Sign out" aria-label="Sign out">?</button>
+      </div>
+    </aside>
+
+    <div class="sidebar__scrim"></div>
+
+    <nav class="mobile-nav" aria-label="Mobile">
+      <ul class="mobile-nav__list">
+        <li>
+          <a class="mobile-nav__link" href="/">
+            <span class="nav-item__icon">?</span>
+            Home
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav__link" href="/applications/new">
+            <span class="nav-item__icon">+</span>
+            New
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav__link" href="/records">
+            <span class="nav-item__icon">?</span>
+            Records
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav__link is-active" href="/analytics">
+            <span class="nav-item__icon">?</span>
+            Stats
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="topbar__hamburger" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 6h16M4 12h16M4 18h10" />
+          </svg>
+        </button>
+        <h1 class="topbar__title">Analytics</h1>
+        <div class="topbar__actions">
+          <span class="badge badge--neutral topbar__sync-label" id="anaScope">All team</span>
+          <button class="btn btn--sm" id="anaRefresh">Refresh</button>
+        </div>
+      </header>
+
+      <div class="main__inner">
+        <section class="dash-section">
+          <div class="dash-section__head">
+            <h2 class="dash-section__title">Team summary</h2>
+            <div class="dash-section__meta">
+              <label class="form-label" for="anaDays">Period</label>
+              <select class="form-select form-select--sm" id="anaDays">
+                <option value="7">Last 7 days</option>
+                <option value="30" selected>Last 30 days</option>
+                <option value="90">Last 90 days</option>
+                <option value="180">Last 180 days</option>
+                <option value="365">Last 365 days</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card__label">Total applications</div>
+              <div class="stat-card__value" id="anaTotalApps">--</div>
+              <div class="stat-card__hint" id="anaTotalAppsHint">in period</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__label">Total amount</div>
+              <div class="stat-card__value" id="anaTotalAmt">--</div>
+              <div class="stat-card__hint">disbursed loan value</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__label">Today</div>
+              <div class="stat-card__value" id="anaTodayApps">--</div>
+              <div class="stat-card__hint">applications today</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__label">Today amount</div>
+              <div class="stat-card__value" id="anaTodayAmt">--</div>
+              <div class="stat-card__hint">disbursed today</div>
+            </div>
+          </div>
+
+          <div class="stats-grid stats-grid--status" id="anaStatusGrid">
+            <div class="stat-card stat-card--compact">
+              <div class="stat-card__label">Pending</div>
+              <div class="stat-card__value" data-status-count="pending">--</div>
+            </div>
+            <div class="stat-card stat-card--compact">
+              <div class="stat-card__label">Approved</div>
+              <div class="stat-card__value" data-status-count="approved">--</div>
+            </div>
+            <div class="stat-card stat-card--compact">
+              <div class="stat-card__label">Rejected</div>
+              <div class="stat-card__value" data-status-count="rejected">--</div>
+            </div>
+            <div class="stat-card stat-card--compact">
+              <div class="stat-card__label">Disbursed</div>
+              <div class="stat-card__value" data-status-count="disbursed">--</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="dash-section">
+          <div class="dash-section__head">
+            <h2 class="dash-section__title">Team workload</h2>
+          </div>
+          <div class="team-grid" id="anaTeamGrid"></div>
+          <div class="table-wrap">
+            <table class="table" id="anaTeamTable">
+              <thead>
+                <tr>
+                  <th>Staff</th>
+                  <th>Applications</th>
+                  <th>Amount</th>
+                  <th>Pending</th>
+                  <th>Approved</th>
+                  <th>Rejected</th>
+                  <th>Disbursed</th>
+                </tr>
+              </thead>
+              <tbody id="anaTeamBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/ui.js"></script>
+  <script src="/js/nav.js"></script>
+  <script src="/js/analytics.js"></script>
+  <script>
+    (function () {
+      document.getElementById('logoutBtn').addEventListener('click', async function () {
+        try { await GM.api('/api/auth/logout', { method: 'POST' }); } catch (e) {}
+        location.href = '/login';
+      });
+    })();
+  </script>
+</body>
+</html>

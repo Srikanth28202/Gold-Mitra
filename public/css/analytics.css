@@ -1,0 +1,123 @@
+:root {
+  --ana-accent: var(--gold);
+  --ana-bg: var(--bg);
+  --ana-surface: var(--surface);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+  margin-bottom: var(--gap-lg);
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-card__label {
+  color: var(--muted);
+  font-size: var(--font-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-card__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.stat-card__hint {
+  color: var(--muted);
+  font-size: var(--font-sm);
+}
+
+.dash-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--pad);
+  margin-bottom: var(--gap);
+}
+
+.dash-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  margin-bottom: var(--pad);
+}
+
+.dash-section__title {
+  font-size: var(--font-md);
+  font-weight: 600;
+}
+
+.dash-section__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats-grid--status {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--gap);
+}
+
+.team-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.team-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.team-card__name {
+  font-weight: 600;
+}
+
+.team-card__meta {
+  color: var(--muted);
+  font-size: var(--font-sm);
+}
+
+.chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--font-sm);
+  background: var(--surface-2);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid--status { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .stats-grid--status { grid-template-columns: repeat(2, 1fr); }
+}
