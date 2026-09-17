@@ -16,6 +16,19 @@
   }
 }
 
+.settings-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bulk-textarea {
+  font-family: var(--font-mono, monospace);
+  resize: vertical;
+  min-height: 132px;
+  line-height: 1.5;
+}
+
 /* ---------------- Staff list rows ---------------- */
 
 .staff-list {

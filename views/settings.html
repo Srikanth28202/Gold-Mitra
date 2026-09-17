@@ -159,6 +159,7 @@
             </div>
           </section>
 
+          <div class="settings-stack">
           <!-- Create user -->
           <section class="card">
             <div class="card__header">
@@ -211,7 +212,50 @@
               </form>
             </div>
           </section>
-        </div>
+
+          <!-- Bulk add -->
+          <section class="card">
+            <div class="card__header">
+              <h3 class="card__title">Bulk add team members</h3>
+              <span class="badge badge--gold">Admin</span>
+            </div>
+            <div class="card__body">
+              <form class="settings-form" id="bulkForm" novalidate>
+                <div class="field">
+                  <label class="field__label" for="bulkText">Members (one per line)</label>
+                  <textarea
+                    class="field__textarea bulk-textarea"
+                    id="bulkText"
+                    name="text"
+                    rows="6"
+                    spellcheck="false"
+                    placeholder="Name, Email, Mobile&#10;Priya Menon, priya@goldmitra.com, 9876543210&#10;Ravi Kumar, ravi@goldmitra.com, 9123456780"
+                  ></textarea>
+                  <span class="field__hint">Format: <b>Name, Email, Mobile</b> — mobile is optional. Use commas or tabs, one member per line.</span>
+                  <span class="field__error"></span>
+                </div>
+
+                <div class="settings-form__grid">
+                  <div class="field">
+                    <label class="field__label" for="bulkRole">Role</label>
+                    <select class="field__input" id="bulkRole">
+                      <option value="field-officer">Field Officer</option>
+                      <option value="manager">Manager</option>
+                    </select>
+                    <span class="field__error"></span>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="bulkPassword">Shared password</label>
+                    <input class="field__input" type="password" id="bulkPassword" name="password" placeholder="At least 8 characters" autocomplete="new-password" />
+                    <span class="field__error"></span>
+                  </div>
+                </div>
+
+                <button class="btn btn--primary btn--block" type="submit" id="bulkCreateBtn">Create users</button>
+              </form>
+            </div>
+          </section>
+          </div>
       </div>
     </div>
   </div>

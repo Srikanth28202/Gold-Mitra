@@ -89,6 +89,106 @@ router.post('/api/staff', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
+/* Parse bulk text: one member per line -> Name, Email, Phone (phone optional).
+   Supports comma or tab separators and optional surrounding quotes. */
+function parseMembers(text) {
+  const rows = [];
+  const seen = new Set();
+
+  String(text || '')
+    .split(/\r?\n/)
+    .forEach((raw, idx) => {
+      const line = (raw || '').trim();
+      if (!line) return;
+
+      const cells = line
+        .split('\t')
+        .join(',')
+        .split(',')
+        .map((c) => String(c || '').replace(/^["']|["']$/g, '').trim());
+
+      const [name = '', email = '', phone = ''] = cells;
+      if (!name && !email) return;
+
+      rows.push({
+        line: idx + 1,
+        name,
+        email: email.toLowerCase(),
+        phone,
+        duplicateInside: email ? seen.has(email.toLowerCase()) : false
+      });
+      if (email) seen.add(email.toLowerCase());
+    });
+
+  return rows;
+}
+
+/* Bulk create staff members (admin only) */
+router.post('/api/staff/bulk', requireAuth, requireAdmin, async (req, res) => {
+  if (!isConnected()) {
+    return res.status(503).json({ error: 'Database unavailable. Please check your connection and try again.' });
+  }
+
+  const password = String(req.body.password || '');
+  const role = req.body.role || 'field-officer';
+
+  if (password.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters.', errors: ['Password must be at least 8 characters.'] });
+  }
+  if (!ROLES.includes(role)) {
+    return res.status(400).json({ error: 'Role must be one of: ' + ROLES.join(', ') });
+  }
+
+  const members = parseMembers(req.body.text);
+  if (!members.length) {
+    return res.status(400).json({ error: 'No users found. Add one member per line as: Name, Email, Phone' });
+  }
+
+  try {
+    const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+    const results = { inserted: 0, errors: [] };
+
+    for (const m of members) {
+      const errs = [];
+      if (m.duplicateInside) errs.push('Duplicate email in the list');
+      if (m.name.length < 2) errs.push('Full name is required');
+      if (!/^\S+@\S+\.\S+$/.test(m.email)) errs.push('Invalid email');
+      if (m.phone && !/^[6-9]\d{9}$/.test(m.phone)) errs.push('Invalid 10-digit mobile');
+
+      if (errs.length) {
+        results.errors.push({ line: m.line, email: m.email, reason: errs.join('; ') });
+        continue;
+      }
+
+      try {
+        await Staff.create({
+          name: m.name,
+          email: m.email,
+          phone: m.phone,
+          passwordHash,
+          role
+        });
+        results.inserted += 1;
+      } catch (err) {
+        const reason = err && err.code === 11000
+          ? 'A user with this email already exists'
+          : 'Could not create the user';
+        results.errors.push({ line: m.line, email: m.email, reason });
+      }
+    }
+
+    res.status(results.inserted ? 201 : 400).json({
+      success: results.inserted > 0,
+      total: members.length,
+      inserted: results.inserted,
+      errors: results.errors
+    });
+  } catch (err) {
+    console.error('✗ Staff bulk create error:', err.message);
+    res.status(500).json({ error: 'Could not create the users. Please try again.' });
+  }
+});
+
 /* Activate / deactivate a staff member (admin only, never self) */
 router.patch('/api/staff/:id/active', requireAuth, requireAdmin, async (req, res) => {
   if (!isConnected()) {

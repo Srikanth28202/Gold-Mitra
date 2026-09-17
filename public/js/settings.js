@@ -123,6 +123,76 @@
     return !form.querySelector('.field--invalid');
   }
 
+  /* ---------------- Bulk create ---------------- */
+
+  function countLines(text) {
+    return String(text || '')
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0).length;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const bulkForm = $('#bulkForm');
+    const bulkText = $('#bulkText');
+    const bulkPassword = $('#bulkPassword');
+    const bulkBtn = $('#bulkCreateBtn');
+
+    bulkText.addEventListener('input', () => {
+      const n = countLines(bulkText.value);
+      bulkBtn.textContent = n > 1 ? `Create ${n} users` : 'Create user';
+    });
+
+    bulkForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const password = bulkPassword.value;
+      const n = countLines(bulkText.value);
+      if (!n) {
+        GM.toast('Add at least one member line first.', 'danger', 2800);
+        bulkText.focus();
+        return;
+      }
+      if (password.length < 8) {
+        GM.toast('Shared password must be at least 8 characters.', 'danger', 2800);
+        bulkPassword.focus();
+        return;
+      }
+
+      GM.setLoading(bulkBtn, true, 'Creating…');
+      try {
+        const data = await GM.api('/api/staff/bulk', {
+          method: 'POST',
+          body: JSON.stringify({
+            text: bulkText.value,
+            role: $('#bulkRole').value,
+            password
+          })
+        });
+
+        GM.toast(`Created ${data.inserted} of ${data.total} user${data.total === 1 ? '' : 's'}`, data.inserted ? 'success' : 'danger', 3600);
+
+        data.errors.slice(0, 4).forEach((err) => {
+          GM.toast(`Line ${err.line}: ${err.email || '—'} — ${err.reason}`, 'danger', 4200);
+        });
+        if (data.errors.length > 4) {
+          GM.toast(`…and ${data.errors.length - 4} more skipped lines`, 'gold', 4200);
+        }
+
+        if (data.inserted > 0) {
+          bulkText.value = '';
+          bulkPassword.value = '';
+          bulkBtn.textContent = 'Create users';
+          loadStaff();
+        }
+      } catch (err) {
+        GM.toast(err.message, 'danger', 3600);
+      } finally {
+        GM.setLoading(bulkBtn, false, bulkText.value ? `Create ${countLines(bulkText.value)} users` : 'Create users');
+      }
+    });
+  });
+
   document.addEventListener('DOMContentLoaded', () => {
     const form = $('#memberForm');
     const createBtn = $('#createBtn');
