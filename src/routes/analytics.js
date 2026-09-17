@@ -122,7 +122,7 @@ router.get('/api/analytics/summary', requireAuth, async (req, res) => {
         amount: overall.amount,
         todayApplications: today.count,
         todayAmount: today.amount,
-        byStatus: { ...periodStatus.counts, ...periodStatus.amounts ? { amount: 0 } : {} }
+        byStatus: { ...periodStatus.counts }
       },
       byStatusAmounts: periodStatus.amounts,
       team
