@@ -19,34 +19,47 @@ const canAccess = (application, req) => {
 };
 
 function buildApplicationFields(b) {
-  const items = b.jewelleryItems.map((item) => ({
-    itemName: clean(item.itemName),
-    purity: clean(item.purity),
-    weightGrams: Number(item.weightGrams),
-    description: clean(item.description),
-    photoData: item.photoData || ''
-  }));
+  const items = (b.jewelleryItems || []).map((item, index) => {
+    const purityStr = clean(item.purity);
+    const defaultName = purityStr ? `Gold Item (${purityStr})` : `Gold Item ${index + 1}`;
+    return {
+      itemName: clean(item.itemName) || defaultName,
+      purity: purityStr || '22K / 916',
+      weightGrams: Number(item.weightGrams || 0),
+      description: clean(item.description),
+      photoData: item.photoData || ''
+    };
+  });
 
   const totalWeightGrams = items.reduce((sum, i) => sum + i.weightGrams, 0);
+  const loanAmount = Number(b.totalAmountReceived || b.loan?.amount || 0);
 
   return {
+    pageNo: clean(b.pageNo) || '1',
+    declaration: clean(b.declaration),
+    staffSignature: b.staffSignature || '',
+    customerSignature: b.customerSignature || '',
+    totalAmountReceived: loanAmount,
     customer: {
-      name: clean(b.customer.name),
-      mobile: clean(b.customer.mobile),
-      aadhaar: clean(b.customer.aadhaar),
-      address: clean(b.customer.address),
-      photoData: b.customer.photoData || ''
+      name: clean(b.customer?.name),
+      mobile: clean(b.customer?.mobile),
+      aadhaar: clean(b.customer?.aadhaar),
+      address: clean(b.customer?.address),
+      photoData: b.customer?.photoData || ''
     },
     jewelleryItems: items,
     totalWeightGrams: Math.round(totalWeightGrams * 1000) / 1000,
     loan: {
-      amount: Number(b.loan.amount),
-      paymentMode: b.loan.paymentMode,
-      date: new Date(b.loan.date),
+      amount: loanAmount || 1,
+      paymentMode: b.loan?.paymentMode || 'cash',
+      date: b.loan?.date ? new Date(b.loan.date) : new Date(),
       accountDetails: {
-        holderName: clean(b.loan.accountDetails?.holderName),
-        accountNumber: clean(b.loan.accountDetails?.accountNumber).replace(/\s+/g, ''),
-        ifsc: clean(b.loan.accountDetails?.ifsc).toUpperCase().replace(/\s+/g, '')
+        holderName: clean(b.accountDetails?.name || b.loan?.accountDetails?.holderName),
+        accountNumber: clean(b.accountDetails?.accountNumber || b.loan?.accountDetails?.accountNumber).replace(/\s+/g, ''),
+        ifsc: clean(b.accountDetails?.ifsc || b.loan?.accountDetails?.ifsc).toUpperCase().replace(/\s+/g, ''),
+        bank: clean(b.accountDetails?.bank || b.loan?.accountDetails?.bank),
+        branch: clean(b.accountDetails?.branch || b.loan?.accountDetails?.branch),
+        cash: Number(b.accountDetails?.cash || b.loan?.accountDetails?.cash || 0)
       }
     }
   };
@@ -55,54 +68,23 @@ function buildApplicationFields(b) {
 function validatePayload(body) {
   const errors = [];
 
-  if (!clean(body.customer?.name) || clean(body.customer.name).length < 2) {
+  if (!clean(body.customer?.name)) {
     errors.push('Customer name is required');
   }
-  if (!/^[6-9]\d{9}$/.test(clean(body.customer?.mobile))) {
-    errors.push('Valid 10-digit mobile number is required');
+  if (clean(body.customer?.mobile) && !/^\d{10}$/.test(clean(body.customer.mobile))) {
+    errors.push('Mobile number should be a 10-digit number');
   }
-  if (body.customer?.aadhaar && !/^\d{12}$/.test(clean(body.customer.aadhaar))) {
+  if (clean(body.customer?.aadhaar) && !/^\d{12}$/.test(clean(body.customer.aadhaar))) {
     errors.push('Aadhaar must be 12 digits');
-  }
-  if (!clean(body.customer?.address)) {
-    errors.push('Customer address is required');
-  }
-  if (!body.customer?.photoData) {
-    errors.push('Customer photo is required');
   }
 
   if (!Array.isArray(body.jewelleryItems) || body.jewelleryItems.length === 0) {
-    errors.push('At least one jewellery item is required');
+    errors.push('At least one gold item row is required');
   } else {
     body.jewelleryItems.forEach((item, i) => {
       const n = i + 1;
-      if (!clean(item.itemName)) errors.push(`Item ${n}: name is required`);
-      if (!clean(item.purity)) errors.push(`Item ${n}: purity is required`);
-      if (!(Number(item.weightGrams) > 0)) errors.push(`Item ${n}: valid weight is required`);
-      if (!item.photoData) errors.push(`Item ${n}: photo is required`);
+      if (!(Number(item.weightGrams) >= 0)) errors.push(`Item ${n}: enter valid weight in grams`);
     });
-  }
-
-  if (!(Number(body.loan?.amount) >= 1)) {
-    errors.push('Loan amount is required');
-  }
-  if (!['cash', 'account'].includes(body.loan?.paymentMode)) {
-    errors.push('Payment mode is required');
-  }
-  const d = new Date(body.loan?.date);
-  if (Number.isNaN(d.getTime())) {
-    errors.push('Loan date is required');
-  }
-
-  if (body.loan?.paymentMode === 'account') {
-    const ad = body.loan.accountDetails || {};
-    if (!clean(ad.holderName)) errors.push('Account holder name is required for bank transfer');
-    if (!/^\d{9,18}$/.test(clean(ad.accountNumber).replace(/\s+/g, ''))) {
-      errors.push('Enter a valid 9–18 digit account number');
-    }
-    if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(clean(ad.ifsc).toUpperCase())) {
-      errors.push('Enter a valid IFSC code');
-    }
   }
 
   return errors;

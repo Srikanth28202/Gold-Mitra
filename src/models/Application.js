@@ -44,6 +44,11 @@ const applicationSchema = new mongoose.Schema(
     },
 
     totalWeightGrams: { type: Number, default: 0 },
+    pageNo: { type: String, default: '1' },
+    declaration: { type: String, default: '' },
+    staffSignature: { type: String, default: '' },
+    customerSignature: { type: String, default: '' },
+    totalAmountReceived: { type: Number, default: 0 },
 
     loan: {
       amount: { type: Number, required: true, min: 1 },
@@ -53,6 +58,9 @@ const applicationSchema = new mongoose.Schema(
         holderName: { type: String, default: '', trim: true },
         accountNumber: { type: String, default: '', trim: true },
         ifsc: { type: String, default: '', trim: true },
+        bank: { type: String, default: '', trim: true },
+        branch: { type: String, default: '', trim: true },
+        cash: { type: Number, default: 0 },
         _id: false
       }
     }

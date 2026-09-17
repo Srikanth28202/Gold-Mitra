@@ -1,11 +1,10 @@
 /* ============================================
-   Gold Mitra — New Application form logic
+   Gold Mitra — New Application form logic (exact spec layout)
    ============================================ */
 (function () {
   'use strict';
 
-  const PURITY_OPTIONS = ['18K / 750', '22K / 916', '24K / 995', '14K / 585'];
-  const OTHER_PURITY = 'Other';
+  const PURITY_OPTIONS = ['18K / 750', '22K / 916', '24K / 995', '14K / 585', 'Other'];
 
   let uidCounter = 0;
   const uid = () => `item-${Date.now()}-${++uidCounter}`;
@@ -16,479 +15,456 @@
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   };
 
-  const state = {
-    items: [makeItem()],
-    paymentMode: 'cash',
-    loanDate: todayISO()
-  };
-
-  const editId =
-    (location.pathname.match(/^\/applications\/([0-9a-fA-F]{24})\/edit$/) || [])[1] || null;
-
-  function makeItem() {
+  function createEmptyItem() {
     return {
       id: uid(),
-      itemName: '',
       purity: '',
       weight: '',
-      description: '',
       photo: ''
     };
   }
 
-  /* ---------- Element cache ---------- */
+  const state = {
+    items: [createEmptyItem()],
+    customerPhoto: '',
+    docDate: todayISO(),
+    pageNo: '1',
+    paymentMode: 'cash'
+  };
+
+  const editId = (location.pathname.match(/^\/applications\/([0-9a-fA-F]{24})\/edit$/) || [])[1] || null;
+
+  /* ---------- DOM Caching ---------- */
 
   const $ = (sel) => document.querySelector(sel);
-  const form = $('#applicationForm');
-  const itemsList = $('#itemsList');
-  const alertsZone = $('#appAlerts');
 
-  function showAlert(message, type = 'danger') {
+  const form = $('#applicationForm');
+  const tbody = $('#goldItemsTbody');
+  const alertsZone = $('#appAlerts');
+  const docDateInput = $('#docDate');
+  const pageNoInput = $('#pageNo');
+  const totalWeightInput = $('#totalWeightInput');
+  const totalAmountInput = $('#totalAmountReceived');
+
+  const custNameInput = $('#custName');
+  const custAadhaarInput = $('#custAadhaar');
+  const custMobileInput = $('#custMobile');
+  const custAddressInput = $('#custAddress');
+
+  const photoPlaceholder = $('#photoPlaceholder');
+  const customerPhotoImg = $('#customerPhotoImg');
+  const customerPhotoInput = $('#customerPhotoInput');
+  const uploadPhotoBtn = $('#uploadPhotoBtn');
+
+  const modeCashRadio = $('#modeCash');
+  const modeAccountRadio = $('#modeAccount');
+  const bankFieldsGroup = $('#bankFieldsGroup');
+
+  const acctNumberInput = $('#acctNumber');
+  const acctNameInput = $('#acctName');
+  const acctIfscInput = $('#acctIfsc');
+  const acctBankInput = $('#acctBank');
+  const acctBranchInput = $('#acctBranch');
+
+  const declarationInput = $('#declarationText');
+
+  const saveBtn = $('#saveBtn');
+  const printBtn = $('#printBtn');
+  const resetBtn = $('#resetBtn');
+  const addItemRowBtn = $('#addItemRowBtn');
+
+  /* ---------- Payment Mode Toggle ---------- */
+
+  function updatePaymentModeUI() {
+    const isAccount = modeAccountRadio && modeAccountRadio.checked;
+    if (bankFieldsGroup) bankFieldsGroup.style.display = isAccount ? 'block' : 'none';
+    state.paymentMode = isAccount ? 'account' : 'cash';
+  }
+
+  /* ---------- Canvas Signatures ---------- */
+
+  function initSignatureCanvas(canvasId, placeholderId, clearBtnId) {
+    const canvas = document.getElementById(canvasId);
+    const placeholder = document.getElementById(placeholderId);
+    const clearBtn = document.getElementById(clearBtnId);
+    if (!canvas) return { getData: () => '', setData: () => {}, clear: () => {} };
+
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let hasDrawn = false;
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        const temp = canvas.toDataURL();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        if (hasDrawn) {
+          const img = new Image();
+          img.onload = () => ctx.drawImage(img, 0, 0);
+          img.src = temp;
+        }
+      }
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function startDraw(e) {
+      isDrawing = true;
+      const pos = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      if (placeholder) placeholder.style.display = 'none';
+      hasDrawn = true;
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const pos = getPos(e);
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#1F2937';
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
+
+    function stopDraw() {
+      isDrawing = false;
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stopDraw);
+
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDraw);
+
+    function clear() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      hasDrawn = false;
+      if (placeholder) placeholder.style.display = 'block';
+    }
+
+    if (clearBtn) clearBtn.addEventListener('click', clear);
+
+    return {
+      getData: () => (hasDrawn ? canvas.toDataURL('image/png') : ''),
+      setData: (dataUrl) => {
+        if (!dataUrl) return clear();
+        const img = new Image();
+        img.onload = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          if (placeholder) placeholder.style.display = 'none';
+          hasDrawn = true;
+        };
+        img.src = dataUrl;
+      },
+      clear
+    };
+  }
+
+  const staffSig = initSignatureCanvas('staffSigCanvas', 'staffSigPlaceholder', 'clearStaffSigBtn');
+  const customerSig = initSignatureCanvas('customerSigCanvas', 'customerSigPlaceholder', 'clearCustomerSigBtn');
+
+  /* ---------- Alert helper ---------- */
+
+  function showAlert(msg, type = 'danger') {
+    if (!alertsZone) return;
     alertsZone.innerHTML = `
-      <div class="alert alert--${type}">
-        <span class="alert__icon">${type === 'danger' ? '✕' : 'ℹ'}</span>
-        <span>${GM.escapeHtml(message)}</span>
+      <div class="alert alert--${type}" style="padding:10px 14px;border-radius:6px;background:#FEE2E2;border:1px solid #FCA5A5;color:#DC2626;font-size:0.88rem;display:flex;align-items:center;gap:8px;">
+        <span>✕</span>
+        <span>${GM.escapeHtml(msg)}</span>
       </div>
     `;
-    alertsZone.querySelector('.alert').animate(
-      [{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }],
-      { duration: 200, easing: 'cubic-bezier(0.22,1,0.36,1)' }
-    );
+    alertsZone.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   function clearAlerts() {
-    alertsZone.innerHTML = '';
+    if (alertsZone) alertsZone.innerHTML = '';
   }
 
-  /* ---------- Totals ---------- */
+  /* ---------- Customer Photo Upload ---------- */
 
-  function totalWeight() {
-    return state.items.reduce((sum, it) => sum + (parseFloat(it.weight) > 0 ? parseFloat(it.weight) : 0), 0);
-  }
+  uploadPhotoBtn.addEventListener('click', () => customerPhotoInput.click());
 
-  function fmtWeight(w) {
-    return w.toLocaleString('en-IN', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-  }
-
-  function fmtMoney(n) {
-    return '₹' + Number(n || 0).toLocaleString('en-IN');
-  }
-
-  function recalcTotals() {
-    const w = totalWeight();
-    $('#totalWeight').innerHTML =
-      `${fmtWeight(w)} <span style="font-size:var(--fs-xs);color:var(--text-muted);font-weight:var(--fw-medium)">g</span>`;
-    $('#totalCountText').textContent =
-      `${state.items.length} ${state.items.length === 1 ? 'item' : 'items'}`;
-    $('#jewelleryCount').innerHTML = `<span class="badge badge--gold">${fmtWeight(w)} g</span>`;
-    $('#saveBarWeight').textContent = `${fmtWeight(w)} g`;
-  }
-
-  function recalcAmount() {
-    const amt = parseFloat($('#loanAmount').value);
-    $('#saveBarAmount').textContent = amt > 0 ? fmtMoney(amt) : '₹0';
-  }
-
-  /* ---------- Jewellery item rendering ---------- */
-
-  function puritySelectHTML(item) {
-    const opts = PURITY_OPTIONS.map(
-      (p) => `<option value="${p}" ${item.purity === p ? 'selected' : ''}>${p}</option>`
-    ).join('');
-    const other = item.purity && !PURITY_OPTIONS.includes(item.purity);
-    const otherOpt = other ? `<option value="${GM.escapeHtml(item.purity)}" selected>${GM.escapeHtml(item.purity)}</option>` : '';
-    return `<option value="">Select purity</option>${opts}${otherOpt}`;
-  }
-
-  function itemPhotoHTML(item, index) {
-    if (item.photo) {
-      return `
-        <div class="photo-upload photo-upload--filled" data-photo>
-          <div class="photo-upload__preview-wrap">
-            <img class="photo-upload__preview" src="${item.photo}" alt="Item ${index + 1} photo" />
-            <div class="photo-upload__actions">
-              <button type="button" class="photo-upload__action" data-change-photo="${item.id}">⟳ Change</button>
-              <button type="button" class="photo-upload__action photo-upload__action--danger" data-remove-photo="${item.id}">✕ Remove</button>
-            </div>
-          </div>
-        </div>`;
+  customerPhotoInput.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      GM.setLoading(saveBtn, true, 'Processing photo…');
+      const dataUrl = await GM.compressImage(file);
+      state.customerPhoto = dataUrl;
+      customerPhotoImg.src = dataUrl;
+      customerPhotoImg.style.display = 'block';
+      photoPlaceholder.style.display = 'none';
+      GM.setLoading(saveBtn, false);
+      GM.toast('Photo captured', 'success', 1400);
+    } catch (err) {
+      GM.setLoading(saveBtn, false);
+      GM.toast(err.message, 'danger');
     }
-    return `
-      <div class="photo-upload" data-photo>
-        <input type="file" accept="image/*" capture="environment" data-item-file="${item.id}" />
-        <div class="photo-upload__empty">
-          <span class="photo-upload__icon">◆</span>
-          <span class="photo-upload__label">Item ${index + 1} photo</span>
-          <span class="photo-upload__sub">Tap to capture · required</span>
-        </div>
-      </div>`;
-  }
+  });
 
-  function renderItems() {
-    const canGoBelowOne = state.items.length === 1;
-    itemsList.innerHTML = state.items
+  /* ---------- Gold Items Table Logic ---------- */
+
+  function renderTableRows() {
+    tbody.innerHTML = state.items
       .map((item, index) => {
-        const invalidName = item.invalid && !item.itemName.trim();
-        const invalidPurity = item.invalid && !item.purity;
-        const invalidWeight = item.invalid && !(parseFloat(item.weight) > 0);
-        const invalidPhoto = item.invalid && !item.photo;
+        const rowNo = index + 1;
+        const optsHTML = PURITY_OPTIONS.map(
+          (p) => `<option value="${p}" ${item.purity === p ? 'selected' : ''}>${p}</option>`
+        ).join('');
+        const hasPhoto = !!item.photo;
 
-        const klass = item.invalid ? ' item-card is-invalid' : '';
         return `
-        <article class="item-card${klass}" data-item-card="${item.id}">
-          <div class="item-card__head">
-            <div class="item-card__title-wrap">
-              <span class="item-card__chip">${index + 1}</span>
-              <span class="item-card__title">Item ${index + 1}</span>
-            </div>
-            <button type="button" class="item-card__remove" data-remove-item="${item.id}" ${canGoBelowOne && state.items.length <= 1 ? 'disabled' : ''}>
-              ✕ Remove
+        <tr data-item-id="${item.id}">
+          <td class="row-index">${rowNo})</td>
+          <td>
+            <select class="quality-select" data-field="purity">
+              <option value="">Select quality</option>
+              ${optsHTML}
+            </select>
+          </td>
+          <td>
+            <input type="number" class="weight-input" data-field="weight" step="0.001" min="0" placeholder="Enter weight (g)" value="${item.weight || ''}" />
+          </td>
+          <td>
+            <button type="button" class="btn-upload-item-img" data-action="upload-img" style="${hasPhoto ? 'background:#E7F6EE;border-color:#A7F3D0;color:#065F46;' : ''}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span>${hasPhoto ? '✓ Image uploaded' : 'Upload image'}</span>
             </button>
-          </div>
-
-          ${itemPhotoHTML(item, index)}
-
-          <div class="field${invalidName ? ' field--invalid' : ''}">
-            <label class="field__label" for="${item.id}-name">Item name</label>
-            <input class="field__input" type="text" id="${item.id}-name" value="${GM.escapeHtml(item.itemName)}" placeholder="e.g. Gold bangle / chain" />
-            <span class="field__error">Item name is required.</span>
-          </div>
-
-          <div class="item-grid">
-            <div class="field${invalidPurity ? ' field--invalid' : ''}">
-              <label class="field__label" for="${item.id}-purity">Purity</label>
-              <select class="field__select" id="${item.id}-purity">
-                ${puritySelectHTML(item)}
-              </select>
-              <span class="field__error">Select purity.</span>
-            </div>
-            <div class="field${invalidWeight ? ' field--invalid' : ''}">
-              <label class="field__label" for="${item.id}-weight">Weight in grams</label>
-              <div class="input-unit">
-                <input class="field__input" type="number" id="${item.id}-weight" inputmode="decimal" step="0.001" min="0.001" placeholder="0.000" value="${item.weight || ''}" />
-                <span class="input-unit__unit">g</span>
-              </div>
-              <span class="field__error">Enter a valid weight.</span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="field__label" for="${item.id}-desc">Description <span class="text-muted" style="text-transform:none;font-weight:var(--fw-regular)">(optional)</span></label>
-            <textarea class="field__textarea" id="${item.id}-desc" rows="2" placeholder="Design, hallmark, condition, notes…">${GM.escapeHtml(item.description)}</textarea>
-          </div>
-        </article>`;
+            <input type="file" accept="image/*" data-item-file="${item.id}" style="display:none;" />
+          </td>
+          <td>
+            <button type="button" class="btn-delete-row" data-action="delete-row" aria-label="Delete row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+              </svg>
+            </button>
+          </td>
+        </tr>`;
       })
       .join('');
-    bindItemEvents();
-    recalcTotals();
-    updateRemoveButtons();
+
+    bindTableEvents();
+    recalcTotalWeight();
   }
 
-  function bindItemEvents() {
-    /* file capture for new photos */
-    itemsList.querySelectorAll('input[data-item-file]').forEach((input) => {
-      input.addEventListener('change', async (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
-        await capturePhoto(input.dataset.itemFile, file);
-      });
-    });
-
-    /* field updates */
-    itemsList.querySelectorAll('article > .field input, article > .field select, article > .item-grid input, article > .item-grid select').forEach((input) => {
-      input.addEventListener('input', onItemFieldInput);
-      input.addEventListener('change', onItemFieldInput);
-    });
-
-    itemsList.querySelectorAll('textarea').forEach((input) => {
-      input.addEventListener('input', onItemFieldInput);
-    });
-
-    /* change / remove photo actions */
-    itemsList.querySelectorAll('[data-change-photo]').forEach((btn) => {
-      btn.addEventListener('click', () => dispatchItemPhotoAction('change', btn.dataset.changePhoto));
-    });
-    itemsList.querySelectorAll('[data-remove-photo]').forEach((btn) => {
-      btn.addEventListener('click', () => dispatchItemPhotoAction('remove', btn.dataset.removePhoto));
-    });
-
-    itemsList.querySelectorAll('[data-remove-item]').forEach((btn) => {
-      btn.addEventListener('click', () => removeItem(btn.dataset.removeItem));
-    });
+  function recalcTotalWeight() {
+    const sum = state.items.reduce((acc, it) => {
+      const w = parseFloat(it.weight);
+      return acc + (w > 0 ? w : 0);
+    }, 0);
+    totalWeightInput.value = sum > 0 ? sum.toFixed(3) : '0';
   }
 
-  function onItemFieldInput(e) {
-    const card = e.target.closest('[data-item-card]');
-    if (!card) return;
-    const item = state.items.find((i) => i.id === card.dataset.itemCard);
-    if (!item) return;
+  function bindTableEvents() {
+    tbody.querySelectorAll('tr').forEach((tr) => {
+      const id = tr.dataset.itemId;
+      const item = state.items.find((i) => i.id === id);
+      if (!item) return;
 
-    if (e.target.id.endsWith('-name')) item.itemName = e.target.value;
-    else if (e.target.id.endsWith('-purity')) item.purity = e.target.value;
-    else if (e.target.id.endsWith('-weight')) {
-      item.weight = e.target.value;
-      recalcTotals();
-    } else if (e.target.id.endsWith('-desc')) item.description = e.target.value;
+      const puritySelect = tr.querySelector('[data-field="purity"]');
+      const weightInput = tr.querySelector('[data-field="weight"]');
+      const fileInput = tr.querySelector(`[data-item-file="${id}"]`);
+      const uploadBtn = tr.querySelector('[data-action="upload-img"]');
+      const deleteBtn = tr.querySelector('[data-action="delete-row"]');
 
-    /* Field-level live validation: clear error once user fixes it */
-    if (e.target.id.endsWith('-name') && item.itemName.trim()) {
-      e.target.closest('.field').classList.remove('field--invalid');
-    }
-    if (e.target.id.endsWith('-purity') && item.purity) {
-      e.target.closest('.field').classList.remove('field--invalid');
-    }
-    if (e.target.id.endsWith('-weight') && parseFloat(item.weight) > 0) {
-      e.target.closest('.field').classList.remove('field--invalid');
-    }
-  }
+      if (puritySelect) {
+        puritySelect.addEventListener('change', (e) => {
+          item.purity = e.target.value;
+        });
+      }
 
-  function dispatchItemPhotoAction(action, id) {
-    const item = state.items.find((i) => i.id === id);
-    if (!item) return;
+      if (weightInput) {
+        weightInput.addEventListener('input', (e) => {
+          item.weight = e.target.value;
+          recalcTotalWeight();
+        });
+      }
 
-    if (action === 'remove') {
-      item.photo = '';
-      renderItems();
-      return;
-    }
+      if (uploadBtn && fileInput) {
+        uploadBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', async (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          try {
+            GM.setLoading(saveBtn, true, 'Processing image…');
+            const dataUrl = await GM.compressImage(file);
+            item.photo = dataUrl;
+            renderTableRows();
+            GM.setLoading(saveBtn, false);
+            GM.toast('Item image attached', 'success', 1400);
+          } catch (err) {
+            GM.setLoading(saveBtn, false);
+            GM.toast(err.message, 'danger');
+          }
+        });
+      }
 
-    /* Re-capture: recreate a hidden file input and click it */
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.capture = 'environment';
-    input.style.display = 'none';
-    document.body.appendChild(input);
-    input.addEventListener('change', async (e) => {
-      const file = e.target.files && e.target.files[0];
-      input.remove();
-      if (!file) return;
-      await capturePhoto(id, file);
-    });
-    input.click();
-  }
-
-  async function capturePhoto(id, file) {
-    const item = state.items.find((i) => i.id === id);
-    if (!item) return;
-
-    const btn = $('#saveBtn');
-    const req = item.photo ? 'Replacing photo…' : 'Processing photo…';
-    GM.setLoading(btn, true, req);
-
-    try {
-      const dataUrl = await GM.compressImage(file);
-      item.photo = dataUrl;
-      renderItems();
-      GM.setLoading(btn, false);
-    } catch (err) {
-      GM.setLoading(btn, false);
-      GM.toast(err.message, 'danger');
-    }
-  }
-
-  function updateRemoveButtons() {
-    itemsList.querySelectorAll('[data-remove-item]').forEach((btn) => {
-      btn.disabled = state.items.length <= 1;
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => {
+          if (state.items.length <= 1) {
+            GM.toast('At least one item row is required', 'gold');
+            return;
+          }
+          state.items = state.items.filter((i) => i.id !== id);
+          renderTableRows();
+        });
+      }
     });
   }
 
-  function addItem() {
-    state.items.push(makeItem());
-    renderItems();
-    const last = state.items.length;
-    requestAnimationFrame(() => {
-      const input = document.getElementById(`${state.items[last - 1].id}-name`);
-      if (input) input.focus();
+  if (addItemRowBtn) {
+    addItemRowBtn.addEventListener('click', () => {
+      state.items.push(createEmptyItem());
+      renderTableRows();
     });
   }
 
-  function removeItem(id) {
-    if (state.items.length <= 1) return;
-    state.items = state.items.filter((i) => i.id !== id);
-    renderItems();
-    GM.toast('Item removed', 'gold', 1600);
-  }
+  /* ---------- Print & Reset Buttons ---------- */
 
-  /* ---------- Photo loading for customer ---------- */
-
-  function setCustomerPhotoPreview(dataUrl) {
-    const wrap = $('#customerPhoto');
-    wrap.classList.add('photo-upload--filled');
-    wrap.innerHTML = `
-        <div class="photo-upload__preview-wrap">
-          <img class="photo-upload__preview" src="${dataUrl}" alt="Customer photo" />
-          <div class="photo-upload__actions">
-            <button type="button" class="photo-upload__action" id="customerPhotoChange">⟳ Change photo</button>
-          </div>
-        </div>
-        <input type="file" id="customerPhotoInput" accept="image/*" capture="environment" style="display:none" />
-      `;
-    wrap.dataset.hasPhoto = '1';
-    $('#customerPhotoChange').addEventListener('click', () => {
-      document.getElementById('customerPhotoInput').click();
-    });
-    document.getElementById('customerPhotoInput').addEventListener('change', (e) => {
-      const f = e.target.files && e.target.files[0];
-      if (f) handleCustomerPhoto(f);
+  if (printBtn) {
+    printBtn.addEventListener('click', () => {
+      window.print();
     });
   }
 
-  async function handleCustomerPhoto(file) {
-    const btn = $('#saveBtn');
-    GM.setLoading(btn, true, 'Processing photo…');
-    try {
-      const dataUrl = await GM.compressImage(file);
-      customerPhotoData = dataUrl;
-      setCustomerPhotoPreview(dataUrl);
-      GM.setLoading(btn, false);
-      GM.toast('Photo captured', 'success', 1400);
-      refreshCustomerBadge();
-    } catch (err) {
-      GM.setLoading(btn, false);
-      GM.toast(err.message, 'danger');
-    }
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to reset all fields?')) {
+        form.reset();
+        state.items = [createEmptyItem()];
+        state.customerPhoto = '';
+        customerPhotoImg.style.display = 'none';
+        customerPhotoImg.src = '';
+        photoPlaceholder.style.display = 'flex';
+        docDateInput.value = todayISO();
+        pageNoInput.value = '1';
+        staffSig.clear();
+        customerSig.clear();
+        if (modeCashRadio) modeCashRadio.checked = true;
+        updatePaymentModeUI();
+        renderTableRows();
+        clearAlerts();
+        GM.toast('Form reset', 'info', 1600);
+      }
+    });
   }
 
-  let customerPhotoData = '';
-
-  /* ---------- Validation ---------- */
-
-  function setFieldError(sel, hasError) {
-    const el = document.querySelector(sel);
-    if (!el) return;
-    el.closest('.field').classList.toggle('field--invalid', hasError);
-  }
+  /* ---------- Validation & Submission ---------- */
 
   function validate() {
-    let ok = true;
-    const firstInvalid = [];
-
-    /* Customer */
-    const name = $('#custName').value.trim();
-    const mobile = $('#custMobile').value.trim();
-    const aadhaar = $('#custAadhaar').value.replace(/[\s-]/g, '');
-    const address = $('#custAddress').value.trim();
-
-    if (name.length < 2) { setFieldError('#custName', true); ok = false; firstInvalid.push('#custName'); }
-    else setFieldError('#custName', false);
-
-    if (!/^[6-9]\d{9}$/.test(mobile)) { setFieldError('#custMobile', true); ok = false; firstInvalid.push('#custMobile'); }
-    else setFieldError('#custMobile', false);
-
-    if (aadhaar && !/^\d{12}$/.test(aadhaar)) { setFieldError('#custAadhaar', true); ok = false; firstInvalid.push('#custAadhaar'); }
-    else setFieldError('#custAadhaar', false);
-
-    if (address.length < 5) { setFieldError('#custAddress', true); ok = false; firstInvalid.push('#custAddress'); }
-    else setFieldError('#custAddress', false);
-
-    if (!customerPhotoData) {
-      const el = document.querySelector('#customerPhoto');
-      el.style.borderColor = 'var(--danger)';
-      el.style.background = 'var(--danger-bg)';
-      ok = false;
-      firstInvalid.push('#customerPhoto');
-      GM.toast('Customer photo is required', 'danger', 2600);
+    clearAlerts();
+    const name = custNameInput.value.trim();
+    if (!name) {
+      showAlert('Please enter customer name.', 'danger');
+      custNameInput.focus();
+      return false;
     }
 
-    /* Jewellery items */
-    state.items.forEach((item) => {
-      const wasInvalid = !!item.invalid;
-      item.invalid = false;
-
-      if (!item.itemName.trim()) item.invalid = true;
-      if (!item.purity) item.invalid = true;
-      if (!(parseFloat(item.weight) > 0)) item.invalid = true;
-      if (!item.photo) item.invalid = true;
-
-      if (item.invalid) {
-        ok = false;
-        if (!wasInvalid) {
-          const card = document.querySelector(`[data-item-card="${item.id}"]`);
-          if (card) firstInvalid.push(`[data-item-card="${item.id}"]`);
-        }
-      }
-    });
-
-    /* Loan */
-    const amount = parseFloat($('#loanAmount').value);
-    if (!(amount >= 1)) { setFieldError('#loanAmount', true); ok = false; firstInvalid.push('#loanAmount'); }
-    else setFieldError('#loanAmount', false);
-
-    if (!['cash', 'account'].includes(state.paymentMode)) ok = false;
-    if (!state.loanDate) { setFieldError('#loanDate', true); ok = false; firstInvalid.push('#loanDate'); }
-    else setFieldError('#loanDate', false);
-
-    if (state.paymentMode === 'account') {
-      const holder = $('#acctHolderName').value.trim();
-      const acct = $('#acctNumber').value.replace(/\s+/g, '');
-      const ifsc = $('#acctIfsc').value.trim().toUpperCase();
-      if (!holder) { setFieldError('#acctHolderName', true); ok = false; firstInvalid.push('#acctHolderName'); }
-      else setFieldError('#acctHolderName', false);
-      if (!/^\d{9,18}$/.test(acct)) { setFieldError('#acctNumber', true); ok = false; firstInvalid.push('#acctNumber'); }
-      else setFieldError('#acctNumber', false);
-      if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) { setFieldError('#acctIfsc', true); ok = false; firstInvalid.push('#acctIfsc'); }
-      else setFieldError('#acctIfsc', false);
-    } else {
-      setFieldError('#acctHolderName', false);
-      setFieldError('#acctNumber', false);
-      setFieldError('#acctIfsc', false);
+    const mobile = custMobileInput.value.trim();
+    if (mobile && !/^\d{10}$/.test(mobile)) {
+      showAlert('Please enter a valid 10-digit mobile number.', 'danger');
+      custMobileInput.focus();
+      return false;
     }
 
-    if (ok) clearAlerts();
-    else {
-      showAlert('Please complete the highlighted fields before saving.', 'danger');
-      const target = firstInvalid.length ? firstInvalid[0] : '#custName';
-      const el = document.querySelector(target);
-      if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const aadhaar = custAadhaarInput.value.trim();
+    if (aadhaar && !/^\d{12}$/.test(aadhaar)) {
+      showAlert('Please enter a valid 12-digit Aadhar number.', 'danger');
+      custAadhaarInput.focus();
+      return false;
     }
 
-    renderItems();
-    return ok;
+    return true;
   }
 
-  /* ---------- Submit ---------- */
-
-  async function submitApplication() {
-    clearAlerts();
+  async function submitForm() {
     if (!validate()) return;
-    if (!customerPhotoData) return;
 
-    const btn = $('#saveBtn');
-    GM.setLoading(btn, true, 'Saving…');
+    GM.setLoading(saveBtn, true, 'Saving…');
+
+    const totalAmt = parseFloat(totalAmountInput.value) || 0;
+    const isAccount = state.paymentMode === 'account';
 
     const payload = {
+      pageNo: pageNoInput.value.trim() || '1',
+      declaration: declarationInput.value.trim(),
+      staffSignature: staffSig.getData(),
+      customerSignature: customerSig.getData(),
+      totalAmountReceived: totalAmt,
+
       customer: {
-        name: $('#custName').value.trim(),
-        mobile: $('#custMobile').value.trim(),
-        aadhaar: $('#custAadhaar').value.replace(/[\s-]/g, '') || '',
-        address: $('#custAddress').value.trim(),
-        photoData: customerPhotoData || ''
+        name: custNameInput.value.trim(),
+        mobile: custMobileInput.value.trim(),
+        aadhaar: custAadhaarInput.value.trim(),
+        address: custAddressInput.value.trim(),
+        photoData: state.customerPhoto
       },
-      jewelleryItems: state.items.map((item) => ({
-        itemName: item.itemName.trim(),
-        purity: item.purity,
-        weightGrams: parseFloat(item.weight),
-        description: item.description.trim(),
-        photoData: item.photo || ''
-      })),
+
+      jewelleryItems: state.items
+        .filter((it) => it.purity || parseFloat(it.weight) > 0 || it.photo)
+        .map((it, idx) => ({
+          itemName: it.purity ? `Gold Item (${it.purity})` : `Gold Item ${idx + 1}`,
+          purity: it.purity || '22K / 916',
+          weightGrams: parseFloat(it.weight) || 0,
+          description: '',
+          photoData: it.photo || ''
+        })),
+
+      accountDetails: isAccount
+        ? {
+            accountNumber: acctNumberInput.value.trim(),
+            name: acctNameInput.value.trim(),
+            ifsc: acctIfscInput.value.trim().toUpperCase(),
+            bank: acctBankInput.value.trim(),
+            branch: acctBranchInput.value.trim()
+          }
+        : {},
+
       loan: {
-        amount: parseFloat($('#loanAmount').value),
+        amount: totalAmt > 0 ? totalAmt : 1,
         paymentMode: state.paymentMode,
-        date: state.loanDate,
-        accountDetails: state.paymentMode === 'account'
-          ? {
-              holderName: $('#acctHolderName').value.trim(),
-              accountNumber: $('#acctNumber').value.replace(/\s+/g, ''),
-              ifsc: $('#acctIfsc').value.trim().toUpperCase()
-            }
-          : {}
+        date: docDateInput.value || todayISO()
       }
     };
+
+    if (!payload.jewelleryItems.length) {
+      payload.jewelleryItems = [
+        {
+          itemName: 'Gold Item 1',
+          purity: '22K / 916',
+          weightGrams: 0,
+          description: '',
+          photoData: ''
+        }
+      ];
+    }
 
     try {
       const url = editId ? `/api/applications/${editId}` : '/api/applications';
       const method = editId ? 'PUT' : 'POST';
+
       const data = await GM.api(url, {
         method,
         body: JSON.stringify(payload)
@@ -496,20 +472,21 @@
 
       if (data.success) {
         const badge = $('#draftBadge');
-        badge.className = 'badge badge--green';
-        badge.textContent = 'Saved ✓';
-        btn.innerHTML = '<span>Saved ✓</span>';
-        btn.disabled = true;
-
-        GM.toast(`Application ${data.application.applicationNo} saved`, 'success', 3500);
-        setTimeout(() => (location.href = editId ? `/records/${editId}` : '/'), 1300);
+        if (badge) {
+          badge.className = 'badge badge--green';
+          badge.textContent = 'Saved ✓';
+        }
+        GM.toast(`Application ${data.application.applicationNo} saved successfully!`, 'success', 3000);
+        setTimeout(() => (location.href = editId ? `/records/${editId}` : '/'), 1200);
       }
     } catch (err) {
-      GM.setLoading(btn, false);
-      showAlert(err.message.replace(/^[A-Z]/, (c) => c.toLowerCase()), 'danger');
+      GM.setLoading(saveBtn, false);
+      showAlert(err.message, 'danger');
       GM.toast('Could not save application', 'danger', 3000);
     }
   }
+
+  /* ---------- Edit Mode Loader ---------- */
 
   async function loadForEdit(id) {
     try {
@@ -520,121 +497,94 @@
       if (title) title.textContent = 'Edit Application';
 
       const badge = $('#draftBadge');
-      badge.className = 'badge badge--gold';
-      badge.textContent = a.applicationNo;
-
-      /* Customer */
-      $('#custName').value = a.customer.name || '';
-      $('#custMobile').value = a.customer.mobile || '';
-      $('#custAadhaar').value = a.customer.aadhaar || '';
-      $('#custAddress').value = a.customer.address || '';
-      if (a.customer.photoData) {
-        customerPhotoData = a.customer.photoData;
-        setCustomerPhotoPreview(a.customer.photoData);
-        refreshCustomerBadge();
+      if (badge) {
+        badge.className = 'badge badge--gold';
+        badge.textContent = a.applicationNo;
       }
 
-      /* Jewellery */
-      state.items = (a.jewelleryItems || []).map((it) => ({
-        id: uid(),
-        itemName: it.itemName || '',
-        purity: it.purity || '',
-        weight: it.weightGrams != null ? String(it.weightGrams) : '',
-        description: it.description || '',
-        photo: it.photoData || ''
-      }));
-      if (!state.items.length) state.items = [makeItem()];
-      renderItems();
+      pageNoInput.value = a.pageNo || '1';
 
-      /* Loan */
-      if (a.loan.amount != null) {
-        $('#loanAmount').value = a.loan.amount;
-        recalcAmount();
-      }
-      setPaymentMode(a.loan.paymentMode || 'cash');
-      const ad = a.loan.accountDetails || {};
-      $('#acctHolderName').value = ad.holderName || '';
-      $('#acctNumber').value = ad.accountNumber || '';
-      $('#acctIfsc').value = ad.ifsc || '';
-      if (a.loan.date) {
+      if (a.loan && a.loan.date) {
         const d = new Date(a.loan.date);
         const pad = (n) => String(n).padStart(2, '0');
-        state.loanDate = `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
-        $('#loanDate').value = state.loanDate;
+        docDateInput.value = `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
       }
+
+      /* Customer */
+      if (a.customer) {
+        custNameInput.value = a.customer.name || '';
+        custMobileInput.value = a.customer.mobile || '';
+        custAadhaarInput.value = a.customer.aadhaar || '';
+        custAddressInput.value = a.customer.address || '';
+        if (a.customer.photoData) {
+          state.customerPhoto = a.customer.photoData;
+          customerPhotoImg.src = a.customer.photoData;
+          customerPhotoImg.style.display = 'block';
+          photoPlaceholder.style.display = 'none';
+        }
+      }
+
+      /* Jewellery Items */
+      if (Array.isArray(a.jewelleryItems) && a.jewelleryItems.length > 0) {
+        state.items = a.jewelleryItems.map((it) => ({
+          id: uid(),
+          purity: it.purity || '',
+          weight: it.weightGrams != null ? String(it.weightGrams) : '',
+          photo: it.photoData || ''
+        }));
+      }
+
+      /* Payment Mode & Bank Account Details */
+      const mode = a.loan?.paymentMode || 'cash';
+      if (mode === 'account' && modeAccountRadio) {
+        modeAccountRadio.checked = true;
+      } else if (modeCashRadio) {
+        modeCashRadio.checked = true;
+      }
+      updatePaymentModeUI();
+
+      const ad = a.loan?.accountDetails || a.accountDetails || {};
+      acctNumberInput.value = ad.accountNumber || '';
+      acctNameInput.value = ad.holderName || ad.name || '';
+      acctIfscInput.value = ad.ifsc || '';
+      acctBankInput.value = ad.bank || '';
+      acctBranchInput.value = ad.branch || '';
+
+      totalAmountInput.value = a.totalAmountReceived || a.loan?.amount || '';
+
+      /* Declaration */
+      declarationInput.value = a.declaration || '';
+
+      /* Signatures */
+      if (a.staffSignature) staffSig.setData(a.staffSignature);
+      if (a.customerSignature) customerSig.setData(a.customerSignature);
+
+      renderTableRows();
     } catch (err) {
       showAlert(err.message, 'danger');
-      GM.toast(err.message, 'danger', 4000);
     }
-  }
-
-  function refreshCustomerBadge() {
-    $('#customerDone').className = 'badge badge--green form-step__badge';
-    $('#customerDone').textContent = 'Photo ✓';
   }
 
   /* ---------- Init ---------- */
 
-  function setPaymentMode(mode) {
-    state.paymentMode = mode;
-    document.querySelectorAll('.segmented__btn').forEach((b) => {
-      const active = b.dataset.mode === mode;
-      b.classList.toggle('is-active', active);
-      b.setAttribute('aria-checked', active ? 'true' : 'false');
-    });
-    const box = $('#bankDetailsBox');
-    if (box) box.hidden = mode !== 'account';
-  }
-
   function init() {
-    $('#loanDate').value = state.loanDate;
-    $('#loanDate').max = todayISO();
+    docDateInput.value = todayISO();
 
-    renderItems();
-    recalcAmount();
+    if (modeCashRadio) modeCashRadio.addEventListener('change', updatePaymentModeUI);
+    if (modeAccountRadio) modeAccountRadio.addEventListener('change', updatePaymentModeUI);
+    updatePaymentModeUI();
 
-    /* customer photo */
-    document.getElementById('customerPhotoInput').addEventListener('change', (e) => {
-      const f = e.target.files && e.target.files[0];
-      if (f) handleCustomerPhoto(f);
-    });
+    renderTableRows();
 
-    /* loan fields */
-    $('#loanAmount').addEventListener('input', () => {
-      recalcAmount();
-      if (parseFloat($('#loanAmount').value) >= 1) setFieldError('#loanAmount', false);
-    });
-
-    document.querySelectorAll('.segmented__btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        setPaymentMode(btn.dataset.mode);
+    if (acctIfscInput) {
+      acctIfscInput.addEventListener('input', () => {
+        acctIfscInput.value = acctIfscInput.value.toUpperCase();
       });
-    });
+    }
 
-    $('#loanDate').addEventListener('change', (e) => {
-      state.loanDate = e.target.value || todayISO();
-    });
-
-    /* customer: clear field-level errors live */
-    ['#custName', '#custMobile', '#custAadhaar', '#custAddress', '#loanAmount'].forEach((sel) => {
-      const el = document.querySelector(sel);
-      if (el) el.addEventListener('input', () => setFieldError(sel, false));
-    });
-
-    /* bank details: auto-uppercase IFSC + clear errors live */
-    $('#acctIfsc').addEventListener('input', () => {
-      $('#acctIfsc').value = $('#acctIfsc').value.toUpperCase();
-      setFieldError('#acctIfsc', false);
-    });
-    ['#acctHolderName', '#acctNumber', '#acctIfsc'].forEach((sel) => {
-      const el = document.querySelector(sel);
-      if (el) el.addEventListener('input', () => setFieldError(sel, false));
-    });
-
-    $('#addItemBtn').addEventListener('click', addItem);
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      submitApplication();
+      submitForm();
     });
 
     if (editId) loadForEdit(editId);

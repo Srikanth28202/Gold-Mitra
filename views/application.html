@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0A0F1C" />
+  <meta name="theme-color" content="#FAF7F0" />
   <title>New Application · Gold Mitra</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/variables.css" />
   <link rel="stylesheet" href="/css/base.css" />
   <link rel="stylesheet" href="/css/components.css" />
@@ -17,7 +17,7 @@
 </head>
 <body class="app-page">
 
-  <header class="app-page__topbar">
+  <header class="app-page__topbar no-print">
     <a class="back-btn" href="/" aria-label="Back to dashboard">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M15 18l-6-6 6-6"/>
@@ -27,170 +27,284 @@
     <span class="badge badge--gold" id="draftBadge">Draft</span>
   </header>
 
-  <main>
-    <form class="app-form" id="applicationForm" novalidate>
+  <main class="form-container-wrap">
+    <form class="gold-paper-form" id="applicationForm" novalidate>
 
       <!-- Alert zone -->
-      <div class="app-alerts" id="appAlerts"></div>
+      <div class="app-alerts no-print" id="appAlerts"></div>
 
-      <!-- ===== 01 · Customer ===== -->
-      <section class="form-step animate-in">
-        <div class="form-step__head">
-          <span class="form-step__num">01</span>
-          <div class="form-step__titles">
-            <h2 class="form-step__title">Customer</h2>
-            <p class="form-step__hint">Who is pledging the gold?</p>
+      <!-- 1. HEADER SECTION -->
+      <header class="gold-doc-header">
+        <div class="doc-brand">
+          <div class="doc-logo">
+            <!-- 3 Gold Bars stacked icon -->
+            <svg width="52" height="52" viewBox="0 0 64 64" fill="none">
+              <path d="M12 28L28 16L52 24L36 36L12 28Z" fill="#D4AF37" stroke="#8A6719" stroke-width="1.8"/>
+              <path d="M12 28L36 36V48L12 40V28Z" fill="#B8860B" stroke="#8A6719" stroke-width="1.8"/>
+              <path d="M36 36L52 24V36L36 48V36Z" fill="#E6C65A" stroke="#8A6719" stroke-width="1.8"/>
+              <path d="M22 14L38 4L60 12L44 22L22 14Z" fill="#F0D675" stroke="#8A6719" stroke-width="1.8"/>
+            </svg>
           </div>
-          <span class="badge badge--neutral form-step__badge" id="customerDone">Incomplete</span>
+          <div class="doc-brand-text">
+            <h1 class="doc-title">Gold Mitra</h1>
+            <p class="doc-subtitle">Trusted Gold Purchase Partner</p>
+            <p class="doc-gstin" style="font-weight:700;font-size:0.78rem;color:#111827;margin:3px 0 0;">GSTIN: 29BGMPB7189N224</p>
+          </div>
         </div>
 
-        <div class="form-step__body">
-          <!-- Customer photo -->
-          <div class="photo-upload" id="customerPhoto">
-            <input type="file" id="customerPhotoInput" accept="image/*" capture="environment" />
-            <div class="photo-upload__empty">
-              <span class="photo-upload__icon">◉</span>
-              <span class="photo-upload__label">Customer photo</span>
-              <span class="photo-upload__sub">Tap to take a photo · required</span>
+        <div class="doc-address">
+          <p style="font-weight:700;color:#111827;">Near Neelkantaeshwara temple,</p>
+          <p style="font-weight:700;color:#111827;">Hooropate circle, Tumkur</p>
+        </div>
+
+        <div class="doc-meta-box">
+          <div class="meta-row">
+            <label for="pageNo">Page :</label>
+            <input type="text" id="pageNo" name="pageNo" value="1" class="meta-input" />
+          </div>
+          <div class="meta-row">
+            <label for="docDate">Date :</label>
+            <input type="date" id="docDate" name="docDate" class="meta-input meta-date" />
+          </div>
+        </div>
+      </header>
+
+      <!-- 2. CUSTOMER DETAILS SECTION -->
+      <section class="form-section">
+        <div class="section-banner">
+          <span class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </span>
+          <h2 class="section-title">Customer Details</h2>
+        </div>
+
+        <div class="section-content customer-grid">
+          <div class="customer-fields">
+            <div class="doc-field">
+              <label for="custName">Name :</label>
+              <input type="text" id="custName" name="customerName" placeholder="Enter customer name" class="doc-input" />
+            </div>
+            <div class="doc-field">
+              <label for="custAadhaar">Aadhar number :</label>
+              <input type="text" id="custAadhaar" name="customerAadhaar" placeholder="Enter aadhar number" maxlength="12" class="doc-input" />
+            </div>
+            <div class="doc-field">
+              <label for="custMobile">Mobile number :</label>
+              <input type="tel" id="custMobile" name="customerMobile" placeholder="Enter mobile number" maxlength="10" class="doc-input" />
+            </div>
+            <div class="doc-field">
+              <label for="custAddress">Address :</label>
+              <textarea id="custAddress" name="customerAddress" placeholder="Enter address" rows="2" class="doc-textarea"></textarea>
             </div>
           </div>
 
-          <div class="field">
-            <label class="field__label" for="custName">Full name</label>
-            <input class="field__input" type="text" id="custName" name="customerName" inputmode="text" autocomplete="name" placeholder="e.g. Ramesh Kumar" />
-            <span class="field__error">Customer name is required.</span>
+          <div class="customer-photo-box">
+            <div class="photo-preview-container" id="customerPhotoBox">
+              <div class="photo-placeholder" id="photoPlaceholder">
+                <div class="avatar-circle">
+                  <svg width="38" height="38" viewBox="0 0 24 24" fill="#A4B0C0">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                </div>
+                <span class="photo-placeholder-text">Image of the person</span>
+              </div>
+              <img id="customerPhotoImg" class="photo-img-preview" src="" alt="Customer Photo" style="display:none;" />
+            </div>
+            <input type="file" id="customerPhotoInput" accept="image/*" style="display:none;" />
+            <button type="button" class="btn-upload-photo" id="uploadPhotoBtn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+              </svg>
+              Upload Photo
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. GOLD ITEMS LIST SECTION -->
+      <section class="form-section">
+        <div class="section-banner">
+          <span class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 9l10 13L22 9 12 2zm0 3.8L18.6 9 12 17.6 5.4 9 12 5.8z"/>
+            </svg>
+          </span>
+          <h2 class="section-title">Gold Items List</h2>
+        </div>
+
+        <div class="section-content padding-0">
+          <table class="gold-items-table" id="goldItemsTable">
+            <thead>
+              <tr>
+                <th style="width: 10%;">Sl. no</th>
+                <th style="width: 27%;">Quality</th>
+                <th style="width: 27%;">Weight in grams</th>
+                <th style="width: 26%;">Image of the Gold</th>
+                <th style="width: 10%;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="goldItemsTbody">
+              <!-- Dynamic rows rendered by JS -->
+            </tbody>
+          </table>
+
+          <div class="add-row-bar no-print">
+            <button type="button" class="btn-add-item-row" id="addItemRowBtn">
+              <span>+ Add Item Row</span>
+            </button>
           </div>
 
-          <div class="item-grid">
-            <div class="field">
-              <label class="field__label" for="custMobile">Mobile number</label>
-              <input class="field__input" type="tel" id="custMobile" name="customerMobile" inputmode="numeric" maxlength="10" autocomplete="tel-national" placeholder="10-digit mobile" />
-              <span class="field__error">Enter a valid 10-digit mobile number.</span>
+          <div class="section-total-footer">
+            <span class="total-label">Total weight in grams =</span>
+            <div class="total-input-box">
+              <input type="text" id="totalWeightInput" readonly value="0" class="total-weight-field" />
+              <span class="unit-suffix">g</span>
             </div>
-            <div class="field">
-              <label class="field__label" for="custAadhaar">Aadhaar number</label>
-              <input class="field__input" type="tel" id="custAadhaar" name="customerAadhaar" inputmode="numeric" maxlength="12" placeholder="12-digit Aadhaar" />
-              <span class="field__error">Aadhaar must be 12 digits.</span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="field__label" for="custAddress">Address</label>
-            <textarea class="field__textarea" id="custAddress" name="customerAddress" rows="3" placeholder="Door no, street, city, pincode"></textarea>
-            <span class="field__error">Customer address is required.</span>
           </div>
         </div>
       </section>
 
-      <!-- ===== 02 · Jewellery ===== -->
-      <section class="form-step animate-in animate-in-delay-1">
-        <div class="form-step__head">
-          <span class="form-step__num">02</span>
-          <div class="form-step__titles">
-            <h2 class="form-step__title">Gold / Jewellery</h2>
-            <p class="form-step__hint">Add every piece being pledged</p>
-          </div>
-          <span class="form-step__badge" id="jewelleryCount"></span>
+      <!-- 4. ACCOUNT DETAILS OF THE CUSTOMER SECTION -->
+      <section class="form-section">
+        <div class="section-banner">
+          <span class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4 10h16v2H4zm0-4h16v2H4zm0 8h16v2H4zm0 4h16v2H4z"/>
+            </svg>
+          </span>
+          <h2 class="section-title" id="acctSectionTitle">Account Details of the Customer</h2>
         </div>
 
-        <div class="form-step__body">
-          <div class="jewellery-list" id="itemsList"></div>
-
-          <button type="button" class="item-add" id="addItemBtn">
-            <span class="icon">＋</span>
-            Add another item
-          </button>
-
-          <div class="jewellery-total" id="totalSummary">
-            <div>
-              <div class="jewellery-total__label">Total weight</div>
-              <div class="jewellery-total__value" id="totalWeight">0.000 <span style="font-size:var(--fs-xs); color:var(--text-muted); font-weight:var(--fw-medium)">g</span></div>
+        <div class="section-content account-details-grid">
+          <div class="account-table">
+            <div class="acct-row" style="background:#FAF7F0;">
+              <span class="acct-label">Payment mode</span>
+              <div style="display:flex;gap:20px;align-items:center;padding:8px 12px;">
+                <label style="font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.88rem;color:#111827;">
+                  <input type="radio" name="paymentMode" value="cash" id="modeCash" checked />
+                  💵 Cash
+                </label>
+                <label style="font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.88rem;color:#111827;">
+                  <input type="radio" name="paymentMode" value="account" id="modeAccount" />
+                  🏦 Bank Transfer
+                </label>
+              </div>
             </div>
-            <div class="jewellery-total__count" id="totalCountText">0 items</div>
-          </div>
-        </div>
-      </section>
 
-      <!-- ===== 03 · Loan ===== -->
-      <section class="form-step animate-in animate-in-delay-2">
-        <div class="form-step__head">
-          <span class="form-step__num">03</span>
-          <div class="form-step__titles">
-            <h2 class="form-step__title">Loan details</h2>
-            <p class="form-step__hint">Amount, disbursal mode and date</p>
-          </div>
-        </div>
-
-        <div class="form-step__body">
-          <div class="field">
-            <label class="field__label" for="loanAmount">Loan amount</label>
-            <div class="amount-input-wrap">
-              <span class="currency">₹</span>
-              <input class="field__input" type="number" id="loanAmount" name="loanAmount" inputmode="decimal" min="1" step="1" placeholder="0" />
-            </div>
-            <span class="field__error">Enter the loan amount.</span>
-          </div>
-
-          <div class="field">
-            <span class="field__label">Payment mode</span>
-            <div class="segmented" role="radiogroup" aria-label="Payment mode">
-              <button type="button" class="segmented__btn is-active" data-mode="cash" role="radio" aria-checked="true">
-                <span class="icon">💵</span><span>Cash</span>
-              </button>
-              <button type="button" class="segmented__btn" data-mode="account" role="radio" aria-checked="false">
-                <span class="icon">🏦</span><span>Account</span>
-              </button>
-            </div>
-            <span class="field__error">Choose a payment mode.</span>
-          </div>
-
-          <div class="bank-details" id="bankDetailsBox" hidden>
-            <div class="bank-details__head">
-              <span class="bank-details__label">Bank account details</span>
-            </div>
-            <div class="field">
-              <label class="field__label" for="acctHolderName">Account holder name</label>
-              <input class="field__input" type="text" id="acctHolderName" autocomplete="off" placeholder="Name on the account" />
-              <span class="field__error">Account holder name is required for bank transfer.</span>
-            </div>
-            <div class="field">
-              <label class="field__label" for="acctNumber">Account number</label>
-              <input class="field__input" type="text" id="acctNumber" inputmode="numeric" autocomplete="off" placeholder="9–18 digit account number" />
-              <span class="field__error">Enter a valid 9–18 digit account number.</span>
-            </div>
-            <div class="field">
-              <label class="field__label" for="acctIfsc">IFSC code</label>
-              <input class="field__input" type="text" id="acctIfsc" autocomplete="off" maxlength="11" style="text-transform:uppercase" placeholder="e.g. HDFC0001234" />
-              <span class="field__error">Enter a valid IFSC code (e.g. HDFC0001234).</span>
+            <!-- Bank account fields group: shown ONLY when Bank Transfer is selected -->
+            <div id="bankFieldsGroup" style="display:none;">
+              <div class="acct-row">
+                <span class="acct-label">Account number</span>
+                <input type="text" id="acctNumber" placeholder="Enter account number" class="doc-input" />
+              </div>
+              <div class="acct-row">
+                <span class="acct-label">Name</span>
+                <input type="text" id="acctName" placeholder="Enter name" class="doc-input" />
+              </div>
+              <div class="acct-row">
+                <span class="acct-label">IFSC</span>
+                <input type="text" id="acctIfsc" placeholder="Enter IFSC code" style="text-transform:uppercase;" class="doc-input" />
+              </div>
+              <div class="acct-row">
+                <span class="acct-label">Bank</span>
+                <input type="text" id="acctBank" placeholder="Enter bank name" class="doc-input" />
+              </div>
+              <div class="acct-row">
+                <span class="acct-label">Branch</span>
+                <input type="text" id="acctBranch" placeholder="Enter branch name" class="doc-input" />
+              </div>
             </div>
           </div>
 
-          <div class="field">
-            <label class="field__label" for="loanDate">Loan date</label>
-            <input class="field__input" type="date" id="loanDate" name="loanDate" />
-            <span class="field__error">Choose the loan date.</span>
+          <div class="section-total-footer">
+            <span class="total-label">Total amount received =</span>
+            <div class="total-input-box">
+              <span class="rupee-prefix">₹</span>
+              <input type="number" id="totalAmountReceived" placeholder="0" class="total-amount-field" />
+            </div>
           </div>
         </div>
       </section>
+
+      <!-- 5. DECLARATION SECTION -->
+      <section class="form-section">
+        <div class="section-banner">
+          <span class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+          </span>
+          <h2 class="section-title">Declaration</h2>
+        </div>
+
+        <div class="section-content declaration-box">
+          <span class="bullet-point">•</span>
+          <div class="declaration-text-wrapper">
+            <p class="decl-eng">I hereby declare that the above-mentioned gold items belong to me and were purchased by me or received by me as a gift. I am voluntarily selling these gold items to Gold Mitra. The details of the gold items, including their weight and quality, have been explained to me. I have read/heard and understood the above declaration and have signed it voluntarily.</p>
+            <p class="decl-kan">ಮೇಲ್ಕಂಡ ಚಿನ್ನದ ವಸ್ತುಗಳು ನನ್ನ ಸ್ವಂತದ್ದಾಗಿದ್ದು, ಅವುಗಳನ್ನು ನಾನು ಖರೀದಿಸಿರುತ್ತೇನೆ ಅಥವಾ ಉಡುಗೊರೆಯಾಗಿ ಪಡೆದಿರುತ್ತೇನೆ. ಈ ಚಿನ್ನದ ವಸ್ತುಗಳನ್ನು ನಾನು ಸ್ವಇಚ್ಛೆಯಿಂದ ಗೋಲ್ಡ್ ಮಿತ್ರ ಅವರಿಗೆ ಮಾರಾಟ ಮಾಡುತ್ತಿದ್ದೇನೆ. ಚಿನ್ನದ ವಸ್ತುಗಳ ತೂಕ ಮತ್ತು ಗುಣಮಟ್ಟದ ವಿವರಗಳನ್ನು ನನಗೆ ವಿವರಿಸಲಾಗಿದೆ. ಮೇಲಿನ ಘೋಷಣೆಯನ್ನು ನಾನು ಓದಿ/ಕೇಳಿ ಅರ್ಥಮಾಡಿಕೊಂಡು, ನನ್ನ ಸ್ವಇಚ್ಛೆಯಿಂದ ಸಹಿ ಮಾಡಿರುತ್ತೇನೆ.</p>
+          </div>
+          <input type="hidden" id="declarationText" name="declaration" value="I hereby declare that the above-mentioned gold items belong to me and were purchased by me or received by me as a gift. I am voluntarily selling these gold items to Gold Mitra. The details of the gold items, including their weight and quality, have been explained to me. I have read/heard and understood the above declaration and have signed it voluntarily. ಮೇಲ್ಕಂಡ ಚಿನ್ನದ ವಸ್ತುಗಳು ನನ್ನ ಸ್ವಂತದ್ದಾಗಿದ್ದು, ಅವುಗಳನ್ನು ನಾನು ಖರೀದಿಸಿರುತ್ತೇನೆ ಅಥವಾ ಉಡುಗೊರೆಯಾಗಿ ಪಡೆದಿರುತ್ತೇನೆ. ಈ ಚಿನ್ನದ ವಸ್ತುಗಳನ್ನು ನಾನು ಸ್ವಇಚ್ಛೆಯಿಂದ ಗೋಲ್ಡ್ ಮಿತ್ರ ಅವರಿಗೆ ಮಾರಾಟ ಮಾಡುತ್ತಿದ್ದೇನೆ. ಚಿನ್ನದ ವಸ್ತುಗಳ ತೂಕ ಮತ್ತು ಗುಣಮಟ್ಟದ ವಿವರಗಳನ್ನು ನನಗೆ ವಿವರಿಸಲಾಗಿದೆ. ಮೇಲಿನ ಘೋಷಣೆಯನ್ನು ನಾನು ಓದಿ/ಕೇಳಿ ಅರ್ಥಮಾಡಿಕೊಂಡು, ನನ್ನ ಸ್ವಇಚ್ಛೆಯಿಂದ ಸಹಿ ಮಾಡಿರುತ್ತೇನೆ." />
+        </div>
+      </section>
+
+      <!-- 6. SIGNATURES SECTION -->
+      <section class="signatures-section">
+        <div class="signature-card">
+          <div class="signature-card-head">
+            <span class="signature-icon">✎</span>
+            <span class="signature-title">Gold mitra staff or Admin</span>
+          </div>
+          <div class="signature-canvas-wrap">
+            <canvas id="staffSigCanvas" width="340" height="90"></canvas>
+            <span class="canvas-placeholder" id="staffSigPlaceholder">Sign here</span>
+            <button type="button" class="btn-clear-sig no-print" id="clearStaffSigBtn">Clear</button>
+          </div>
+          <div class="signature-card-sub">Signature</div>
+        </div>
+
+        <div class="signature-card">
+          <div class="signature-card-head">
+            <span class="signature-icon">✎</span>
+            <span class="signature-title">Customer signature</span>
+          </div>
+          <div class="signature-canvas-wrap">
+            <canvas id="customerSigCanvas" width="340" height="90"></canvas>
+            <span class="canvas-placeholder" id="customerSigPlaceholder">Sign here</span>
+            <button type="button" class="btn-clear-sig no-print" id="clearCustomerSigBtn">Clear</button>
+          </div>
+          <div class="signature-card-sub">Signature</div>
+        </div>
+      </section>
+
+      <!-- 7. ACTION BUTTONS SECTION -->
+      <div class="action-buttons-bar no-print">
+        <button type="submit" class="btn-action btn-save" id="saveBtn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+            <path d="M17 21v-8H7v8M7 3v5h8"/>
+          </svg>
+          Save
+        </button>
+        <button type="button" class="btn-action btn-print" id="printBtn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+            <path d="M6 14h12v8H6z"/>
+          </svg>
+          Print
+        </button>
+        <button type="button" class="btn-action btn-reset" id="resetBtn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 4v6h-6M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+          </svg>
+          Reset
+        </button>
+      </div>
+
     </form>
   </main>
-
-  <!-- ===== Sticky save bar ===== -->
-  <footer class="save-bar">
-    <div class="save-bar__inner">
-      <div class="save-bar__summary">
-        <div class="save-bar__label">Application summary</div>
-        <div class="save-bar__summary-row">
-          <span class="save-bar__total" id="saveBarAmount">₹0</span>
-          <span class="badge badge--neutral" id="saveBarWeight">0 g</span>
-        </div>
-      </div>
-      <button class="btn btn--primary btn--lg save-bar__btn" type="submit" form="applicationForm" id="saveBtn">
-        <span>Save Application</span>
-        <span class="icon">→</span>
-      </button>
-    </div>
-  </footer>
 
   <script src="/js/ui.js"></script>
   <script src="/js/application.js"></script>

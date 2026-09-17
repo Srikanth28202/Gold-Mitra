@@ -696,33 +696,169 @@
 
 @page {
   size: A4 portrait;
-  margin: 12mm 10mm 14mm;
+  margin: 5mm 8mm 5mm;
 }
 
 @media print {
-  html, body { background: #FFF !important; }
+  html, body, .print-page {
+    background: #FFF !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100%;
+    overflow: hidden !important;
+  }
 
-  .print-toolbar { display: none !important; }
-  .print-page { background: #FFF !important; }
-  .print-stage { padding: 0 !important; display: block; }
+  .print-toolbar, .no-print, .btn-action, .add-row-bar, .btn-upload-photo, .btn-upload-item-img, .btn-delete-row, .btn-clear-sig, .action-buttons-bar {
+    display: none !important;
+  }
 
-  .print-doc {
+  .print-stage {
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  .print-doc, .gold-paper-form {
     width: 100% !important;
-    max-width: none !important;
+    max-width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
     box-shadow: none !important;
+    border: none !important;
     min-width: 0 !important;
+    background: #FFF !important;
   }
 
-  .pd-section { break-inside: auto; }
-  .pd-customer, .pd-loan, .pd-amount-words, .pd-term, .pd-sig-grid, .pd-declaration,
-  .pd-place-date, .pd-meta, .pd-table tr { break-inside: avoid; }
+  .gold-doc-header {
+    padding-bottom: 6px !important;
+    margin-bottom: 8px !important;
+    border-bottom: 1.5px solid #D4AF37 !important;
+  }
 
-  thead { display: table-header-group; }
-  .pd-table { page-break-inside: auto; }
+  .doc-logo svg {
+    width: 36px !important;
+    height: 36px !important;
+  }
 
-  a { color: inherit; text-decoration: none; }
+  .doc-title {
+    font-size: 1.4rem !important;
+  }
+
+  .doc-subtitle, .doc-address {
+    font-size: 0.72rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .form-section {
+    margin-bottom: 8px !important;
+    border: 1px solid #EADBBA !important;
+    border-radius: 6px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .section-banner {
+    padding: 4px 10px !important;
+    background: #F7E5A9 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .section-banner .section-icon svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  .section-title {
+    font-size: 0.88rem !important;
+  }
+
+  .section-content {
+    padding: 8px 10px !important;
+  }
+
+  .customer-grid {
+    grid-template-columns: 1fr 130px !important;
+    gap: 10px !important;
+  }
+
+  .customer-fields {
+    gap: 4px !important;
+  }
+
+  .doc-field label {
+    min-width: 110px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .doc-input, .doc-textarea, .doc-val {
+    padding: 3px 6px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .photo-preview-container {
+    height: 85px !important;
+  }
+
+  .photo-img-preview {
+    max-height: 85px !important;
+    object-fit: cover !important;
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .gold-items-table th, .gold-items-table td {
+    padding: 4px 6px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .gold-items-table img, .print-gold-img {
+    max-height: 38px !important;
+    max-width: 75px !important;
+    object-fit: contain !important;
+    display: inline-block !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .section-total-footer {
+    padding: 4px 10px !important;
+    background: #FAF2D6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .declaration-box {
+    padding: 6px 10px !important;
+  }
+
+  .declaration-textarea, .declaration-text {
+    min-height: 36px !important;
+    font-size: 0.78rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .signatures-section {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    margin-top: 8px !important;
+    margin-bottom: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .signature-card {
+    padding: 6px 8px !important;
+  }
+
+  .signature-canvas-wrap {
+    height: 55px !important;
+  }
+
+  .signature-canvas-wrap img {
+    max-height: 50px !important;
+  }
 }
 
 /* Narrow screens (the toolbar acts as its own shell) */
