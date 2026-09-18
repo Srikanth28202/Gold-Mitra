@@ -704,18 +704,23 @@
     background: #FFF !important;
     padding: 0 !important;
     margin: 0 !important;
-    height: 100%;
-    overflow: hidden !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
   }
 
-  .print-toolbar, .no-print, .btn-action, .add-row-bar, .btn-upload-photo, .btn-upload-item-img, .btn-delete-row, .btn-clear-sig, .action-buttons-bar {
+  .print-toolbar, .no-print, .btn-action, .add-row-bar, .btn-upload-photo, .btn-upload-item-img, .btn-delete-row, .btn-clear-sig, .action-buttons-bar, .sidebar, .topbar, .mobile-nav, .back-btn {
     display: none !important;
   }
 
-  .print-stage {
+  .print-stage, .form-container-wrap, .main, .main__inner, .app {
     padding: 0 !important;
     margin: 0 !important;
     display: block !important;
+    width: 100% !important;
+    background: #FFF !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   .print-doc, .gold-paper-form {
@@ -727,12 +732,16 @@
     border: none !important;
     min-width: 0 !important;
     background: #FFF !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   .gold-doc-header {
     padding-bottom: 6px !important;
     margin-bottom: 8px !important;
     border-bottom: 1.5px solid #D4AF37 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
   .doc-logo svg {
@@ -778,8 +787,19 @@
   }
 
   .customer-grid {
-    grid-template-columns: 1fr 130px !important;
-    gap: 10px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 160px !important;
+    gap: 12px !important;
+  }
+
+  .customer-photo-box {
+    width: 156px !important;
+    margin-left: auto !important;
+    padding: 6px !important;
+    background: #FFFDF8 !important;
+    border: 1px solid #EADBBA !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .customer-fields {
@@ -797,15 +817,29 @@
   }
 
   .photo-preview-container {
-    height: 85px !important;
+    width: 140px !important;
+    height: 175px !important;
+    border: 2px dashed #D4AF37 !important;
+    background: #FAF7F0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .photo-img-preview {
-    max-height: 85px !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 175px !important;
     object-fit: cover !important;
     display: block !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  .full-width-address-row {
+    margin-top: 8px !important;
+    padding-top: 8px !important;
+    border-top: 1px dashed #E5E7EB !important;
+    width: 100% !important;
   }
 
   .gold-items-table th, .gold-items-table td {
@@ -831,33 +865,58 @@
 
   .declaration-box {
     padding: 6px 10px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
-  .declaration-textarea, .declaration-text {
-    min-height: 36px !important;
-    font-size: 0.78rem !important;
-    line-height: 1.25 !important;
+  .declaration-textarea, .declaration-text, .decl-eng, .decl-kan {
+    font-size: 0.76rem !important;
+    line-height: 1.35 !important;
+    color: #1F2937 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-bottom: 4px !important;
   }
 
   .signatures-section {
+    display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
-    margin-top: 8px !important;
+    gap: 16px !important;
+    margin-top: 12px !important;
     margin-bottom: 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
   .signature-card {
-    padding: 6px 8px !important;
+    padding: 8px 10px !important;
+    border: 1px solid #EADBBA !important;
+    background: #FFFDF8 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  .signature-canvas-wrap {
-    height: 55px !important;
+  .physical-signature-wrap {
+    display: block !important;
+    margin-top: 6px !important;
   }
 
-  .signature-canvas-wrap img {
-    max-height: 50px !important;
+  .signature-space {
+    height: 45px !important;
+  }
+
+  .signature-line {
+    font-size: 0.8rem !important;
+    color: #4B5563 !important;
+  }
+
+  .signature-subtext {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: #1F2937 !important;
   }
 }
 

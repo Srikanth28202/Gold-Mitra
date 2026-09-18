@@ -45,8 +45,13 @@ function buildApplicationFields(b) {
       mobile: clean(b.customer?.mobile),
       aadhaar: clean(b.customer?.aadhaar),
       address: clean(b.customer?.address),
+      fatherName: clean(b.customer?.fatherName),
+      motherName: clean(b.customer?.motherName),
+      spouseName: clean(b.customer?.spouseName),
+      profession: clean(b.customer?.profession),
       photoData: b.customer?.photoData || ''
     },
+    jewelleryPhotoData: b.jewelleryPhotoData || (items.length > 0 ? items[0].photoData : '') || '',
     jewelleryItems: items,
     totalWeightGrams: Math.round(totalWeightGrams * 1000) / 1000,
     loan: {
@@ -71,11 +76,15 @@ function validatePayload(body) {
   if (!clean(body.customer?.name)) {
     errors.push('Customer name is required');
   }
-  if (clean(body.customer?.mobile) && !/^\d{10}$/.test(clean(body.customer.mobile))) {
-    errors.push('Mobile number should be a 10-digit number');
+  const mobile = clean(body.customer?.mobile);
+  if (!mobile) {
+    errors.push('Mobile number is required');
+  } else if (!/^[6-9]\d{9}$/.test(mobile)) {
+    errors.push('Mobile number must be a valid 10-digit number starting with 6-9');
   }
-  if (clean(body.customer?.aadhaar) && !/^\d{12}$/.test(clean(body.customer.aadhaar))) {
-    errors.push('Aadhaar must be 12 digits');
+
+  if (!clean(body.customer?.address)) {
+    errors.push('Customer address is required');
   }
 
   if (!Array.isArray(body.jewelleryItems) || body.jewelleryItems.length === 0) {
@@ -97,7 +106,7 @@ router.post('/api/applications', requireAuth, async (req, res) => {
 
   const errors = validatePayload(req.body);
   if (errors.length) {
-    return res.status(400).json({ error: 'Please fix the highlighted fields.', errors });
+    return res.status(400).json({ error: errors[0], errors });
   }
 
   try {
@@ -122,6 +131,10 @@ router.post('/api/applications', requireAuth, async (req, res) => {
     });
   } catch (err) {
     console.error('✗ Application create error:', err.message);
+    if (err.name === 'ValidationError') {
+      const msgs = Object.values(err.errors || {}).map((e) => e.message);
+      return res.status(400).json({ error: msgs.join(', ') || err.message });
+    }
     if (err.code === 11000) {
       return res.status(409).json({ error: 'Duplicate application number. Please retry.' });
     }
@@ -190,7 +203,7 @@ router.put('/api/applications/:id', requireAuth, async (req, res) => {
 
   const errors = validatePayload(req.body);
   if (errors.length) {
-    return res.status(400).json({ error: 'Please fix the highlighted fields.', errors });
+    return res.status(400).json({ error: errors[0], errors });
   }
 
   try {
@@ -215,6 +228,10 @@ router.put('/api/applications/:id', requireAuth, async (req, res) => {
     });
   } catch (err) {
     console.error('✗ Application update error:', err.message);
+    if (err.name === 'ValidationError') {
+      const msgs = Object.values(err.errors || {}).map((e) => e.message);
+      return res.status(400).json({ error: msgs.join(', ') || err.message });
+    }
     res.status(500).json({ error: 'Could not update the record. Please try again.' });
   }
 });

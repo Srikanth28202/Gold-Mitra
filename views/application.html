@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/css/components.css" />
   <link rel="stylesheet" href="/css/layout.css" />
   <link rel="stylesheet" href="/css/application.css" />
+  <link rel="stylesheet" href="/css/print.css" />
 </head>
 <body class="app-page">
 
@@ -38,7 +39,7 @@
         <div class="doc-brand">
           <div class="doc-logo">
             <!-- 3 Gold Bars stacked icon -->
-            <svg width="52" height="52" viewBox="0 0 64 64" fill="none">
+            <svg width="54" height="54" viewBox="0 0 64 64" fill="none">
               <path d="M12 28L28 16L52 24L36 36L12 28Z" fill="#D4AF37" stroke="#8A6719" stroke-width="1.8"/>
               <path d="M12 28L36 36V48L12 40V28Z" fill="#B8860B" stroke="#8A6719" stroke-width="1.8"/>
               <path d="M36 36L52 24V36L36 48V36Z" fill="#E6C65A" stroke="#8A6719" stroke-width="1.8"/>
@@ -48,20 +49,17 @@
           <div class="doc-brand-text">
             <h1 class="doc-title">Gold Mitra</h1>
             <p class="doc-subtitle">Trusted Gold Purchase Partner</p>
-            <p class="doc-gstin" style="font-weight:700;font-size:0.78rem;color:#111827;margin:3px 0 0;">GSTIN: 29BGMPB7189N224</p>
+            <span class="doc-gstin-badge">GSTIN: 29BGMPB7189N224</span>
           </div>
         </div>
 
         <div class="doc-address">
-          <p style="font-weight:700;color:#111827;">Near Neelkantaeshwara temple,</p>
-          <p style="font-weight:700;color:#111827;">Hooropate circle, Tumkur</p>
+          <p class="store-name">Gold Mitra Financial Services</p>
+          <p class="store-loc">Near Neelkantaeshwara Temple,</p>
+          <p class="store-loc">Hooropate Circle, Tumkur</p>
         </div>
 
         <div class="doc-meta-box">
-          <div class="meta-row">
-            <label for="pageNo">Page :</label>
-            <input type="text" id="pageNo" name="pageNo" value="1" class="meta-input" />
-          </div>
           <div class="meta-row">
             <label for="docDate">Date :</label>
             <input type="date" id="docDate" name="docDate" class="meta-input meta-date" />
@@ -80,45 +78,66 @@
           <h2 class="section-title">Customer Details</h2>
         </div>
 
-        <div class="section-content customer-grid">
-          <div class="customer-fields">
-            <div class="doc-field">
-              <label for="custName">Name :</label>
-              <input type="text" id="custName" name="customerName" placeholder="Enter customer name" class="doc-input" />
+        <div class="section-content">
+          <div class="customer-grid">
+            <div class="customer-fields">
+              <div class="doc-field">
+                <label for="custName">Name :</label>
+                <input type="text" id="custName" name="customerName" placeholder="Enter customer name" class="doc-input" />
+              </div>
+              <div class="doc-field">
+                <label for="custFatherName">Father name :</label>
+                <input type="text" id="custFatherName" name="customerFatherName" placeholder="Enter father name" class="doc-input" />
+              </div>
+              <div class="doc-field">
+                <label for="custMotherName">Mother name :</label>
+                <input type="text" id="custMotherName" name="customerMotherName" placeholder="Enter mother name" class="doc-input" />
+              </div>
+              <div class="doc-field">
+                <label for="custSpouseName">Wife / Husband :</label>
+                <input type="text" id="custSpouseName" name="customerSpouseName" placeholder="Enter wife or husband name" class="doc-input" />
+              </div>
+              <div class="doc-field">
+                <label for="custProfession">Work profession :</label>
+                <input type="text" id="custProfession" name="customerProfession" placeholder="Enter work/profession" class="doc-input" />
+              </div>
+              <div class="doc-field">
+                <label for="custAadhaar">Aadhar number :</label>
+                <input type="text" id="custAadhaar" name="customerAadhaar" placeholder="Enter aadhar number" maxlength="12" class="doc-input" />
+              </div>
+              <div class="doc-field">
+                <label for="custMobile">Mobile number :</label>
+                <input type="tel" id="custMobile" name="customerMobile" placeholder="Enter mobile number" maxlength="10" class="doc-input" />
+              </div>
             </div>
-            <div class="doc-field">
-              <label for="custAadhaar">Aadhar number :</label>
-              <input type="text" id="custAadhaar" name="customerAadhaar" placeholder="Enter aadhar number" maxlength="12" class="doc-input" />
+
+            <div class="customer-photo-box">
+              <div class="photo-preview-container" id="customerPhotoBox">
+                <div class="photo-placeholder" id="photoPlaceholder">
+                  <div class="avatar-circle">
+                    <svg width="38" height="38" viewBox="0 0 24 24" fill="#A4B0C0">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                  </div>
+                  <span class="photo-placeholder-text">Passport Photo</span>
+                </div>
+                <img id="customerPhotoImg" class="photo-img-preview" src="" alt="Customer Photo" style="display:none;" />
+              </div>
+              <input type="file" id="customerPhotoInput" accept="image/*" style="display:none;" />
+              <button type="button" class="btn-upload-photo" id="uploadPhotoBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+                Upload Photo
+              </button>
             </div>
-            <div class="doc-field">
-              <label for="custMobile">Mobile number :</label>
-              <input type="tel" id="custMobile" name="customerMobile" placeholder="Enter mobile number" maxlength="10" class="doc-input" />
-            </div>
+          </div>
+
+          <div class="full-width-address-row">
             <div class="doc-field">
               <label for="custAddress">Address :</label>
               <textarea id="custAddress" name="customerAddress" placeholder="Enter address" rows="2" class="doc-textarea"></textarea>
             </div>
-          </div>
-
-          <div class="customer-photo-box">
-            <div class="photo-preview-container" id="customerPhotoBox">
-              <div class="photo-placeholder" id="photoPlaceholder">
-                <div class="avatar-circle">
-                  <svg width="38" height="38" viewBox="0 0 24 24" fill="#A4B0C0">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
-                </div>
-                <span class="photo-placeholder-text">Image of the person</span>
-              </div>
-              <img id="customerPhotoImg" class="photo-img-preview" src="" alt="Customer Photo" style="display:none;" />
-            </div>
-            <input type="file" id="customerPhotoInput" accept="image/*" style="display:none;" />
-            <button type="button" class="btn-upload-photo" id="uploadPhotoBtn">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-              </svg>
-              Upload Photo
-            </button>
           </div>
         </div>
       </section>
@@ -134,34 +153,56 @@
           <h2 class="section-title">Gold Items List</h2>
         </div>
 
-        <div class="section-content padding-0">
-          <table class="gold-items-table" id="goldItemsTable">
-            <thead>
-              <tr>
-                <th style="width: 10%;">Sl. no</th>
-                <th style="width: 27%;">Quality</th>
-                <th style="width: 27%;">Weight in grams</th>
-                <th style="width: 26%;">Image of the Gold</th>
-                <th style="width: 10%;">Action</th>
-              </tr>
-            </thead>
-            <tbody id="goldItemsTbody">
-              <!-- Dynamic rows rendered by JS -->
-            </tbody>
-          </table>
+        <div class="section-content customer-grid">
+          <div class="customer-fields padding-0" style="grid-column: span 1;">
+            <table class="gold-items-table" id="goldItemsTable">
+              <thead>
+                <tr>
+                  <th style="width: 15%;">Sl. no</th>
+                  <th style="width: 40%;">Quality</th>
+                  <th style="width: 30%;">Weight in grams</th>
+                  <th style="width: 15%;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="goldItemsTbody">
+                <!-- Dynamic rows rendered by JS -->
+              </tbody>
+            </table>
 
-          <div class="add-row-bar no-print">
-            <button type="button" class="btn-add-item-row" id="addItemRowBtn">
-              <span>+ Add Item Row</span>
-            </button>
+            <div class="add-row-bar no-print">
+              <button type="button" class="btn-add-item-row" id="addItemRowBtn">
+                <span>+ Add Item Row</span>
+              </button>
+            </div>
+
+            <div class="section-total-footer">
+              <span class="total-label">Total weight in grams =</span>
+              <div class="total-input-box">
+                <input type="text" id="totalWeightInput" readonly value="0" class="total-weight-field" />
+                <span class="unit-suffix">g</span>
+              </div>
+            </div>
           </div>
 
-          <div class="section-total-footer">
-            <span class="total-label">Total weight in grams =</span>
-            <div class="total-input-box">
-              <input type="text" id="totalWeightInput" readonly value="0" class="total-weight-field" />
-              <span class="unit-suffix">g</span>
+          <div class="customer-photo-box">
+            <div class="photo-preview-container" id="goldPhotoBox">
+              <div class="photo-placeholder" id="goldPhotoPlaceholder">
+                <div class="avatar-circle" style="background:#FEF3C7;color:#D97706;">
+                  <svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 9l10 13L22 9 12 2zm0 3.8L18.6 9 12 17.6 5.4 9 12 5.8z"/>
+                  </svg>
+                </div>
+                <span class="photo-placeholder-text">Image of the Gold</span>
+              </div>
+              <img id="goldPhotoImg" class="photo-img-preview" src="" alt="Gold Items Photo" style="display:none;" />
             </div>
+            <input type="file" id="goldPhotoInput" accept="image/*" style="display:none;" />
+            <button type="button" class="btn-upload-photo" id="uploadGoldPhotoBtn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+              </svg>
+              Upload Gold Image
+            </button>
           </div>
         </div>
       </section>
@@ -254,27 +295,25 @@
         <div class="signature-card">
           <div class="signature-card-head">
             <span class="signature-icon">✎</span>
-            <span class="signature-title">Gold mitra staff or Admin</span>
+            <span class="signature-title">Gold Mitra Staff / Admin</span>
           </div>
-          <div class="signature-canvas-wrap">
-            <canvas id="staffSigCanvas" width="340" height="90"></canvas>
-            <span class="canvas-placeholder" id="staffSigPlaceholder">Sign here</span>
-            <button type="button" class="btn-clear-sig no-print" id="clearStaffSigBtn">Clear</button>
+          <div class="physical-signature-wrap">
+            <div class="signature-space"></div>
+            <div class="signature-line">_______________________________</div>
+            <span class="signature-subtext">Signature & Seal</span>
           </div>
-          <div class="signature-card-sub">Signature</div>
         </div>
 
         <div class="signature-card">
           <div class="signature-card-head">
             <span class="signature-icon">✎</span>
-            <span class="signature-title">Customer signature</span>
+            <span class="signature-title">Customer Signature</span>
           </div>
-          <div class="signature-canvas-wrap">
-            <canvas id="customerSigCanvas" width="340" height="90"></canvas>
-            <span class="canvas-placeholder" id="customerSigPlaceholder">Sign here</span>
-            <button type="button" class="btn-clear-sig no-print" id="clearCustomerSigBtn">Clear</button>
+          <div class="physical-signature-wrap">
+            <div class="signature-space"></div>
+            <div class="signature-line">_______________________________</div>
+            <span class="signature-subtext">Signature / Thumb Impression</span>
           </div>
-          <div class="signature-card-sub">Signature</div>
         </div>
       </section>
 

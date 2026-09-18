@@ -73,9 +73,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding-bottom: 18px;
-  border-bottom: 2px solid #F0E8D5;
-  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #FFFDF8 0%, #FAF6EA 100%);
+  border: 1px solid #EADBBA;
+  border-top: 4px solid #D4AF37;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 10px rgba(212, 175, 55, 0.08);
 }
 
 .doc-brand {
@@ -105,20 +109,45 @@
   margin: 2px 0 0;
 }
 
+.doc-gstin-badge {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #92400E;
+  background: #FEF3C7;
+  border: 1px solid #FDE68A;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin-top: 4px;
+  display: inline-block;
+  width: fit-content;
+}
+
 .doc-address {
   text-align: center;
-  font-size: 0.8rem;
-  color: #374151;
   line-height: 1.35;
 }
-.doc-address p { margin: 0; }
-.doc-circle { font-weight: 700; color: #111827; margin-top: 2px !important; }
+.store-name {
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #111827;
+  margin: 0 0 2px;
+}
+.store-loc {
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #4B5563;
+  margin: 0;
+}
 
 .doc-meta-box {
   display: flex;
   flex-direction: column;
   gap: 8px;
   align-items: flex-end;
+  background: #FFFFFF;
+  padding: 8px 12px;
+  border: 1px solid #EADBBA;
+  border-radius: 8px;
 }
 
 .meta-row {
@@ -189,26 +218,26 @@
 
 .customer-grid {
   display: grid;
-  grid-template-columns: 1fr 180px;
-  gap: 20px;
+  grid-template-columns: 1fr 160px;
+  gap: 16px;
   align-items: flex-start;
 }
 
 .customer-fields {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .doc-field {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .doc-field label {
-  min-width: 130px;
-  font-size: 0.88rem;
+  min-width: 118px;
+  font-size: 0.84rem;
   font-weight: 700;
   color: #1F2937;
 }
@@ -217,8 +246,8 @@
   flex: 1;
   border: 1px solid #D1D5DB;
   border-radius: 4px;
-  padding: 7px 12px;
-  font-size: 0.88rem;
+  padding: 5px 10px;
+  font-size: 0.85rem;
   color: #111827;
   background: #FFFFFF;
   outline: none;
@@ -231,20 +260,51 @@
 }
 
 .customer-photo-box {
-  border: 1px solid #E5E7EB;
-  border-radius: 6px;
-  background: #F9FAFB;
-  padding: 10px;
+  width: 156px;
+  margin-left: auto;
+  border: 1px solid #EADBBA;
+  border-radius: 8px;
+  background: #FFFDF8;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.full-width-address-row {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #E5E7EB;
+  width: 100%;
+}
+
+.full-width-address-row .doc-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.full-width-address-row .doc-field label {
+  min-width: 118px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.full-width-address-row .doc-textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 44px;
 }
 
 .photo-preview-container {
-  width: 100%;
-  height: 130px;
-  background: #F3F4F6;
+  width: 140px;
+  height: 175px;
+  background: #FAF7F0;
+  border: 2px dashed #D4AF37;
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -554,41 +614,37 @@
   color: #4B5563;
 }
 
-.signature-canvas-wrap {
-  position: relative;
+.physical-signature-wrap {
   width: 100%;
-  height: 90px;
-  border: 1px solid #D1D5DB;
-  border-radius: 6px;
-  background: #FAFAFA;
+  height: 100px;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  padding: 10px;
+  background: #FAF9F5;
+  border: 1px dashed #D1D5DB;
+  border-radius: 6px;
+  text-align: center;
 }
 
-.signature-canvas-wrap canvas {
-  width: 100%;
-  height: 100%;
-  cursor: crosshair;
-  touch-action: none;
+.signature-space {
+  flex: 1;
 }
 
-.canvas-placeholder {
-  position: absolute;
-  pointer-events: none;
+.signature-line {
   color: #9CA3AF;
+  font-weight: 600;
+  letter-spacing: -0.5px;
   font-size: 0.85rem;
 }
 
-.btn-clear-sig {
-  position: absolute;
-  right: 6px;
-  top: 6px;
-  font-size: 0.7rem;
-  background: rgba(0, 0, 0, 0.08);
-  border: none;
-  border-radius: 4px;
+.signature-subtext {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #374151;
+  margin-top: 4px;
+}
   padding: 3px 7px;
   cursor: pointer;
   color: #374151;

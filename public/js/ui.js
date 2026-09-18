@@ -67,13 +67,26 @@
   /* ---------- Simple fetch wrapper ---------- */
 
   GM.api = async function (url, options = {}) {
-    const res = await fetch(url, {
-      headers: { 'Content-Type': 'application/json' },
-      ...options
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || 'Request failed');
-    return data;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), options.timeout || 15000);
+
+    try {
+      const res = await fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        ...options
+      });
+      clearTimeout(timeoutId);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (err.name === 'AbortError') {
+        throw new Error('Request timed out. Please check your network and try again.');
+      }
+      throw err;
+    }
   };
 
   GM.escapeHtml = function (str) {

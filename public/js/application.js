@@ -27,6 +27,7 @@
   const state = {
     items: [createEmptyItem()],
     customerPhoto: '',
+    goldPhoto: '',
     docDate: todayISO(),
     pageNo: '1',
     paymentMode: 'cash'
@@ -47,6 +48,10 @@
   const totalAmountInput = $('#totalAmountReceived');
 
   const custNameInput = $('#custName');
+  const custFatherNameInput = $('#custFatherName');
+  const custMotherNameInput = $('#custMotherName');
+  const custSpouseNameInput = $('#custSpouseName');
+  const custProfessionInput = $('#custProfession');
   const custAadhaarInput = $('#custAadhaar');
   const custMobileInput = $('#custMobile');
   const custAddressInput = $('#custAddress');
@@ -55,6 +60,11 @@
   const customerPhotoImg = $('#customerPhotoImg');
   const customerPhotoInput = $('#customerPhotoInput');
   const uploadPhotoBtn = $('#uploadPhotoBtn');
+
+  const goldPhotoPlaceholder = $('#goldPhotoPlaceholder');
+  const goldPhotoImg = $('#goldPhotoImg');
+  const goldPhotoInput = $('#goldPhotoInput');
+  const uploadGoldPhotoBtn = $('#uploadGoldPhotoBtn');
 
   const modeCashRadio = $('#modeCash');
   const modeAccountRadio = $('#modeAccount');
@@ -81,105 +91,6 @@
     state.paymentMode = isAccount ? 'account' : 'cash';
   }
 
-  /* ---------- Canvas Signatures ---------- */
-
-  function initSignatureCanvas(canvasId, placeholderId, clearBtnId) {
-    const canvas = document.getElementById(canvasId);
-    const placeholder = document.getElementById(placeholderId);
-    const clearBtn = document.getElementById(clearBtnId);
-    if (!canvas) return { getData: () => '', setData: () => {}, clear: () => {} };
-
-    const ctx = canvas.getContext('2d');
-    let isDrawing = false;
-    let hasDrawn = false;
-
-    function resizeCanvas() {
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) {
-        const temp = canvas.toDataURL();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-        if (hasDrawn) {
-          const img = new Image();
-          img.onload = () => ctx.drawImage(img, 0, 0);
-          img.src = temp;
-        }
-      }
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    function getPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
-      };
-    }
-
-    function startDraw(e) {
-      isDrawing = true;
-      const pos = getPos(e);
-      ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
-      if (placeholder) placeholder.style.display = 'none';
-      hasDrawn = true;
-    }
-
-    function draw(e) {
-      if (!isDrawing) return;
-      e.preventDefault();
-      const pos = getPos(e);
-      ctx.lineWidth = 2.2;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.strokeStyle = '#1F2937';
-      ctx.lineTo(pos.x, pos.y);
-      ctx.stroke();
-    }
-
-    function stopDraw() {
-      isDrawing = false;
-    }
-
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', draw);
-    window.addEventListener('mouseup', stopDraw);
-
-    canvas.addEventListener('touchstart', startDraw, { passive: false });
-    canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', stopDraw);
-
-    function clear() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      hasDrawn = false;
-      if (placeholder) placeholder.style.display = 'block';
-    }
-
-    if (clearBtn) clearBtn.addEventListener('click', clear);
-
-    return {
-      getData: () => (hasDrawn ? canvas.toDataURL('image/png') : ''),
-      setData: (dataUrl) => {
-        if (!dataUrl) return clear();
-        const img = new Image();
-        img.onload = () => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          if (placeholder) placeholder.style.display = 'none';
-          hasDrawn = true;
-        };
-        img.src = dataUrl;
-      },
-      clear
-    };
-  }
-
-  const staffSig = initSignatureCanvas('staffSigCanvas', 'staffSigPlaceholder', 'clearStaffSigBtn');
-  const customerSig = initSignatureCanvas('customerSigCanvas', 'customerSigPlaceholder', 'clearCustomerSigBtn');
-
   /* ---------- Alert helper ---------- */
 
   function showAlert(msg, type = 'danger') {
@@ -197,7 +108,7 @@
     if (alertsZone) alertsZone.innerHTML = '';
   }
 
-  /* ---------- Customer Photo Upload ---------- */
+  /* ---------- Photo Uploads ---------- */
 
   uploadPhotoBtn.addEventListener('click', () => customerPhotoInput.click());
 
@@ -219,6 +130,30 @@
     }
   });
 
+  if (uploadGoldPhotoBtn && goldPhotoInput) {
+    uploadGoldPhotoBtn.addEventListener('click', () => goldPhotoInput.click());
+
+    goldPhotoInput.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      try {
+        GM.setLoading(saveBtn, true, 'Processing gold photo…');
+        const dataUrl = await GM.compressImage(file);
+        state.goldPhoto = dataUrl;
+        if (goldPhotoImg) {
+          goldPhotoImg.src = dataUrl;
+          goldPhotoImg.style.display = 'block';
+        }
+        if (goldPhotoPlaceholder) goldPhotoPlaceholder.style.display = 'none';
+        GM.setLoading(saveBtn, false);
+        GM.toast('Gold photo attached', 'success', 1400);
+      } catch (err) {
+        GM.setLoading(saveBtn, false);
+        GM.toast(err.message, 'danger');
+      }
+    });
+  }
+
   /* ---------- Gold Items Table Logic ---------- */
 
   function renderTableRows() {
@@ -228,7 +163,6 @@
         const optsHTML = PURITY_OPTIONS.map(
           (p) => `<option value="${p}" ${item.purity === p ? 'selected' : ''}>${p}</option>`
         ).join('');
-        const hasPhoto = !!item.photo;
 
         return `
         <tr data-item-id="${item.id}">
@@ -241,17 +175,6 @@
           </td>
           <td>
             <input type="number" class="weight-input" data-field="weight" step="0.001" min="0" placeholder="Enter weight (g)" value="${item.weight || ''}" />
-          </td>
-          <td>
-            <button type="button" class="btn-upload-item-img" data-action="upload-img" style="${hasPhoto ? 'background:#E7F6EE;border-color:#A7F3D0;color:#065F46;' : ''}">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <polyline points="21 15 16 10 5 21"/>
-              </svg>
-              <span>${hasPhoto ? '✓ Image uploaded' : 'Upload image'}</span>
-            </button>
-            <input type="file" accept="image/*" data-item-file="${item.id}" style="display:none;" />
           </td>
           <td>
             <button type="button" class="btn-delete-row" data-action="delete-row" aria-label="Delete row">
@@ -285,8 +208,6 @@
 
       const puritySelect = tr.querySelector('[data-field="purity"]');
       const weightInput = tr.querySelector('[data-field="weight"]');
-      const fileInput = tr.querySelector(`[data-item-file="${id}"]`);
-      const uploadBtn = tr.querySelector('[data-action="upload-img"]');
       const deleteBtn = tr.querySelector('[data-action="delete-row"]');
 
       if (puritySelect) {
@@ -299,25 +220,6 @@
         weightInput.addEventListener('input', (e) => {
           item.weight = e.target.value;
           recalcTotalWeight();
-        });
-      }
-
-      if (uploadBtn && fileInput) {
-        uploadBtn.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', async (e) => {
-          const file = e.target.files && e.target.files[0];
-          if (!file) return;
-          try {
-            GM.setLoading(saveBtn, true, 'Processing image…');
-            const dataUrl = await GM.compressImage(file);
-            item.photo = dataUrl;
-            renderTableRows();
-            GM.setLoading(saveBtn, false);
-            GM.toast('Item image attached', 'success', 1400);
-          } catch (err) {
-            GM.setLoading(saveBtn, false);
-            GM.toast(err.message, 'danger');
-          }
         });
       }
 
@@ -355,13 +257,17 @@
         form.reset();
         state.items = [createEmptyItem()];
         state.customerPhoto = '';
+        state.goldPhoto = '';
         customerPhotoImg.style.display = 'none';
         customerPhotoImg.src = '';
         photoPlaceholder.style.display = 'flex';
+        if (goldPhotoImg) {
+          goldPhotoImg.style.display = 'none';
+          goldPhotoImg.src = '';
+        }
+        if (goldPhotoPlaceholder) goldPhotoPlaceholder.style.display = 'flex';
         docDateInput.value = todayISO();
         pageNoInput.value = '1';
-        staffSig.clear();
-        customerSig.clear();
         if (modeCashRadio) modeCashRadio.checked = true;
         updatePaymentModeUI();
         renderTableRows();
@@ -383,9 +289,21 @@
     }
 
     const mobile = custMobileInput.value.trim();
-    if (mobile && !/^\d{10}$/.test(mobile)) {
-      showAlert('Please enter a valid 10-digit mobile number.', 'danger');
+    if (!mobile) {
+      showAlert('Please enter mobile number.', 'danger');
       custMobileInput.focus();
+      return false;
+    }
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      showAlert('Please enter a valid 10-digit mobile number starting with 6-9.', 'danger');
+      custMobileInput.focus();
+      return false;
+    }
+
+    const address = custAddressInput.value.trim();
+    if (!address) {
+      showAlert('Please enter customer address.', 'danger');
+      custAddressInput.focus();
       return false;
     }
 
@@ -410,26 +328,32 @@
     const payload = {
       pageNo: pageNoInput.value.trim() || '1',
       declaration: declarationInput.value.trim(),
-      staffSignature: staffSig.getData(),
-      customerSignature: customerSig.getData(),
+      staffSignature: '',
+      customerSignature: '',
       totalAmountReceived: totalAmt,
 
       customer: {
         name: custNameInput.value.trim(),
+        fatherName: custFatherNameInput ? custFatherNameInput.value.trim() : '',
+        motherName: custMotherNameInput ? custMotherNameInput.value.trim() : '',
+        spouseName: custSpouseNameInput ? custSpouseNameInput.value.trim() : '',
+        profession: custProfessionInput ? custProfessionInput.value.trim() : '',
         mobile: custMobileInput.value.trim(),
         aadhaar: custAadhaarInput.value.trim(),
         address: custAddressInput.value.trim(),
         photoData: state.customerPhoto
       },
 
+      jewelleryPhotoData: state.goldPhoto,
+
       jewelleryItems: state.items
-        .filter((it) => it.purity || parseFloat(it.weight) > 0 || it.photo)
+        .filter((it) => it.purity || parseFloat(it.weight) > 0)
         .map((it, idx) => ({
           itemName: it.purity ? `Gold Item (${it.purity})` : `Gold Item ${idx + 1}`,
           purity: it.purity || '22K / 916',
           weightGrams: parseFloat(it.weight) || 0,
           description: '',
-          photoData: it.photo || ''
+          photoData: idx === 0 ? (state.goldPhoto || '') : ''
         })),
 
       accountDetails: isAccount
@@ -456,7 +380,7 @@
           purity: '22K / 916',
           weightGrams: 0,
           description: '',
-          photoData: ''
+          photoData: state.goldPhoto || ''
         }
       ];
     }
@@ -513,6 +437,10 @@
       /* Customer */
       if (a.customer) {
         custNameInput.value = a.customer.name || '';
+        if (custFatherNameInput) custFatherNameInput.value = a.customer.fatherName || '';
+        if (custMotherNameInput) custMotherNameInput.value = a.customer.motherName || '';
+        if (custSpouseNameInput) custSpouseNameInput.value = a.customer.spouseName || '';
+        if (custProfessionInput) custProfessionInput.value = a.customer.profession || '';
         custMobileInput.value = a.customer.mobile || '';
         custAadhaarInput.value = a.customer.aadhaar || '';
         custAddressInput.value = a.customer.address || '';
@@ -522,6 +450,17 @@
           customerPhotoImg.style.display = 'block';
           photoPlaceholder.style.display = 'none';
         }
+      }
+
+      /* Gold Items Photo */
+      const goldImg = a.jewelleryPhotoData || (a.jewelleryItems && a.jewelleryItems[0] ? a.jewelleryItems[0].photoData : '');
+      if (goldImg) {
+        state.goldPhoto = goldImg;
+        if (goldPhotoImg) {
+          goldPhotoImg.src = goldImg;
+          goldPhotoImg.style.display = 'block';
+        }
+        if (goldPhotoPlaceholder) goldPhotoPlaceholder.style.display = 'none';
       }
 
       /* Jewellery Items */
@@ -554,10 +493,6 @@
 
       /* Declaration */
       declarationInput.value = a.declaration || '';
-
-      /* Signatures */
-      if (a.staffSignature) staffSig.setData(a.staffSignature);
-      if (a.customerSignature) customerSig.setData(a.customerSignature);
 
       renderTableRows();
     } catch (err) {

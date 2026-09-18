@@ -82,7 +82,11 @@ const sessionStore = process.env.MONGODB_URI
   ? MongoStore.create({
       mongoUrl: process.env.MONGODB_URI,
       collectionName: 'sessions',
-      ttl: 24 * 60 * 60
+      ttl: 24 * 60 * 60,
+      mongoOptions: {
+        serverSelectionTimeoutMS: 4000,
+        connectTimeoutMS: 4000
+      }
     })
   : undefined;
 

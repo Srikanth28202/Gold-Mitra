@@ -25,21 +25,15 @@
 
   function jewelleryRowsHTML(items) {
     if (!Array.isArray(items) || !items.length) {
-      return `<tr><td colspan="5" style="text-align:center;padding:12px;color:#6B7280">No gold items recorded.</td></tr>`;
+      return `<tr><td colspan="4" style="text-align:center;padding:12px;color:#6B7280">No gold items recorded.</td></tr>`;
     }
     return items
       .map((item, i) => {
-        const hasPhoto = !!item.photoData;
-        const photoCell = hasPhoto
-          ? `<img src="${item.photoData}" alt="Gold item ${i + 1}" class="print-gold-img" style="max-height:60px;max-width:100px;object-fit:contain;border:1px solid #D1D5DB;border-radius:4px;display:inline-block;" />`
-          : `<span style="font-size:0.75rem;color:#9CA3AF">[ No Image ]</span>`;
-
         return `
         <tr>
           <td class="row-index" style="text-align:center;font-weight:700;">${i + 1})</td>
           <td style="text-align:center;font-weight:600;">${GM.escapeHtml(item.purity || '—')}</td>
           <td style="text-align:center;font-weight:700;">${fmtWeight(item.weightGrams)}</td>
-          <td style="text-align:center;">${photoCell}</td>
           <td style="text-align:center;color:#6B7280;font-size:0.8rem;">—</td>
         </tr>`;
       })
@@ -48,6 +42,7 @@
 
   function draw(a) {
     const custPhoto = a.customer?.photoData;
+    const goldPhoto = a.jewelleryPhotoData || (a.jewelleryItems && a.jewelleryItems[0] ? a.jewelleryItems[0].photoData : '');
     const acct = a.loan?.accountDetails || a.accountDetails || {};
     const isAccount = (a.loan?.paymentMode === 'account') || !!(acct.accountNumber && acct.accountNumber !== '—');
     const totalAmt = a.totalAmountReceived || a.loan?.amount || 0;
@@ -70,7 +65,7 @@
       <header class="gold-doc-header">
         <div class="doc-brand">
           <div class="doc-logo">
-            <svg width="52" height="52" viewBox="0 0 64 64" fill="none">
+            <svg width="54" height="54" viewBox="0 0 64 64" fill="none">
               <path d="M12 28L28 16L52 24L36 36L12 28Z" fill="#D4AF37" stroke="#8A6719" stroke-width="1.8"/>
               <path d="M12 28L36 36V48L12 40V28Z" fill="#B8860B" stroke="#8A6719" stroke-width="1.8"/>
               <path d="M36 36L52 24V36L36 48V36Z" fill="#E6C65A" stroke="#8A6719" stroke-width="1.8"/>
@@ -80,19 +75,17 @@
           <div class="doc-brand-text">
             <h1 class="doc-title">Gold Mitra</h1>
             <p class="doc-subtitle">Trusted Gold Purchase Partner</p>
-            <p class="doc-gstin" style="font-weight:700;font-size:0.78rem;color:#111827;margin:3px 0 0;">GSTIN: 29BGMPB7189N224</p>
+            <span class="doc-gstin-badge">GSTIN: 29BGMPB7189N224</span>
           </div>
         </div>
 
         <div class="doc-address">
-          <p style="font-weight:700;color:#111827;">Near Neelkantaeshwara temple,</p>
-          <p style="font-weight:700;color:#111827;">Hooropate circle, Tumkur</p>
+          <p class="store-name">Gold Mitra Financial Services</p>
+          <p class="store-loc">Near Neelkantaeshwara Temple,</p>
+          <p class="store-loc">Hooropate Circle, Tumkur</p>
         </div>
 
         <div class="doc-meta-box">
-          <div class="meta-row">
-            <span>Page :</span> <strong>${GM.escapeHtml(a.pageNo || '1')}</strong>
-          </div>
           <div class="meta-row">
             <span>Date :</span> <strong>${fmtDate(a.loan?.date || a.createdAt)}</strong>
           </div>
@@ -113,33 +106,54 @@
           <h2 class="section-title">Customer Details</h2>
         </div>
 
-        <div class="section-content customer-grid">
-          <div class="customer-fields">
-            <div class="doc-field">
-              <label>Name :</label>
-              <div class="doc-input" style="background:#FAF9F5;font-weight:600;">${GM.escapeHtml(a.customer?.name || '—')}</div>
+        <div class="section-content">
+          <div class="customer-grid">
+            <div class="customer-fields">
+              <div class="doc-field">
+                <label>Name :</label>
+                <div class="doc-input" style="background:#FAF9F5;font-weight:600;">${GM.escapeHtml(a.customer?.name || '—')}</div>
+              </div>
+              <div class="doc-field">
+                <label>Father name :</label>
+                <div class="doc-input" style="background:#FAF9F5;">${GM.escapeHtml(a.customer?.fatherName || '—')}</div>
+              </div>
+              <div class="doc-field">
+                <label>Mother name :</label>
+                <div class="doc-input" style="background:#FAF9F5;">${GM.escapeHtml(a.customer?.motherName || '—')}</div>
+              </div>
+              <div class="doc-field">
+                <label>Wife / Husband :</label>
+                <div class="doc-input" style="background:#FAF9F5;">${GM.escapeHtml(a.customer?.spouseName || '—')}</div>
+              </div>
+              <div class="doc-field">
+                <label>Work profession :</label>
+                <div class="doc-input" style="background:#FAF9F5;">${GM.escapeHtml(a.customer?.profession || '—')}</div>
+              </div>
+              <div class="doc-field">
+                <label>Aadhar number :</label>
+                <div class="doc-input" style="background:#FAF9F5;">${GM.escapeHtml(a.customer?.aadhaar || '—')}</div>
+              </div>
+              <div class="doc-field">
+                <label>Mobile number :</label>
+                <div class="doc-input" style="background:#FAF9F5;">${GM.escapeHtml(a.customer?.mobile || '—')}</div>
+              </div>
             </div>
-            <div class="doc-field">
-              <label>Aadhar number :</label>
-              <div class="doc-input" style="background:#FAF9F5;">${GM.escapeHtml(a.customer?.aadhaar || '—')}</div>
-            </div>
-            <div class="doc-field">
-              <label>Mobile number :</label>
-              <div class="doc-input" style="background:#FAF9F5;">${GM.escapeHtml(a.customer?.mobile || '—')}</div>
-            </div>
-            <div class="doc-field">
-              <label>Address :</label>
-              <div class="doc-textarea" style="background:#FAF9F5;min-height:48px;">${GM.escapeHtml(a.customer?.address || '—')}</div>
+
+            <div class="customer-photo-box">
+              <div class="photo-preview-container">
+                ${
+                  custPhoto
+                    ? `<img class="photo-img-preview" src="${custPhoto}" alt="Customer photo" style="display:block;" />`
+                    : `<div class="photo-placeholder"><div class="avatar-circle"><svg width="38" height="38" viewBox="0 0 24 24" fill="#A4B0C0"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div><span class="photo-placeholder-text">Passport Photo</span></div>`
+                }
+              </div>
             </div>
           </div>
 
-          <div class="customer-photo-box">
-            <div class="photo-preview-container" style="border:1px solid #E5E7EB;display:flex;align-items:center;justify-content:center;">
-              ${
-                custPhoto
-                  ? `<img class="photo-img-preview" src="${custPhoto}" alt="Customer photo" style="display:block;width:100%;height:100%;object-fit:cover;" />`
-                  : `<div class="photo-placeholder"><div class="avatar-circle"><svg width="38" height="38" viewBox="0 0 24 24" fill="#A4B0C0"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div><span class="photo-placeholder-text">Image of the person</span></div>`
-              }
+          <div class="full-width-address-row">
+            <div class="doc-field">
+              <label>Address :</label>
+              <div class="doc-textarea" style="background:#FAF9F5;min-height:44px;">${GM.escapeHtml(a.customer?.address || '—')}</div>
             </div>
           </div>
         </div>
@@ -156,28 +170,40 @@
           <h2 class="section-title">Gold Items List</h2>
         </div>
 
-        <div class="section-content padding-0">
-          <table class="gold-items-table">
-            <thead>
-              <tr>
-                <th style="width: 10%;">Sl. no</th>
-                <th style="width: 27%;">Quality</th>
-                <th style="width: 27%;">Weight in grams</th>
-                <th style="width: 26%;">Image of the Gold</th>
-                <th style="width: 10%;">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${jewelleryRowsHTML(a.jewelleryItems)}
-            </tbody>
-          </table>
+        <div class="section-content customer-grid">
+          <div class="customer-fields padding-0" style="grid-column: span 1;">
+            <table class="gold-items-table">
+              <thead>
+                <tr>
+                  <th style="width: 15%;">Sl. no</th>
+                  <th style="width: 40%;">Quality</th>
+                  <th style="width: 30%;">Weight in grams</th>
+                  <th style="width: 15%;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${jewelleryRowsHTML(a.jewelleryItems)}
+              </tbody>
+            </table>
 
-          <div class="section-total-footer">
-            <span class="total-label">Total weight in grams =</span>
-            <div class="total-input-box">
-              <span style="font-weight:700;font-size:1.05rem;">${fmtWeight(a.totalWeightGrams)} g</span>
+            <div class="section-total-footer">
+              <span class="total-label">Total weight in grams =</span>
+              <div class="total-input-box">
+                <span style="font-weight:700;font-size:1.05rem;">${fmtWeight(a.totalWeightGrams)} g</span>
+              </div>
             </div>
           </div>
+
+          <div class="customer-photo-box">
+            <div class="photo-preview-container" style="border:1px solid #E5E7EB;display:flex;align-items:center;justify-content:center;">
+              ${
+                goldPhoto
+                  ? `<img class="photo-img-preview" src="${goldPhoto}" alt="Gold items photo" style="display:block;width:100%;height:100%;object-fit:cover;" />`
+                  : `<div class="photo-placeholder"><div class="avatar-circle" style="background:#FEF3C7;color:#D97706;"><svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 9l10 13L22 9 12 2zm0 3.8L18.6 9 12 17.6 5.4 9 12 5.8z"/></svg></div><span class="photo-placeholder-text">Image of the Gold</span></div>`
+              }
+            </div>
+          </div>
+        </div>
         </div>
       </section>
 
@@ -253,28 +279,30 @@
         </div>
       </section>
 
-      <!-- 6. SIGNATURES SECTION (Manual / Pen Signing Supported) -->
+      <!-- 6. SIGNATURES SECTION -->
       <section class="signatures-section">
         <div class="signature-card">
           <div class="signature-card-head">
             <span class="signature-icon">✎</span>
-            <span class="signature-title">Gold mitra staff or Admin</span>
+            <span class="signature-title">Gold Mitra Staff / Admin</span>
           </div>
-          <div class="signature-canvas-wrap" style="background:#FFFFFF;border:1px solid #D1D5DB;height:80px;">
-            ${staffSigHTML}
+          <div class="physical-signature-wrap">
+            <div class="signature-space"></div>
+            <div class="signature-line">_______________________________</div>
+            <span class="signature-subtext">Signature & Seal</span>
           </div>
-          <div class="signature-card-sub">Signature</div>
         </div>
 
         <div class="signature-card">
           <div class="signature-card-head">
             <span class="signature-icon">✎</span>
-            <span class="signature-title">Customer signature</span>
+            <span class="signature-title">Customer Signature</span>
           </div>
-          <div class="signature-canvas-wrap" style="background:#FFFFFF;border:1px solid #D1D5DB;height:80px;">
-            ${custSigHTML}
+          <div class="physical-signature-wrap">
+            <div class="signature-space"></div>
+            <div class="signature-line">_______________________________</div>
+            <span class="signature-subtext">Signature / Thumb Impression</span>
           </div>
-          <div class="signature-card-sub">Signature</div>
         </div>
       </section>`;
   }

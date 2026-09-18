@@ -31,6 +31,10 @@ const applicationSchema = new mongoose.Schema(
       },
       aadhaar: { type: String, default: '', trim: true },
       address: { type: String, required: true, trim: true },
+      fatherName: { type: String, default: '', trim: true },
+      motherName: { type: String, default: '', trim: true },
+      spouseName: { type: String, default: '', trim: true },
+      profession: { type: String, default: '', trim: true },
       photoData: { type: String, default: '' }
     },
 
@@ -42,6 +46,8 @@ const applicationSchema = new mongoose.Schema(
         message: 'At least one jewellery item is required'
       }
     },
+
+    jewelleryPhotoData: { type: String, default: '' },
 
     totalWeightGrams: { type: Number, default: 0 },
     pageNo: { type: String, default: '1' },
