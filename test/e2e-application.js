@@ -104,7 +104,7 @@ async function main() {
   if (status === 201 && data.success) {
     pass(`Application created → ${data.application.applicationNo}`);
     const no = data.application.applicationNo || '';
-    if (/^GL-\d{8}-\d{4}$/.test(no)) pass('Application number format valid');
+    if (/^GL-\d{8}-\d{5}$/.test(no)) pass('Application number format valid');
     else fail('Application number format valid', no);
     if (data.application.totalWeightGrams === 42.75) pass('Total weight auto-computed (42.750 g)');
     else fail('Total weight auto-computed', data.application.totalWeightGrams);
@@ -225,6 +225,13 @@ async function main() {
     else fail('Deleted record is gone (404)', gone.status);
   } else {
     fail('Fixture record for delete', extra.status);
+  }
+
+  /* Clean up the primary fixture so reruns never pollute the DB */
+  if (appId) {
+    const cleanup = await api(`/api/applications/${appId}`, { method: 'DELETE' });
+    if (cleanup.ok && cleanup.data.success) pass('Fixture record cleaned up');
+    else fail('Fixture record cleaned up', `status=${cleanup.status} ${JSON.stringify(cleanup.data)}`);
   }
 
   console.log('');

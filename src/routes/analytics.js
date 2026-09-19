@@ -72,7 +72,7 @@ router.get('/api/analytics/summary', requireAuth, async (req, res) => {
           }
         }
       ]),
-      Staff.find(staffFilter.scope ? {} : { _id: req.session.userId })
+      Staff.find(isAdmin ? {} : { _id: req.session.userId })
         .select('name email role isActive')
         .sort({ name: 1 })
         .lean()

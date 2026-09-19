@@ -267,7 +267,7 @@
         }
         if (goldPhotoPlaceholder) goldPhotoPlaceholder.style.display = 'flex';
         docDateInput.value = todayISO();
-        pageNoInput.value = '1';
+        if (pageNoInput) pageNoInput.value = '1';
         if (modeCashRadio) modeCashRadio.checked = true;
         updatePaymentModeUI();
         renderTableRows();
@@ -326,7 +326,7 @@
     const isAccount = state.paymentMode === 'account';
 
     const payload = {
-      pageNo: pageNoInput.value.trim() || '1',
+      pageNo: pageNoInput ? pageNoInput.value.trim() || '1' : '1',
       declaration: declarationInput.value.trim(),
       staffSignature: '',
       customerSignature: '',
@@ -426,7 +426,7 @@
         badge.textContent = a.applicationNo;
       }
 
-      pageNoInput.value = a.pageNo || '1';
+        if (pageNoInput) pageNoInput.value = a.pageNo || '1';
 
       if (a.loan && a.loan.date) {
         const d = new Date(a.loan.date);

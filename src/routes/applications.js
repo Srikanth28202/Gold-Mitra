@@ -116,8 +116,18 @@ router.post('/api/applications', requireAuth, async (req, res) => {
       ...buildApplicationFields(req.body)
     });
 
-    application.applicationNo = application.generateApplicationNo();
-    await application.save();
+    /* Retry on rare same-day application-number collisions. */
+    const MAX_ATTEMPTS = 3;
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+      application.applicationNo = application.generateApplicationNo();
+      try {
+        await application.save();
+        break;
+      } catch (err) {
+        if (err.code === 11000 && attempt < MAX_ATTEMPTS - 1) continue;
+        throw err;
+      }
+    }
 
     res.status(201).json({
       success: true,

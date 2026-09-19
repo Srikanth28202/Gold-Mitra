@@ -18,7 +18,6 @@ function zeroStatus() {
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('anaRefresh');
   const daysSel = document.getElementById('anaDays');
-  const teamBody = document.getElementById('anaTeamBody');
   const scopeBadge = document.getElementById('anaScope');
   const totalApps = document.getElementById('anaTotalApps');
   const totalAmt = document.getElementById('anaTotalAmt');
@@ -33,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
       totalApps.textContent = String(data.overall.applications);
       totalAmt.textContent = GM.formatINR(data.overall.amount);
       todayApps.textContent = String(data.overall.todayApplications);
-      todayAmt.textContent = GM.formatINR(data.overall.todayAmount說);
+      todayAmt.textContent = GM.formatINR(data.overall.todayAmount);
       renderStatus(data.overall.byStatus, data.byStatusAmounts);
       renderTeam(data.team || []);
     } catch (err) {
@@ -63,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderTeam(team) {
     const grid = document.getElementById('anaTeamGrid');
-    if (!grid) { renderTeamTable(team); return; }
     grid.innerHTML = team.map((m) => {
       const st = m.byStatus || {};
       const chips = STATUS_ORDER.map((k) =>
@@ -81,24 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
           '<div class="team-card__amount">' + GM.formatINR(m.amount) + '</div>' +
           '<div class="team-card__chips">' + chips + '</div>' +
         '</div>'
-      );
-    }).join('');
-  }
-
-  function renderTeamTable(team) {
-    const tbody = document.getElementById('anaTeamBody');
-    if (!tbody) return;
-    tbody.innerHTML = team.map((m) => {
-      const st = m.byStatus || {};
-      const cells = STATUS_ORDER.map((k) =>
-        '<td class="num">' + (st[k] || 0) + '</td>').join('');
-      return (
-        '<tr>' +
-          '<td>' + GM.escapeHtml(m.name) + '</td>' +
-          '<td class="num">' + m.applications + '</td>' +
-          '<td class="num">' + GM.formatINR(m.amount) + '</td>' +
-          cells +
-        '</tr>'
       );
     }).join('');
   }

@@ -21,32 +21,32 @@
         <span class="brand__mark">GM</span>
         <span>
           <span class="brand__name">Gold Mitra</span>
-          <span class="brand__tagline">Field Loan Suite</span>
+            <span class="brand__tagline">Field Gold Suite</span>
         </span>
       </div>
 
       <nav class="sidebar__nav">
         <div class="nav-group__label">Overview</div>
         <a class="nav-item" href="/" data-nav-link>
-          <span class="nav-item__icon">?</span>
+          <span class="nav-item__icon">◈</span>
           Dashboard
         </a>
         <a class="nav-item" href="/applications/new" data-nav-link>
-          <span class="nav-item__icon">+</span>
+          <span class="nav-item__icon">＋</span>
           New Application
         </a>
         <a class="nav-item" href="/records" data-nav-link>
-          <span class="nav-item__icon">?</span>
+          <span class="nav-item__icon">▤</span>
           Records
         </a>
         <a class="nav-item is-active" href="/analytics" data-nav-link>
-          <span class="nav-item__icon">?</span>
+          <span class="nav-item__icon">#</span>
           Analytics
         </a>
 
         <div class="nav-group__label">System</div>
-        <a class="nav-item" href="/settings" data-nav-link>
-          <span class="nav-item__icon">?</span>
+        <a class="nav-item" href="/settings" data-nav-link data-admin-only>
+          <span class="nav-item__icon">⚙</span>
           Settings
         </a>
       </nav>
@@ -57,7 +57,7 @@
           <div class="sidebar__user-name" data-user-full>Loading...</div>
           <div class="sidebar__user-role" data-user-role>field officer</div>
         </div>
-        <button class="logout-btn" id="logoutBtn" title="Sign out" aria-label="Sign out">?</button>
+        <button class="logout-btn" id="logoutBtn" title="Sign out" aria-label="Sign out">⏻</button>
       </div>
     </aside>
 
@@ -67,25 +67,25 @@
       <ul class="mobile-nav__list">
         <li>
           <a class="mobile-nav__link" href="/">
-            <span class="nav-item__icon">?</span>
+            <span class="nav-item__icon">◈</span>
             Home
           </a>
         </li>
         <li>
           <a class="mobile-nav__link" href="/applications/new">
-            <span class="nav-item__icon">+</span>
+            <span class="nav-item__icon">＋</span>
             New
           </a>
         </li>
         <li>
           <a class="mobile-nav__link" href="/records">
-            <span class="nav-item__icon">?</span>
+            <span class="nav-item__icon">▤</span>
             Records
           </a>
         </li>
         <li>
           <a class="mobile-nav__link is-active" href="/analytics">
-            <span class="nav-item__icon">?</span>
+            <span class="nav-item__icon">#</span>
             Stats
           </a>
         </li>
@@ -131,7 +131,7 @@
             <div class="stat-card">
               <div class="stat-card__label">Total amount</div>
               <div class="stat-card__value" id="anaTotalAmt">--</div>
-              <div class="stat-card__hint">disbursed loan value</div>
+              <div class="stat-card__hint">gold value</div>
             </div>
             <div class="stat-card">
               <div class="stat-card__label">Today</div>
@@ -141,7 +141,7 @@
             <div class="stat-card">
               <div class="stat-card__label">Today amount</div>
               <div class="stat-card__value" id="anaTodayAmt">--</div>
-              <div class="stat-card__hint">disbursed today</div>
+              <div class="stat-card__hint">gold value today</div>
             </div>
           </div>
 
@@ -170,22 +170,6 @@
             <h2 class="dash-section__title">Team workload</h2>
           </div>
           <div class="team-grid" id="anaTeamGrid"></div>
-          <div class="table-wrap">
-            <table class="table" id="anaTeamTable">
-              <thead>
-                <tr>
-                  <th>Staff</th>
-                  <th>Applications</th>
-                  <th>Amount</th>
-                  <th>Pending</th>
-                  <th>Approved</th>
-                  <th>Rejected</th>
-                  <th>Disbursed</th>
-                </tr>
-              </thead>
-              <tbody id="anaTeamBody"></tbody>
-            </table>
-          </div>
         </section>
       </div>
     </div>

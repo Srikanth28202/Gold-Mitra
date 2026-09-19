@@ -76,15 +76,15 @@
           </div>
           <div class="stat animate-in animate-in-delay-1">
             <div class="stat__icon stat__icon--green">₹</div>
-            <div class="stat__label">Disbursed Today</div>
+            <div class="stat__label">Gold Value Today</div>
             <div class="stat__value">${GM.formatINR(s.todayDisbursed)}</div>
             <div class="stat__sub mt-2">${s.todayApplications} application${s.todayApplications === 1 ? '' : 's'} today</div>
           </div>
           <div class="stat animate-in animate-in-delay-2">
             <div class="stat__icon stat__icon--amber">Σ</div>
-            <div class="stat__label">Total Disbursed</div>
+            <div class="stat__label">Total Gold Value</div>
             <div class="stat__value">${GM.formatINR(s.portfolio)}</div>
-            <div class="stat__sub mt-2">principal across all loans</div>
+            <div class="stat__sub mt-2">principal across all applications</div>
           </div>
           <div class="stat animate-in animate-in-delay-3">
             <div class="stat__icon stat__icon--blue">◈</div>
@@ -146,7 +146,7 @@
       tbody.innerHTML = `
         <tr>
           <td colspan="5" class="table__cell-muted" style="text-align:center; padding:28px">
-            No applications yet — record your first loan from the New Application screen.
+            No applications yet — record your first application from the New Application screen.
           </td>
         </tr>`;
       return;

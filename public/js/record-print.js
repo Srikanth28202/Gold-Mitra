@@ -46,17 +46,6 @@
     const acct = a.loan?.accountDetails || a.accountDetails || {};
     const isAccount = (a.loan?.paymentMode === 'account') || !!(acct.accountNumber && acct.accountNumber !== '—');
     const totalAmt = a.totalAmountReceived || a.loan?.amount || 0;
-    const declText =
-      a.declaration ||
-      `English\n\nDeclaration:\nI hereby declare that the above-mentioned gold items belong to me and were purchased by me or received by me as a gift. I am voluntarily selling these gold items to Gold Mitra. The details of the gold items, including their weight and quality, have been explained to me. I have read/heard and understood the above declaration and have signed it voluntarily.\n\nCustomer Signature: ____________________\nDate: ____ / ____ / ______\n\nಕನ್ನಡ\n\nಘೋಷಣೆ:\nಮೇಲ್ಕಂಡ ಚಿನ್ನದ ವಸ್ತುಗಳು ನನ್ನ ಸ್ವಂತದ್ದಾಗಿದ್ದು, ಅವುಗಳನ್ನು ನಾನು ಖರೀದಿಸಿರುತ್ತೇನೆ ಅಥವಾ ಉಡುಗೊರೆಯಾಗಿ ಪಡೆದಿರುತ್ತೇನೆ. ಈ ಚಿನ್ನದ ವಸ್ತುಗಳನ್ನು ನಾನು ಸ್ವಇಚ್ಛೆಯಿಂದ ಗೋಲ್ಡ್ ಮಿತ್ರ ಅವರಿಗೆ ಮಾರಾಟ ಮಾಡುತ್ತಿದ್ದೇನೆ. ಚಿನ್ನದ ವಸ್ತುಗಳ ತೂಕ ಮತ್ತು ಗುಣಮಟ್ಟದ ವಿವರಗಳನ್ನು ನನಗೆ ವಿವರಿಸಲಾಗಿದೆ. ಮೇಲಿನ ಘೋಷಣೆಯನ್ನು ನಾನು ಓದಿ/ಕೇಳಿ ಅರ್ಥಮಾಡಿಕೊಂಡು, ನನ್ನ ಸ್ವಇಚ್ಛೆಯಿಂದ ಸಹಿ ಮಾಡಿರುತ್ತೇನೆ.\n\nಗ್ರಾಹಕರ ಸಹಿ: ____________________\nದಿನಾಂಕ: ____ / ____ / ______`;
-
-    const staffSigHTML = a.staffSignature
-      ? `<img src="${a.staffSignature}" alt="Staff Signature" style="max-height:80px;max-width:100%;object-fit:contain;" />`
-      : `<span style="color:#9CA3AF;font-size:0.82rem;">Sign here</span>`;
-
-    const custSigHTML = a.customerSignature
-      ? `<img src="${a.customerSignature}" alt="Customer Signature" style="max-height:80px;max-width:100%;object-fit:contain;" />`
-      : `<span style="color:#9CA3AF;font-size:0.82rem;">Sign here</span>`;
 
     document.title = `Print — ${a.applicationNo} · Gold Mitra`;
 

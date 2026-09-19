@@ -9,10 +9,13 @@
  * Usage: node test/workflow-test.js
  */
 const path = require('path');
+const crypto = require('crypto');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 const { connectDB, disconnectDB } = require('../src/config/db');
 const { bootstrapAdmin } = require('../src/routes/auth');
+const Staff = require('../src/models/Staff');
+const Application = require('../src/models/Application');
 
 const BASE = `http://localhost:${process.env.PORT || 3000}`;
 const adminEmail = (process.env.ADMIN_EMAIL || 'admin@goldmitra.com').toLowerCase();
@@ -66,6 +69,11 @@ async function main() {
 
   await bootstrapAdmin();
   pass('1.02 Bootstrap admin ensured');
+
+  /* Clear leftovers from earlier interrupted runs so the shared unique email
+     index never blocks a rerun (reported "E11000 duplicate key" on staff). */
+  await Staff.deleteMany({ email: /^field[0-9a-z]+@goldmitra\.com$/i });
+  await Application.deleteMany({ 'customer.name': { $in: ['Workflow Test Customer', 'Member Test Customer'] } });
 
   /* ── Login ─────────────────────────────────────────────── */
   const login = await api('/api/auth/login', {
@@ -273,7 +281,7 @@ async function main() {
   }
   pass('3.02 GET /api/staff lists team (' + staffList.data.staff.length + ' members)');
 
-  const memberEmail = 'field' + String(Date.now()).slice(-6) + '@goldmitra.com';
+  const memberEmail = 'field' + Date.now().toString(36) + crypto.randomBytes(4).toString('hex') + '@goldmitra.com';
   const createdMember = await api('/api/staff', {
     method: 'POST',
     body: { name: 'Field Temp Officer', email: memberEmail, phone: '9876501234', role: 'field-officer', password: 'Field@Pass123' }
@@ -353,7 +361,6 @@ async function main() {
   if (selfBlock.status !== 400) return bail('3.13 Admin cannot deactivate own account (400)', String(selfBlock.status));
   pass('3.13 Admin cannot deactivate own account');
 
-  const Staff = require('../src/models/Staff');
   await Staff.deleteOne({ email: memberEmail });
 
   /* ── 4 · Brute-force rate limiting ─────────────────────── */
