@@ -928,4 +928,35 @@
   .gold-doc-header { flex-direction: column; text-align: center; }
   .doc-meta-box { align-items: center; }
   .signatures-section { grid-template-columns: 1fr; }
+
+  /* Gold items table: let it slide sideways on narrow phones instead of crushing cells */
+  .gold-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .gold-table-scroll .gold-items-table { min-width: 540px; }
+  .gold-table-scroll th,
+  .gold-table-scroll td { min-width: 120px; }
+}
+
+@media (max-width: 480px) {
+  .form-container-wrap { padding: 14px 10px 44px; }
+
+  .doc-field { flex-wrap: wrap; }
+  .doc-field label { min-width: 100%; font-size: 0.8rem; }
+  .doc-input, .doc-textarea { width: 100%; font-size: 0.85rem; }
+
+  .acct-row { align-items: flex-start; flex-direction: column; }
+  .acct-label { min-width: 0; width: 100%; border-right: none; border-bottom: 1px solid #EADBBA; }
+
+  .section-banner { padding: 8px 10px; }
+  .section-title { font-size: 0.92rem; }
+
+  .section-total-footer, .section-total-footer-mob {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .action-buttons-bar { flex-wrap: wrap; align-items: stretch; }
+  .btn-save, .btn-print, .btn-reset { min-height: 46px; font-size: 0.92rem; }
 }
