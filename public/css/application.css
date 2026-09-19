@@ -645,6 +645,7 @@
   color: #374151;
   margin-top: 4px;
 }
+.btn-clear-sig {
   padding: 3px 7px;
   cursor: pointer;
   color: #374151;
@@ -929,14 +930,54 @@
   .doc-meta-box { align-items: center; }
   .signatures-section { grid-template-columns: 1fr; }
 
-  /* Gold items table: let it slide sideways on narrow phones instead of crushing cells */
-  .gold-table-scroll {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  /* GOLD ITEM LIST ON PHONES: stack every row into a full-width card so
+     Sl.no, Quality, Weight, the gold-photo button and the Delete button are
+     ALL on-screen with zero horizontal scrolling (photo/weight/delete were
+     being cut off to the right on narrow phones). */
+  .gold-items-table,
+  .gold-items-table thead,
+  .gold-items-table tbody,
+  .gold-items-table tr,
+  .gold-items-table th,
+  .gold-items-table td { display: block; width: 100%; box-sizing: border-box; }
+
+  .gold-items-table thead { display: none; }
+
+  .gold-items-table tr {
+    margin: 0 0 14px 0;
+    padding: 10px 12px;
+    background: #FFFDF7;
+    border: 1px solid #EADBBA;
+    border-radius: 8px;
   }
-  .gold-table-scroll .gold-items-table { min-width: 540px; }
-  .gold-table-scroll th,
-  .gold-table-scroll td { min-width: 120px; }
+
+  .gold-items-table td { padding: 8px 0; border: none; }
+
+  .gold-items-table td::before {
+    display: block;
+    content: attr(data-label);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #8A7A4D;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 3px;
+  }
+
+  .gold-items-table td:nth-child(1)::before { content: "Item #"; }
+  .gold-items-table td:nth-child(2)::before { content: "Quality"; }
+  .gold-items-table td:nth-child(3)::before { content: "Weight (g)"; }
+  .gold-items-table td:nth-child(4)::before { content: "Actions"; }
+
+  .gold-items-table .quality-select,
+  .gold-items-table .weight-input { width: 100%; min-height: 42px; font-size: 0.95rem; }
+
+  /* only per-row action is Delete: make it a full-width, easy-to-tap target */
+  .gold-items-table .btn-delete-row {
+    width: 100%;
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
 }
 
 @media (max-width: 480px) {
