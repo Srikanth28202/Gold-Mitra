@@ -63,13 +63,12 @@
           </div>
           <div class="doc-brand-text">
             <h1 class="doc-title">Gold Mitra</h1>
-            <p class="doc-subtitle">Trusted Gold Purchase Partner</p>
-            <span class="doc-gstin-badge">GSTIN: 29BGMPB7189N224</span>
+            <span class="doc-gstin-badge">GSTIN: 29BGMPB7189N22ZH</span>
           </div>
         </div>
 
         <div class="doc-address">
-          <p class="store-name">Gold Mitra Financial Services</p>
+          <p class="store-name">Gold Mitra</p>
           <p class="store-loc">Near Neelkantaeshwara Temple,</p>
           <p class="store-loc">Hooropate Circle, Tumkur</p>
         </div>
