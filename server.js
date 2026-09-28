@@ -8,7 +8,6 @@ const { connectDB } = require('./src/config/db');
 const { router: authRoutes, bootstrapAdmin } = require('./src/routes/auth');
 const dashboardRoutes = require('./src/routes/dashboard');
 const applicationRoutes = require('./src/routes/applications');
-const exportRoutes = require('./src/routes/export');
 const staffRoutes = require('./src/routes/staff');
 const { requireAuth } = require('./src/middleware/auth');
 
@@ -238,7 +237,6 @@ app.get('/settings', requireAuth, (req, res) => {
 app.use(authRoutes);
 app.use(dashboardRoutes);
 app.use(applicationRoutes);
-app.use(exportRoutes);
 app.use(staffRoutes);
 
 /* ─────────────────────────────────────────────────────────────
