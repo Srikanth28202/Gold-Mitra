@@ -68,7 +68,7 @@ router.get('/api/dashboard/stats', requireAuth, async (req, res) => {
     const recent = await Application.find(scope)
       .sort({ createdAt: -1 })
       .limit(RECENT_LIMIT)
-      .select('applicationNo status customer.name totalWeightGrams createdAt loan.amount')
+      .select('applicationNo customer.name totalWeightGrams createdAt loan.amount')
       .lean();
 
     // $count / $group return no row when nothing matches, so normalise to 0.
@@ -96,7 +96,6 @@ router.get('/api/dashboard/stats', requireAuth, async (req, res) => {
         customerName: (a.customer && a.customer.name) || '—',
         weightGrams: num(a.totalWeightGrams),
         amount: num(a.loan && a.loan.amount),
-        status: a.status,
         createdAt: a.createdAt
       }))
     });

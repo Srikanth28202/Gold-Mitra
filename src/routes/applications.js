@@ -175,7 +175,7 @@ router.get('/api/applications', requireAuth, async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(100)
       .select(
-        '_id applicationNo status customer.name customer.mobile loan.amount loan.date totalWeightGrams createdAt'
+        '_id applicationNo customer.name customer.mobile loan.amount loan.date totalWeightGrams createdAt'
       );
 
     res.json({ applications, total: applications.length });
@@ -232,7 +232,6 @@ router.put('/api/applications/:id', requireAuth, async (req, res) => {
         totalWeightGrams: application.totalWeightGrams,
         amount: application.loan.amount,
         date: application.loan.date,
-        status: application.status,
         updatedAt: application.updatedAt
       }
     });

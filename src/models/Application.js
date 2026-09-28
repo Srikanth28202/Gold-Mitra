@@ -14,11 +14,6 @@ const jewelleryItemSchema = new mongoose.Schema(
 const applicationSchema = new mongoose.Schema(
   {
     applicationNo: { type: String, required: true, unique: true },
-    status: {
-      type: String,
-      enum: ['pending', 'approved', 'rejected', 'disbursed'],
-      default: 'pending'
-    },
     staff: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff', required: true },
 
     customer: {

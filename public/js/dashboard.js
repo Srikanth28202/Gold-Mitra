@@ -9,7 +9,7 @@
      amount:       { day, week },          // rupees transferred
      goldGrams:    { day, week },          // grams pledged
      recent: [{ id, applicationNo, customerName,
-                weightGrams, amount, status, createdAt }]
+                weightGrams, amount, createdAt }]
    }
    ============================================ */
 (function () {
@@ -27,13 +27,6 @@
   const periodLine = $('#dashPeriod');
   const greeting = $('#dashGreeting');
   const refreshBtn = $('#refreshBtn');
-
-  const STATUS = {
-    pending: { label: 'Pending', cls: 'badge--amber' },
-    approved: { label: 'Approved', cls: 'badge--blue' },
-    rejected: { label: 'Rejected', cls: 'badge--red' },
-    disbursed: { label: 'Disbursed', cls: 'badge--green' }
-  };
 
   const money = (n) =>
     '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
@@ -57,11 +50,6 @@
     if (h < 12) return 'Good morning';
     if (h < 17) return 'Good afternoon';
     return 'Good evening';
-  }
-
-  function statusBadge(status) {
-    const s = STATUS[status] || { label: status || '—', cls: 'badge--neutral' };
-    return `<span class="badge ${s.cls}">${s.label}</span>`;
   }
 
   function when(iso) {
@@ -113,7 +101,6 @@
           <td>${GM.escapeHtml(a.customerName)}</td>
           <td class="ta-right">${money(a.amount)}</td>
           <td class="ta-right">${grams(a.weightGrams)} g</td>
-          <td>${statusBadge(a.status)}</td>
           <td>${when(a.createdAt)}</td>
         </tr>`
       )

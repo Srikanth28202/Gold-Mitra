@@ -4,13 +4,6 @@
 (function () {
   'use strict';
 
-  const STATUS = {
-    pending: { label: 'Pending', cls: 'badge--amber' },
-    approved: { label: 'Approved', cls: 'badge--blue' },
-    rejected: { label: 'Rejected', cls: 'badge--red' },
-    disbursed: { label: 'Disbursed', cls: 'badge--green' }
-  };
-
   const $ = (s) => document.querySelector(s);
   const searchInput = $('#recordSearch');
   const clearBtn = $('#searchClear');
@@ -35,11 +28,6 @@
     return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
-  function statusBadge(status) {
-    const s = STATUS[status] || STATUS.pending;
-    return `<span class="badge ${s.cls}"><span class="badge__dot"></span>${s.label}</span>`;
-  }
-
   function showState(which) {
     cardsEl.innerHTML = '';
     tableEl.innerHTML = '';
@@ -58,7 +46,6 @@
           <div>
             <div class="record-card__no">${GM.escapeHtml(a.applicationNo)}<small>${GM.escapeHtml(a.customer.name)}</small></div>
           </div>
-          ${statusBadge(a.status)}
         </div>
         <div class="record-card__grid">
           <div class="record-card__cell">
@@ -72,10 +59,6 @@
           <div class="record-card__cell">
             <div class="cell-label">Weight</div>
             <div class="cell-value">${fmtWeight(a.totalWeightGrams)}</div>
-          </div>
-          <div class="record-card__cell">
-            <div class="cell-label">Status</div>
-            <div class="cell-value">${(STATUS[a.status] || STATUS.pending).label}</div>
           </div>
         </div>
         <div class="record-card__date">🗓 &nbsp;${fmtDate(a.loan.date)}</div>
@@ -94,7 +77,6 @@
               <th>Amount</th>
               <th>Weight</th>
               <th>Date</th>
-              <th>Status</th>
               <th></th>
             </tr>
           </thead>
@@ -114,7 +96,6 @@
         <td class="table__cell-strong">${fmtMoney(a.loan.amount)}</td>
         <td>${fmtWeight(a.totalWeightGrams)}</td>
         <td class="table__cell-muted">${fmtDate(a.loan.date)}</td>
-        <td>${statusBadge(a.status)}</td>
         <td class="table__chevron">→</td>
       </tr>`;
   }

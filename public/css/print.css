@@ -234,30 +234,6 @@
 
 .pd-meta__value { font-weight: var(--fw-semibold); color: #161B22; }
 
-.pd-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 4pt;
-  padding: 1.5pt 7pt;
-  border-radius: 999px;
-  font-weight: var(--fw-semibold);
-  font-size: 7.5pt;
-  print-color-adjust: exact;
-  -webkit-print-color-adjust: exact;
-}
-
-.pd-status__dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.pd-status--pending   { background: #FBF1DC; color: #A96B00; }
-.pd-status--approved  { background: #E8F1FB; color: #1D5EA8; }
-.pd-status--rejected  { background: #FBE9E7; color: #B43232; }
-.pd-status--disbursed { background: #E7F6EE; color: #157A4E; }
-
 /* ---------------- Sections ---------------- */
 
 .pd-section { margin-top: 6mm; break-inside: auto; }
