@@ -241,42 +241,29 @@
 
         <div class="section-content account-details-grid">
           <div class="account-table">
-            <div class="acct-row" style="background:#FAF7F0;">
-              <span class="acct-label">Payment mode</span>
-              <div style="display:flex;gap:20px;align-items:center;padding:8px 12px;">
-                <label style="font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.88rem;color:#111827;">
-                  <input type="radio" name="paymentMode" value="cash" id="modeCash" checked />
-                  💵 Cash
-                </label>
-                <label style="font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.88rem;color:#111827;">
-                  <input type="radio" name="paymentMode" value="account" id="modeAccount" />
-                  🏦 Bank Transfer
-                </label>
-              </div>
+            <div class="acct-row">
+              <span class="acct-label">Account number</span>
+              <input type="text" id="acctNumber" placeholder="Enter account number" class="doc-input" />
             </div>
-
-            <!-- Bank account fields group: shown ONLY when Bank Transfer is selected -->
-            <div id="bankFieldsGroup" style="display:none;">
-              <div class="acct-row">
-                <span class="acct-label">Account number</span>
-                <input type="text" id="acctNumber" placeholder="Enter account number" class="doc-input" />
-              </div>
-              <div class="acct-row">
-                <span class="acct-label">Name</span>
-                <input type="text" id="acctName" placeholder="Enter name" class="doc-input" />
-              </div>
-              <div class="acct-row">
-                <span class="acct-label">IFSC</span>
-                <input type="text" id="acctIfsc" placeholder="Enter IFSC code" style="text-transform:uppercase;" class="doc-input" />
-              </div>
-              <div class="acct-row">
-                <span class="acct-label">Bank</span>
-                <input type="text" id="acctBank" placeholder="Enter bank name" class="doc-input" />
-              </div>
-              <div class="acct-row">
-                <span class="acct-label">Branch</span>
-                <input type="text" id="acctBranch" placeholder="Enter branch name" class="doc-input" />
-              </div>
+            <div class="acct-row">
+              <span class="acct-label">Name</span>
+              <input type="text" id="acctName" placeholder="Enter name" class="doc-input" />
+            </div>
+            <div class="acct-row">
+              <span class="acct-label">IFSC</span>
+              <input type="text" id="acctIfsc" placeholder="Enter IFSC code" style="text-transform:uppercase;" class="doc-input" />
+            </div>
+            <div class="acct-row">
+              <span class="acct-label">Bank</span>
+              <input type="text" id="acctBank" placeholder="Enter bank name" class="doc-input" />
+            </div>
+            <div class="acct-row">
+              <span class="acct-label">Branch</span>
+              <input type="text" id="acctBranch" placeholder="Enter branch name" class="doc-input" />
+            </div>
+            <div class="acct-row">
+              <span class="acct-label">Cash</span>
+              <input type="text" id="acctCash" placeholder="Enter cash amount / details" class="doc-input" />
             </div>
           </div>
 

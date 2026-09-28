@@ -208,34 +208,30 @@
 
         <div class="section-content account-details-grid">
           <div class="account-table">
-            <div class="acct-row" style="background:#FAF7F0;">
-              <span class="acct-label">Payment mode</span>
-              <div class="doc-input" style="background:transparent;border:none;font-weight:700;">${isAccount ? '🏦 Bank Transfer' : '💵 Cash'}</div>
+            <div class="acct-row">
+              <span class="acct-label">Account number</span>
+              <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.accountNumber || '—')}</div>
             </div>
-            ${
-              isAccount
-                ? `<div class="acct-row">
-                    <span class="acct-label">Account number</span>
-                    <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.accountNumber || '—')}</div>
-                  </div>
-                  <div class="acct-row">
-                    <span class="acct-label">Name</span>
-                    <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.holderName || acct.name || '—')}</div>
-                  </div>
-                  <div class="acct-row">
-                    <span class="acct-label">IFSC</span>
-                    <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.ifsc || '—')}</div>
-                  </div>
-                  <div class="acct-row">
-                    <span class="acct-label">Bank</span>
-                    <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.bank || '—')}</div>
-                  </div>
-                  <div class="acct-row">
-                    <span class="acct-label">Branch</span>
-                    <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.branch || '—')}</div>
-                  </div>`
-                : ''
-            }
+            <div class="acct-row">
+              <span class="acct-label">Name</span>
+              <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.holderName || acct.name || '—')}</div>
+            </div>
+            <div class="acct-row">
+              <span class="acct-label">IFSC</span>
+              <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.ifsc || '—')}</div>
+            </div>
+            <div class="acct-row">
+              <span class="acct-label">Bank</span>
+              <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.bank || '—')}</div>
+            </div>
+            <div class="acct-row">
+              <span class="acct-label">Branch</span>
+              <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(acct.branch || '—')}</div>
+            </div>
+            <div class="acct-row">
+              <span class="acct-label">Cash</span>
+              <div class="doc-input" style="background:#FAF9F5;border:none;">${GM.escapeHtml(String(acct.cash || '—'))}</div>
+            </div>
           </div>
 
           <div class="section-total-footer">

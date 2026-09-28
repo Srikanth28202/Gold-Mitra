@@ -81,15 +81,12 @@
   const goldPhotoInput = $('#goldPhotoInput');
   const uploadGoldPhotoBtn = $('#uploadGoldPhotoBtn');
 
-  const modeCashRadio = $('#modeCash');
-  const modeAccountRadio = $('#modeAccount');
-  const bankFieldsGroup = $('#bankFieldsGroup');
-
   const acctNumberInput = $('#acctNumber');
   const acctNameInput = $('#acctName');
   const acctIfscInput = $('#acctIfsc');
   const acctBankInput = $('#acctBank');
   const acctBranchInput = $('#acctBranch');
+  const acctCashInput = $('#acctCash');
 
   const declarationInput = $('#declarationText');
 
@@ -97,14 +94,6 @@
   const printBtn = $('#printBtn');
   const resetBtn = $('#resetBtn');
   const addItemRowBtn = $('#addItemRowBtn');
-
-  /* ---------- Payment Mode Toggle ---------- */
-
-  function updatePaymentModeUI() {
-    const isAccount = modeAccountRadio && modeAccountRadio.checked;
-    if (bankFieldsGroup) bankFieldsGroup.style.display = isAccount ? 'block' : 'none';
-    state.paymentMode = isAccount ? 'account' : 'cash';
-  }
 
   /* ---------- Alert helper ---------- */
 
@@ -425,7 +414,6 @@
     GM.setLoading(saveBtn, true, 'Saving…');
 
     const totalAmt = parseFloat(totalAmountInput.value) || 0;
-    const isAccount = state.paymentMode === 'account';
 
     const payload = {
       pageNo: pageNoInput ? pageNoInput.value.trim() || '1' : '1',
@@ -458,19 +446,18 @@
           photoData: idx === 0 ? (state.goldPhoto || '') : ''
         })),
 
-      accountDetails: isAccount
-        ? {
-            accountNumber: acctNumberInput.value.trim(),
-            name: acctNameInput.value.trim(),
-            ifsc: acctIfscInput.value.trim().toUpperCase(),
-            bank: acctBankInput.value.trim(),
-            branch: acctBranchInput.value.trim()
-          }
-        : {},
+      accountDetails: {
+        accountNumber: acctNumberInput ? acctNumberInput.value.trim() : '',
+        name: acctNameInput ? acctNameInput.value.trim() : '',
+        ifsc: acctIfscInput ? acctIfscInput.value.trim().toUpperCase() : '',
+        bank: acctBankInput ? acctBankInput.value.trim() : '',
+        branch: acctBranchInput ? acctBranchInput.value.trim() : '',
+        cash: acctCashInput ? acctCashInput.value.trim() : ''
+      },
 
       loan: {
         amount: totalAmt > 0 ? totalAmt : 1,
-        paymentMode: state.paymentMode,
+        paymentMode: 'account',
         date: docDateInput.value || todayISO()
       }
     };
@@ -575,21 +562,14 @@
         }));
       }
 
-      /* Payment Mode & Bank Account Details */
-      const mode = a.loan?.paymentMode || 'cash';
-      if (mode === 'account' && modeAccountRadio) {
-        modeAccountRadio.checked = true;
-      } else if (modeCashRadio) {
-        modeCashRadio.checked = true;
-      }
-      updatePaymentModeUI();
-
+      /* Bank Account & Cash Details */
       const ad = a.loan?.accountDetails || a.accountDetails || {};
-      acctNumberInput.value = ad.accountNumber || '';
-      acctNameInput.value = ad.holderName || ad.name || '';
-      acctIfscInput.value = ad.ifsc || '';
-      acctBankInput.value = ad.bank || '';
-      acctBranchInput.value = ad.branch || '';
+      if (acctNumberInput) acctNumberInput.value = ad.accountNumber || '';
+      if (acctNameInput) acctNameInput.value = ad.holderName || ad.name || '';
+      if (acctIfscInput) acctIfscInput.value = ad.ifsc || '';
+      if (acctBankInput) acctBankInput.value = ad.bank || '';
+      if (acctBranchInput) acctBranchInput.value = ad.branch || '';
+      if (acctCashInput) acctCashInput.value = ad.cash || '';
 
       totalAmountInput.value = a.totalAmountReceived || a.loan?.amount || '';
 
@@ -606,10 +586,6 @@
 
   function init() {
     docDateInput.value = todayISO();
-
-    if (modeCashRadio) modeCashRadio.addEventListener('change', updatePaymentModeUI);
-    if (modeAccountRadio) modeAccountRadio.addEventListener('change', updatePaymentModeUI);
-    updatePaymentModeUI();
 
     renderTableRows();
 
