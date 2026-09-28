@@ -29,18 +29,16 @@ gold-mithra/
 │   │   └── Application.js  # Loan application: customer, jewellery items, loan
 │   └── routes/
 │       ├── auth.js         # /api/auth/* login, logout, me
-│       ├── dashboard.js    # /api/dashboard/stats, /api/health
 │       ├── applications.js # /api/applications* create, list, get, update, delete
 │       └── staff.js        # /api/staff* list, create, activate/deactivate (admin only)
 ├── public/
 │   ├── css/               # Design system + records.css + print.css + settings.css
-│   └── js/                # UI kit, nav, auth, dashboard, application, records, print, settings
+│   └── js/                # UI kit, nav, auth, application, records, print, settings
 ├── test/
 │   ├── e2e-application.js  # API-level create/read/update/delete test (needs server + Mongo)
 │   └── workflow-test.js    # Full journey + security test (pages, staff, CSRF, rate-limit, headers)
 └── views/
     ├── login.html          # Login page
-    ├── dashboard.html      # Main dashboard (sidebar + topbar + mobile nav)
     ├── application.html    # New Application field form (customer/jewellery/loan)
     ├── records.html        # Records list (search + cards/table)
     ├── record.html         # Record detail (edit/delete)
@@ -123,7 +121,7 @@ The reusable styles live under `public/css/`:
 - `components.css` — buttons, inputs, cards, stat cards, badges, tables, toasts,
   alerts, skeletons, empty states, avatars
 - `layout.css` — sidebar, mobile bottom nav, topbar, responsive grids
-- `login.css` / `dashboard.css` — page-specific styles
+- `login.css` — page-specific styles
 
 All pages share the same token-driven design system, so new screens stay
 consistent automatically.

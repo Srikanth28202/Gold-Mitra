@@ -6,10 +6,8 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const { connectDB } = require('./src/config/db');
 const { router: authRoutes, bootstrapAdmin } = require('./src/routes/auth');
-const dashboardRoutes = require('./src/routes/dashboard');
 const applicationRoutes = require('./src/routes/applications');
 const staffRoutes = require('./src/routes/staff');
-const analyticsRoutes = require('./src/routes/analytics');
 const { requireAuth } = require('./src/middleware/auth');
 
 dotenv.config();
@@ -200,7 +198,7 @@ app.use('/api', async (req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', requireAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+  res.redirect('/records');
 });
 
 app.get('/login', (req, res) => {
@@ -230,20 +228,14 @@ app.get('/records/:id', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'record.html'));
 });
 
-app.get('/analytics', requireAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'analytics.html'));
-});
-
 app.get('/settings', requireAuth, (req, res) => {
   if (req.session.role !== 'admin') return res.redirect('/');
   res.sendFile(path.join(__dirname, 'views', 'settings.html'));
 });
 
 app.use(authRoutes);
-app.use(dashboardRoutes);
 app.use(applicationRoutes);
 app.use(staffRoutes);
-app.use(analyticsRoutes);
 
 /* ─────────────────────────────────────────────────────────────
    Missing-route handling (API 404 JSON, pages redirect home)
