@@ -274,28 +274,14 @@
 
         <!-- 6. SIGNATURES SECTION -->
         <section class="signatures-section">
-          <div class="signature-card">
-            <div class="signature-card-head">
-              <span class="signature-icon">✎</span>
-              <span class="signature-title">Gold Mitra Staff / Admin</span>
-            </div>
-            <div class="physical-signature-wrap">
-              <div class="signature-space"></div>
-              <div class="signature-line">_______________________________</div>
-              <span class="signature-subtext">Signature & Seal</span>
-            </div>
+          <div class="signature-block">
+            <div class="signature-line"></div>
+            <span class="signature-subtext">Gold Mitra Staff / Admin &mdash; Signature &amp; Seal</span>
           </div>
 
-          <div class="signature-card">
-            <div class="signature-card-head">
-              <span class="signature-icon">✎</span>
-              <span class="signature-title">Customer Signature</span>
-            </div>
-            <div class="physical-signature-wrap">
-              <div class="signature-space"></div>
-              <div class="signature-line">_______________________________</div>
-              <span class="signature-subtext">Signature / Thumb Impression</span>
-            </div>
+          <div class="signature-block">
+            <div class="signature-line"></div>
+            <span class="signature-subtext">Customer &mdash; Signature / Thumb Impression</span>
           </div>
         </section>
 

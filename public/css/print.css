@@ -608,55 +608,6 @@
   min-width: 34mm;
 }
 
-.pd-sig-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 6mm;
-  margin-top: 10mm;
-  break-inside: avoid;
-}
-
-.pd-sig {
-  break-inside: avoid;
-}
-
-.pd-sig__title {
-  font-size: 8pt;
-  font-weight: var(--fw-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #3A414D;
-  border-bottom: 1px solid var(--ink-200);
-  padding-bottom: 1.5mm;
-  margin-bottom: 15mm;
-}
-
-.pd-sig__name {
-  font-size: 8.5pt;
-  font-weight: var(--fw-semibold);
-  color: #161B22;
-}
-
-.pd-sig__role { font-size: 7pt; color: var(--ink-500); margin-top: 0.5mm; min-height: 3mm; }
-
-.pd-sig__line {
-  margin-top: 6mm;
-  border-top: 1px solid #8D95A3;
-  padding-top: 1mm;
-  font-size: 7pt;
-  color: var(--ink-500);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  width: 82%;
-}
-
-.pd-sig__stamp {
-  margin-top: 1mm;
-  font-size: 7pt;
-  font-style: italic;
-  color: var(--ink-400);
-}
-
 /* ---------------- Footer ---------------- */
 
 .pd-footer {
@@ -709,7 +660,7 @@
     overflow: visible !important;
   }
 
-  .print-toolbar, .no-print, .btn-action, .add-row-bar, .btn-upload-photo, .btn-upload-item-img, .btn-delete-row, .btn-clear-sig, .action-buttons-bar, .sidebar, .topbar, .mobile-nav, .back-btn {
+  .print-toolbar, .no-print, .btn-action, .add-row-bar, .btn-upload-photo, .btn-upload-item-img, .btn-delete-row, .action-buttons-bar, .sidebar, .topbar, .mobile-nav, .back-btn {
     display: none !important;
   }
 
@@ -738,64 +689,64 @@
 
   .gold-doc-header {
     padding-bottom: 4px !important;
-    margin-bottom: 5px !important;
+    margin-bottom: 6px !important;
     border-bottom: 1.5px solid #D4AF37 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
   .doc-logo svg {
-    width: 28px !important;
-    height: 28px !important;
+    width: 32px !important;
+    height: 32px !important;
   }
 
   .doc-title {
-    font-size: 1.1rem !important;
+    font-size: 1.22rem !important;
   }
 
   .doc-subtitle, .doc-address {
-    font-size: 0.65rem !important;
-    line-height: 1.15 !important;
+    font-size: 0.72rem !important;
+    line-height: 1.25 !important;
   }
 
-  /* Sections tighter */
+  /* Form Sections: comfortable spacing without spilling onto page 2 */
   .form-section {
-    margin-bottom: 5px !important;
+    margin-bottom: 6px !important;
     border: 1px solid #EADBBA !important;
-    border-radius: 4px !important;
+    border-radius: 5px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
   .section-banner {
-    padding: 2px 8px !important;
+    padding: 3px 10px !important;
     background: #F7E5A9 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
   .section-banner .section-icon svg {
-    width: 12px !important;
-    height: 12px !important;
+    width: 14px !important;
+    height: 14px !important;
   }
 
   .section-title {
-    font-size: 0.75rem !important;
+    font-size: 0.82rem !important;
   }
 
   .section-content {
-    padding: 5px 8px !important;
+    padding: 6px 10px !important;
   }
 
-  /* Customer grid */
+  /* Customer Details */
   .customer-grid {
     display: grid !important;
-    grid-template-columns: 1fr 130px !important;
-    gap: 8px !important;
+    grid-template-columns: 1fr 135px !important;
+    gap: 10px !important;
   }
 
   .customer-photo-box {
-    width: 125px !important;
+    width: 130px !important;
     margin-left: auto !important;
     padding: 4px !important;
     background: #FFFDF8 !important;
@@ -805,25 +756,25 @@
   }
 
   .customer-fields {
-    gap: 2px !important;
+    gap: 3px !important;
   }
 
   .doc-field label {
-    min-width: 95px !important;
-    font-size: 0.7rem !important;
+    min-width: 105px !important;
+    font-size: 0.76rem !important;
   }
 
   .doc-input, .doc-textarea, .doc-val {
-    padding: 2px 5px !important;
-    font-size: 0.7rem !important;
+    padding: 2.5px 6px !important;
+    font-size: 0.76rem !important;
     min-height: unset !important;
-    line-height: 1.2 !important;
+    line-height: 1.25 !important;
   }
 
   .photo-preview-container {
-    width: 115px !important;
+    width: 120px !important;
     height: 145px !important;
-    border: 2px dashed #D4AF37 !important;
+    border: 1.5px dashed #D4AF37 !important;
     background: #FAF7F0 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -840,21 +791,21 @@
   }
 
   .full-width-address-row {
-    margin-top: 4px !important;
-    padding-top: 4px !important;
+    margin-top: 5px !important;
+    padding-top: 5px !important;
     border-top: 1px dashed #E5E7EB !important;
     width: 100% !important;
   }
 
   /* Jewellery table */
   .gold-items-table th, .gold-items-table td {
-    padding: 2px 5px !important;
-    font-size: 0.68rem !important;
+    padding: 3px 6px !important;
+    font-size: 0.74rem !important;
   }
 
   .gold-items-table img, .print-gold-img {
-    max-height: 32px !important;
-    max-width: 60px !important;
+    max-height: 34px !important;
+    max-width: 65px !important;
     object-fit: contain !important;
     display: inline-block !important;
     -webkit-print-color-adjust: exact !important;
@@ -862,7 +813,7 @@
   }
 
   .section-total-footer {
-    padding: 2px 8px !important;
+    padding: 3px 10px !important;
     background: #FAF2D6 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -872,25 +823,25 @@
   .account-table { width: 100% !important; }
 
   .acct-row {
-    padding: 2px 6px !important;
-    font-size: 0.68rem !important;
+    padding: 2.5px 6px !important;
+    font-size: 0.74rem !important;
   }
 
   .acct-label {
-    font-size: 0.68rem !important;
-    min-width: 90px !important;
+    font-size: 0.74rem !important;
+    min-width: 100px !important;
   }
 
   /* Declaration */
   .declaration-box {
-    padding: 4px 8px !important;
+    padding: 5px 10px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
   .declaration-textarea, .declaration-text, .decl-eng, .decl-kan {
-    font-size: 0.67rem !important;
-    line-height: 1.25 !important;
+    font-size: 0.71rem !important;
+    line-height: 1.3 !important;
     color: #1F2937 !important;
     display: block !important;
     visibility: visible !important;
@@ -898,65 +849,37 @@
     margin-bottom: 2px !important;
   }
 
-  /* Signatures */
+  /* Compact signatures: no box, just the writing gap, the rule and the caption */
   .signatures-section {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 10px !important;
-    margin-top: 8px !important;
-    margin-bottom: 0 !important;
+    gap: 24px !important;
+    margin: 10px 0 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
-  .signature-card {
-    padding: 5px 8px !important;
-    border: 1px solid #EADBBA !important;
-    background: #FFFDF8 !important;
+  .signature-block {
+    padding-top: 16px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  .physical-signature-wrap {
-    display: block !important;
-    margin-top: 4px !important;
-  }
-
-  .signature-space {
-    height: 32px !important;
   }
 
   .signature-line {
-    font-size: 0.7rem !important;
-    color: #4B5563 !important;
+    max-width: 60mm !important;
+    border-bottom-color: #4B5563 !important;
   }
 
   .signature-subtext {
-    font-size: 0.67rem !important;
+    font-size: 8pt !important;
     font-weight: 600 !important;
     color: #1F2937 !important;
   }
 
-  /* Kill all top margins/paddings inside print area to reclaim space */
+  /* Kill extra margins */
   .pd-section { margin-top: 3mm !important; }
   .pd-rule { margin: 2mm 0 3mm !important; }
   .pd-meta { margin: 2mm 0 0 !important; padding: 2mm 3mm !important; }
-  .pd-sig-grid { margin-top: 6mm !important; }
   .pd-footer { margin-top: 5mm !important; }
 }
 
-/* Narrow screens (the toolbar acts as its own shell) */
-@media (max-width: 640px) {
-  .print-stage { padding: 16px 10px 48px; }
-  .print-doc { padding: 7mm 6mm; }
-  .pd-sig-grid { grid-template-columns: 1fr; gap: 7mm; margin-top: 6mm; }
-  .pd-sig__title { margin-bottom: 8mm; }
-  .pd-loan { grid-template-columns: 1fr; }
-  .pd-customer { grid-template-columns: 1fr; }
-  .pd-customer__photo { width: 100%; height: 90mm; }
-  .print-toolbar { flex-wrap: wrap; }
-  .pd-watermark { font-size: 30pt; }
-  .pd-meta__item--push { margin-left: 0; }
-}
