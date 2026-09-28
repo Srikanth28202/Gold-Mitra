@@ -1,0 +1,69 @@
+/* ============================================
+   Gold Mitra — records download panel
+   ============================================ */
+
+.dl {
+  position: relative;
+  display: inline-block;
+}
+
+.dl__panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 40;
+  width: 306px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.dl__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--text-strong);
+}
+
+.dl__hint {
+  margin: 0;
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.dl__go { width: 100%; justify-content: center; }
+
+.dl__status {
+  margin: 0;
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.dl__status.is-error {
+  color: var(--danger);
+  font-weight: var(--fw-semibold);
+}
+
+.dl__status.is-busy { color: var(--info); }
+
+/* Keep the panel on screen on narrow phones. */
+@media (max-width: 767px) {
+  .dl__panel {
+    position: fixed;
+    top: auto;
+    bottom: calc(64px + 12px);
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+}

@@ -1,42 +1,30 @@
 const express = require('express');
 const { requireAuth } = require('../middleware/auth');
 const { isConnected } = require('../config/db');
+const {
+  istStartOfDay,
+  istEndOfDay,
+  istStartOfWeek,
+  istStartOfMonth,
+  istStartOfYear
+} = require('../config/dates');
 const Application = require('../models/Application');
 
 const router = express.Router();
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
 const RECENT_LIMIT = 8;
-
-/* All "today / this week / this month / this year" boundaries are drawn in IST,
-   not UTC. The shop is in Tumkur, so a UTC day boundary would misfile every
-   application logged between midnight and 5:30am onto the previous day. */
-function istPeriods(ref = new Date()) {
-  const shifted = new Date(ref.getTime() + IST_OFFSET_MS);
-
-  const y = shifted.getUTCFullYear();
-  const m = shifted.getUTCMonth();
-  const d = shifted.getUTCDate();
-
-  // Midnight IST expressed as a UTC instant.
-  const dayStart = new Date(Date.UTC(y, m, d) - IST_OFFSET_MS);
-  const dayEnd = new Date(dayStart.getTime() + DAY_MS);
-
-  // Week starts Monday.
-  const isoDow = (shifted.getUTCDay() + 6) % 7;
-  const weekStart = new Date(dayStart.getTime() - isoDow * DAY_MS);
-
-  const monthStart = new Date(Date.UTC(y, m, 1) - IST_OFFSET_MS);
-  const yearStart = new Date(Date.UTC(y, 0, 1) - IST_OFFSET_MS);
-
-  return { dayStart, dayEnd, weekStart, monthStart, yearStart };
-}
 
 router.get('/api/dashboard/stats', requireAuth, async (req, res) => {
   try {
     const scope = req.session.role === 'admin' ? {} : { staff: req.session.userId };
-    const p = istPeriods();
+    const dayStart = istStartOfDay();
+    const p = {
+      dayStart,
+      dayEnd: istEndOfDay(),
+      weekStart: istStartOfWeek(),
+      monthStart: istStartOfMonth(),
+      yearStart: istStartOfYear()
+    };
 
     // Everything is bounded above by the end of today, so a clock-skewed future
     // createdAt cannot leak into "this month" / "this year" totals.

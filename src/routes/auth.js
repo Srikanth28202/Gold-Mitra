@@ -61,13 +61,24 @@ router.post('/api/auth/login', async (req, res) => {
     staff.lastLoginAt = new Date();
     await staff.save();
 
-    req.session.userId = staff._id.toString();
-    req.session.role = staff.role;
-    req.session.name = staff.name;
+    /* Issue a brand new session id on login. Without this, express-session
+       reuses the incoming cookie, so anyone who planted a `connect.sid`
+       before the victim logged in keeps a valid session afterwards
+       (session fixation). It also stops a second login from silently
+       overwriting the first session's user/role. */
+    req.session.regenerate((regenErr) => {
+      if (regenErr) {
+        console.error('✗ Session regenerate error:', regenErr.message);
+        return res.status(500).json({ error: 'Something went wrong' });
+      }
+      req.session.userId = staff._id.toString();
+      req.session.role = staff.role;
+      req.session.name = staff.name;
 
-    res.json({
-      success: true,
-      user: { name: staff.name, email: staff.email, role: staff.role }
+      res.json({
+        success: true,
+        user: { name: staff.name, email: staff.email, role: staff.role }
+      });
     });
   } catch (err) {
     console.error('✗ Login error:', err.message);

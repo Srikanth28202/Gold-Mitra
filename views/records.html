@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/css/components.css" />
   <link rel="stylesheet" href="/css/layout.css" />
   <link rel="stylesheet" href="/css/records.css" />
+<link rel="stylesheet" href="/css/records-export.css" />
 </head>
 <body>
   <div class="app">
@@ -122,6 +123,42 @@
             <p class="page-head__sub">Search, review and manage every application recorded in the field.</p>
           </div>
           <div class="page-head__actions">
+            <div class="dl" data-admin-only>
+              <button class="btn btn--outline" id="dlToggle" aria-expanded="false" aria-haspopup="true">
+                <span class="icon">⭳</span><span>Download</span>
+              </button>
+
+              <div class="dl__panel hidden" id="dlPanel" role="menu" aria-label="Download records">
+                <p class="dl__title">Save records to this computer</p>
+
+                <label class="field dl__field">
+                  <span class="field__label">What to export</span>
+                  <select class="field__select" id="dlBasis">
+                    <option value="today">Today</option>
+                    <option value="day">A single day</option>
+                    <option value="month">A whole month</option>
+                  </select>
+                </label>
+
+                <label class="field dl__field hidden" id="dlDayField">
+                  <span class="field__label">Day</span>
+                  <input class="field__input" type="date" id="dlDay" />
+                </label>
+
+                <label class="field dl__field hidden" id="dlMonthField">
+                  <span class="field__label">Month</span>
+                  <input class="field__input" type="month" id="dlMonth" />
+                </label>
+
+                <p class="dl__hint" id="dlHint">
+                  Saves a ZIP with a receipt for every application, plus index.csv for Excel.
+                </p>
+
+                <button class="btn btn--primary dl__go" id="dlGo">Download ZIP</button>
+                <p class="dl__status hidden" id="dlStatus" role="status"></p>
+              </div>
+            </div>
+
             <a class="btn btn--primary" href="/applications/new">
               <span class="icon">＋</span><span>New Application</span>
             </a>
@@ -172,9 +209,10 @@
     </div>
   </div>
 
-  <script src="/js/ui.js"></script>
-  <script src="/js/nav.js"></script>
-  <script src="/js/records.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/nav.js"></script>
+<script src="/js/records-export.js"></script>
+<script src="/js/records.js"></script>
   <script>
     (function () {
       document.getElementById('logoutBtn').addEventListener('click', async function () {

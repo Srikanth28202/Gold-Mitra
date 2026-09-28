@@ -20,6 +20,7 @@
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
+    "archiver": "^8.0.0",
     "bcryptjs": "^3.0.3",
     "connect-mongo": "^6.0.0",
     "dotenv": "^17.4.2",
