@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const { connectDB } = require('./src/config/db');
 const { router: authRoutes, bootstrapAdmin } = require('./src/routes/auth');
+const dashboardRoutes = require('./src/routes/dashboard');
 const applicationRoutes = require('./src/routes/applications');
 const staffRoutes = require('./src/routes/staff');
 const { requireAuth } = require('./src/middleware/auth');
@@ -198,7 +199,7 @@ app.use('/api', async (req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', requireAuth, (req, res) => {
-  res.redirect('/records');
+  res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
 
 app.get('/login', (req, res) => {
@@ -234,6 +235,7 @@ app.get('/settings', requireAuth, (req, res) => {
 });
 
 app.use(authRoutes);
+app.use(dashboardRoutes);
 app.use(applicationRoutes);
 app.use(staffRoutes);
 

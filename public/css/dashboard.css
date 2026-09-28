@@ -1,0 +1,106 @@
+/* ============================================
+   Gold Mitra — Dashboard
+   Stat tiles and section grouping for the
+   day / week / month / year figures.
+   ============================================ */
+
+.dash-group { margin-bottom: 26px; }
+
+.dash-group__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dash-group__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.dash-group__hint {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+/* Two-up for the money/gold tiles; .grid-stats itself is a 4-up. */
+.grid-stats--2 { grid-template-columns: repeat(2, 1fr); }
+
+@media (max-width: 1100px) {
+  .grid-stats--2 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---------- Stat tile ---------- */
+
+.stat {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-xs);
+}
+
+.stat::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--gold-400);
+}
+
+.stat--money::after  { background: var(--success); }
+.stat--gold::after   { background: var(--gold-500); }
+.stat--neutral::after { background: var(--ink-300); }
+
+.stat__label {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.stat__value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  line-height: 1.05;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat__unit {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-muted);
+}
+
+.stat__sub {
+  display: block;
+  margin-top: 6px;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+/* ---------- Table helpers ---------- */
+
+.ta-right { text-align: right; }
+
+@media (max-width: 767px) {
+  .grid-stats--2 { grid-template-columns: 1fr; gap: 12px; }
+  .dash-group { margin-bottom: 20px; }
+  .stat { padding: 15px 16px; }
+  .stat__value { font-size: var(--fs-xl); }
+}

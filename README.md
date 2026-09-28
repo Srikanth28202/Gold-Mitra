@@ -29,6 +29,7 @@ gold-mithra/
 │   │   └── Application.js  # Loan application: customer, jewellery items, loan
 │   └── routes/
 │       ├── auth.js         # /api/auth/* login, logout, me
+│       ├── dashboard.js    # /api/dashboard/* day/week/month/year figures
 │       ├── applications.js # /api/applications* create, list, get, update, delete
 │       └── staff.js        # /api/staff* list, create, activate/deactivate (admin only)
 ├── public/
@@ -39,6 +40,7 @@ gold-mithra/
 │   └── workflow-test.js    # Full journey + security test (pages, staff, CSRF, rate-limit, headers)
 └── views/
     ├── login.html          # Login page
+    ├── dashboard.html      # Dashboard (figures + recent applications)
     ├── application.html    # New Application field form (customer/jewellery/loan)
     ├── records.html        # Records list (search + cards/table)
     ├── record.html         # Record detail (edit/delete)
@@ -121,6 +123,7 @@ The reusable styles live under `public/css/`:
 - `components.css` — buttons, inputs, cards, stat cards, badges, tables, toasts,
   alerts, skeletons, empty states, avatars
 - `layout.css` — sidebar, mobile bottom nav, topbar, responsive grids
+- `dashboard.css` — dashboard stat tiles and section grouping
 - `login.css` — page-specific styles
 
 All pages share the same token-driven design system, so new screens stay
