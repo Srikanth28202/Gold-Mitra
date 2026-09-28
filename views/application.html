@@ -123,12 +123,22 @@
                 <img id="customerPhotoImg" class="photo-img-preview" src="" alt="Customer Photo" style="display:none;" />
               </div>
               <input type="file" id="customerPhotoInput" accept="image/*" style="display:none;" />
-              <button type="button" class="btn-upload-photo" id="uploadPhotoBtn">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-                </svg>
-                Upload Photo
-              </button>
+              <input type="file" id="customerCameraInput" accept="image/*" capture="user" style="display:none;" />
+              <div class="photo-btn-group">
+                <button type="button" class="btn-upload-photo" id="uploadPhotoBtn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                  </svg>
+                  Upload
+                </button>
+                <button type="button" class="btn-capture-photo" id="capturePhotoBtn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                  Capture
+                </button>
+              </div>
             </div>
           </div>
 
@@ -198,12 +208,22 @@
               <img id="goldPhotoImg" class="photo-img-preview" src="" alt="Gold Items Photo" style="display:none;" />
             </div>
             <input type="file" id="goldPhotoInput" accept="image/*" style="display:none;" />
-            <button type="button" class="btn-upload-photo" id="uploadGoldPhotoBtn">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-              </svg>
-              Upload Gold Image
-            </button>
+            <input type="file" id="goldCameraInput" accept="image/*" capture="environment" style="display:none;" />
+            <div class="photo-btn-group">
+              <button type="button" class="btn-upload-photo" id="uploadGoldPhotoBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+                Upload
+              </button>
+              <button type="button" class="btn-capture-photo" id="captureGoldPhotoBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+                Capture
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -345,6 +365,26 @@
 
     </form>
   </main>
+
+  <!-- Camera Modal -->
+  <div class="camera-modal-backdrop no-print" id="cameraModal" style="display:none;">
+    <div class="camera-modal-dialog">
+      <div class="camera-modal-header">
+        <h3 id="cameraModalTitle">📷 Capture Photo</h3>
+        <button type="button" class="btn-close-modal" id="closeCameraModalBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="camera-modal-body">
+        <video id="cameraVideo" autoplay playsinline muted></video>
+        <canvas id="cameraCanvas" style="display:none;"></canvas>
+      </div>
+      <div class="camera-modal-footer">
+        <button type="button" class="btn-action btn-reset" id="cancelCameraBtn">Cancel</button>
+        <button type="button" class="btn-action btn-snap" id="takeSnapBtn">
+          📸 Snap Photo
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="/js/ui.js"></script>
   <script src="/js/application.js"></script>

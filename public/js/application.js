@@ -60,6 +60,21 @@
   const customerPhotoImg = $('#customerPhotoImg');
   const customerPhotoInput = $('#customerPhotoInput');
   const uploadPhotoBtn = $('#uploadPhotoBtn');
+  const customerCameraInput = $('#customerCameraInput');
+  const capturePhotoBtn = $('#capturePhotoBtn');
+  const goldCameraInput = $('#goldCameraInput');
+  const captureGoldPhotoBtn = $('#captureGoldPhotoBtn');
+
+  const cameraModal = $('#cameraModal');
+  const cameraModalTitle = $('#cameraModalTitle');
+  const cameraVideo = $('#cameraVideo');
+  const cameraCanvas = $('#cameraCanvas');
+  const closeCameraModalBtn = $('#closeCameraModalBtn');
+  const cancelCameraBtn = $('#cancelCameraBtn');
+  const takeSnapBtn = $('#takeSnapBtn');
+
+  let activeMediaStream = null;
+  let activeCaptureType = null;
 
   const goldPhotoPlaceholder = $('#goldPhotoPlaceholder');
   const goldPhotoImg = $('#goldPhotoImg');
@@ -108,49 +123,136 @@
     if (alertsZone) alertsZone.innerHTML = '';
   }
 
-  /* ---------- Photo Uploads ---------- */
+  /* ---------- Photo Uploads & Camera Capture ---------- */
 
-  uploadPhotoBtn.addEventListener('click', () => customerPhotoInput.click());
-
-  customerPhotoInput.addEventListener('change', async (e) => {
-    const file = e.target.files && e.target.files[0];
+  async function processAndSetImage(file, type) {
     if (!file) return;
     try {
-      GM.setLoading(saveBtn, true, 'Processing photo…');
+      GM.setLoading(saveBtn, true, `Processing ${type === 'customer' ? 'photo' : 'gold photo'}…`);
       const dataUrl = await GM.compressImage(file);
-      state.customerPhoto = dataUrl;
-      customerPhotoImg.src = dataUrl;
-      customerPhotoImg.style.display = 'block';
-      photoPlaceholder.style.display = 'none';
-      GM.setLoading(saveBtn, false);
-      GM.toast('Photo captured', 'success', 1400);
-    } catch (err) {
-      GM.setLoading(saveBtn, false);
-      GM.toast(err.message, 'danger');
-    }
-  });
-
-  if (uploadGoldPhotoBtn && goldPhotoInput) {
-    uploadGoldPhotoBtn.addEventListener('click', () => goldPhotoInput.click());
-
-    goldPhotoInput.addEventListener('change', async (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      try {
-        GM.setLoading(saveBtn, true, 'Processing gold photo…');
-        const dataUrl = await GM.compressImage(file);
+      if (type === 'customer') {
+        state.customerPhoto = dataUrl;
+        customerPhotoImg.src = dataUrl;
+        customerPhotoImg.style.display = 'block';
+        if (photoPlaceholder) photoPlaceholder.style.display = 'none';
+        GM.toast('Customer photo attached', 'success', 1400);
+      } else {
         state.goldPhoto = dataUrl;
         if (goldPhotoImg) {
           goldPhotoImg.src = dataUrl;
           goldPhotoImg.style.display = 'block';
         }
         if (goldPhotoPlaceholder) goldPhotoPlaceholder.style.display = 'none';
-        GM.setLoading(saveBtn, false);
         GM.toast('Gold photo attached', 'success', 1400);
-      } catch (err) {
-        GM.setLoading(saveBtn, false);
-        GM.toast(err.message, 'danger');
       }
+    } catch (err) {
+      GM.toast(err.message, 'danger');
+    } finally {
+      GM.setLoading(saveBtn, false);
+    }
+  }
+
+  function stopCameraStream() {
+    if (activeMediaStream) {
+      activeMediaStream.getTracks().forEach((track) => track.stop());
+      activeMediaStream = null;
+    }
+    if (cameraVideo) cameraVideo.srcObject = null;
+    if (cameraModal) cameraModal.style.display = 'none';
+  }
+
+  async function openCameraModal(type) {
+    activeCaptureType = type;
+    const isUser = type === 'customer';
+    const facingMode = isUser ? 'user' : { ideal: 'environment' };
+    const titleText = isUser ? '📷 Capture Customer Photo' : '📷 Capture Gold Image';
+
+    if (cameraModalTitle) cameraModalTitle.textContent = titleText;
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      const fallbackInput = isUser ? customerCameraInput : goldCameraInput;
+      if (fallbackInput) fallbackInput.click();
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      activeMediaStream = stream;
+      if (cameraVideo) {
+        cameraVideo.srcObject = stream;
+        await cameraVideo.play();
+      }
+      if (cameraModal) cameraModal.style.display = 'flex';
+    } catch (err) {
+      console.warn('Camera stream error, triggering camera input fallback:', err);
+      const fallbackInput = isUser ? customerCameraInput : goldCameraInput;
+      if (fallbackInput) fallbackInput.click();
+      else GM.toast('Camera unavailable: ' + err.message, 'danger');
+    }
+  }
+
+  function captureSnapshot() {
+    if (!cameraVideo || !cameraCanvas || !activeCaptureType) return;
+    const w = cameraVideo.videoWidth || 640;
+    const h = cameraVideo.videoHeight || 480;
+    cameraCanvas.width = w;
+    cameraCanvas.height = h;
+    const ctx = cameraCanvas.getContext('2d');
+    ctx.drawImage(cameraVideo, 0, 0, w, h);
+    const dataUrl = cameraCanvas.toDataURL('image/jpeg', 0.85);
+
+    if (activeCaptureType === 'customer') {
+      state.customerPhoto = dataUrl;
+      customerPhotoImg.src = dataUrl;
+      customerPhotoImg.style.display = 'block';
+      if (photoPlaceholder) photoPlaceholder.style.display = 'none';
+      GM.toast('Customer photo captured!', 'success', 1400);
+    } else {
+      state.goldPhoto = dataUrl;
+      if (goldPhotoImg) {
+        goldPhotoImg.src = dataUrl;
+        goldPhotoImg.style.display = 'block';
+      }
+      if (goldPhotoPlaceholder) goldPhotoPlaceholder.style.display = 'none';
+      GM.toast('Gold photo captured!', 'success', 1400);
+    }
+
+    stopCameraStream();
+  }
+
+  /* Customer Photo events */
+  if (uploadPhotoBtn && customerPhotoInput) {
+    uploadPhotoBtn.addEventListener('click', () => customerPhotoInput.click());
+    customerPhotoInput.addEventListener('change', (e) => processAndSetImage(e.target.files && e.target.files[0], 'customer'));
+  }
+  if (customerCameraInput) {
+    customerCameraInput.addEventListener('change', (e) => processAndSetImage(e.target.files && e.target.files[0], 'customer'));
+  }
+  if (capturePhotoBtn) {
+    capturePhotoBtn.addEventListener('click', () => openCameraModal('customer'));
+  }
+
+  /* Gold Photo events */
+  if (uploadGoldPhotoBtn && goldPhotoInput) {
+    uploadGoldPhotoBtn.addEventListener('click', () => goldPhotoInput.click());
+    goldPhotoInput.addEventListener('change', (e) => processAndSetImage(e.target.files && e.target.files[0], 'gold'));
+  }
+  if (goldCameraInput) {
+    goldCameraInput.addEventListener('change', (e) => processAndSetImage(e.target.files && e.target.files[0], 'gold'));
+  }
+  if (captureGoldPhotoBtn) {
+    captureGoldPhotoBtn.addEventListener('click', () => openCameraModal('gold'));
+  }
+
+  /* Camera Modal controls */
+  if (takeSnapBtn) takeSnapBtn.addEventListener('click', captureSnapshot);
+  if (closeCameraModalBtn) closeCameraModalBtn.addEventListener('click', stopCameraStream);
+  if (cancelCameraBtn) cancelCameraBtn.addEventListener('click', stopCameraStream);
+  if (cameraModal) {
+    cameraModal.addEventListener('click', (e) => {
+      if (e.target === cameraModal) stopCameraStream();
     });
   }
 
