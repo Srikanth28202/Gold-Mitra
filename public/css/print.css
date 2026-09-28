@@ -709,9 +709,12 @@
     line-height: 1.25 !important;
   }
 
-  /* Form Sections: comfortable spacing without spilling onto page 2 */
+  /* Form Sections: comfortable spacing without spilling onto page 2.
+     Vertical rhythm is deliberately tight here - the whole document has to
+     land on a single A4 sheet, and the leftover room is given back to the
+     signature block at the bottom where a human actually has to write. */
   .form-section {
-    margin-bottom: 6px !important;
+    margin-bottom: 4px !important;
     border: 1px solid #EADBBA !important;
     border-radius: 5px !important;
     page-break-inside: avoid !important;
@@ -719,15 +722,15 @@
   }
 
   .section-banner {
-    padding: 3px 10px !important;
+    padding: 2px 10px !important;
     background: #F7E5A9 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
   .section-banner .section-icon svg {
-    width: 14px !important;
-    height: 14px !important;
+    width: 12px !important;
+    height: 12px !important;
   }
 
   .section-title {
@@ -735,7 +738,7 @@
   }
 
   .section-content {
-    padding: 6px 10px !important;
+    padding: 5px 10px !important;
   }
 
   /* Customer Details */
@@ -756,7 +759,7 @@
   }
 
   .customer-fields {
-    gap: 3px !important;
+    gap: 2px !important;
   }
 
   .doc-field label {
@@ -773,7 +776,7 @@
 
   .photo-preview-container {
     width: 120px !important;
-    height: 145px !important;
+    height: 128px !important;
     border: 1.5px dashed #D4AF37 !important;
     background: #FAF7F0 !important;
     -webkit-print-color-adjust: exact !important;
@@ -783,7 +786,7 @@
   .photo-img-preview {
     width: 100% !important;
     height: 100% !important;
-    max-height: 145px !important;
+    max-height: 128px !important;
     object-fit: cover !important;
     display: block !important;
     -webkit-print-color-adjust: exact !important;
@@ -791,21 +794,56 @@
   }
 
   .full-width-address-row {
-    margin-top: 5px !important;
-    padding-top: 5px !important;
+    margin-top: 3px !important;
+    padding-top: 3px !important;
     border-top: 1px dashed #E5E7EB !important;
     width: 100% !important;
   }
 
   /* Jewellery table */
   .gold-items-table th, .gold-items-table td {
-    padding: 3px 6px !important;
+    padding: 2.5px 6px !important;
     font-size: 0.74rem !important;
   }
 
+  /* The row controls keep their 6px screen padding in print, which costs ~4mm
+     on every single row - by far the most expensive padding on the page. */
+  .quality-select, .weight-input {
+    padding: 1px 4px !important;
+    font-size: 0.72rem !important;
+  }
+
+  /* Long item lists step the jewellery section down a tier so the document
+     still lands on a single sheet. The class is put on the enclosing
+     .form-section in public/js/application.js on beforeprint. Below ~0.64rem
+     the table stops shrinking and a second page is the correct outcome. */
+  .form-section.is-dense .gold-items-table th,
+  .form-section.is-dense .gold-items-table td {
+    padding: 1px 4px !important;
+    font-size: 0.66rem !important;
+  }
+
+  .form-section.is-dense .quality-select,
+  .form-section.is-dense .weight-input {
+    padding: 0.5px 3px !important;
+    font-size: 0.64rem !important;
+  }
+
+  /* Reclaim the remaining fixed-height furniture too, so a long item list
+     still has a few mm of slack for text that wraps onto an extra line. */
+  .form-section.is-dense .photo-preview-container,
+  .form-section.is-dense .photo-img-preview {
+    height: 108px !important;
+    max-height: 108px !important;
+  }
+
+  .form-section.is-dense .section-total-footer {
+    padding: 1px 8px !important;
+  }
+
   .gold-items-table img, .print-gold-img {
-    max-height: 34px !important;
-    max-width: 65px !important;
+    max-height: 30px !important;
+    max-width: 60px !important;
     object-fit: contain !important;
     display: inline-block !important;
     -webkit-print-color-adjust: exact !important;
@@ -813,54 +851,73 @@
   }
 
   .section-total-footer {
-    padding: 3px 10px !important;
+    padding: 2px 10px !important;
     background: #FAF2D6 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  .total-label {
+    font-size: 0.78rem !important;
+  }
+
+  .total-input-box {
+    padding: 2px 6px !important;
+  }
+
+  .total-weight-field, .total-amount-field {
+    font-size: 0.85rem !important;
+    width: 90px !important;
   }
 
   /* Account details table */
   .account-table { width: 100% !important; }
 
   .acct-row {
-    padding: 2.5px 6px !important;
+    padding: 1px 8px !important;
     font-size: 0.74rem !important;
   }
 
+  /* The base stylesheet gives the label 8px vertical padding, which is ~17mm
+     of wasted height across the six rows - flatten it for print. */
   .acct-label {
     font-size: 0.74rem !important;
     min-width: 100px !important;
+    padding: 2.5px 8px !important;
   }
 
   /* Declaration */
   .declaration-box {
-    padding: 5px 10px !important;
+    padding: 4px 9px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
   .declaration-textarea, .declaration-text, .decl-eng, .decl-kan {
     font-size: 0.71rem !important;
-    line-height: 1.3 !important;
+    line-height: 1.25 !important;
     color: #1F2937 !important;
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    margin-bottom: 2px !important;
+    margin-bottom: 1px !important;
   }
 
-  /* Compact signatures: no box, just the writing gap, the rule and the caption */
+  /* Signatures: no box, just a writing gap, the rule and the caption.
+     The ~9.5mm gap is the one place on the page that is deliberately left
+     roomy - it is the only part of the form a person writes on. The space is
+     paid for by the tighter vertical rhythm above. */
   .signatures-section {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 24px !important;
-    margin: 10px 0 0 !important;
+    gap: 28px !important;
+    margin: 14px 0 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
   .signature-block {
-    padding-top: 16px !important;
+    padding-top: 36px !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }

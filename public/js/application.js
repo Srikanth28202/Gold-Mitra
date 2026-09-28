@@ -342,6 +342,24 @@
     });
   }
 
+  /* ---------- Keep the printout on one A4 sheet ----------
+
+     The jewellery table is the only part of the form whose height grows with
+     the data, so it is the only part that needs a density tier. Once the list
+     gets long the table steps down so the whole application still prints on a
+     single page. beforeprint covers both the Print button and Ctrl+P. */
+  const goldItemsTable = $('#goldItemsTable');
+  const goldItemsSection = goldItemsTable ? goldItemsTable.closest('.form-section') : null;
+  const DENSE_FROM_ROWS = 9;
+
+  function applyPrintDensity() {
+    if (!goldItemsSection || !tbody) return;
+    const rows = tbody.querySelectorAll('tr').length;
+    goldItemsSection.classList.toggle('is-dense', rows >= DENSE_FROM_ROWS);
+  }
+
+  window.addEventListener('beforeprint', applyPrintDensity);
+
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
       if (confirm('Are you sure you want to reset all fields?')) {
