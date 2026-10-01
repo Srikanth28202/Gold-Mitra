@@ -13,9 +13,11 @@
   const tableEl = $('#recordsTable');
   const emptyEl = $('#recordsEmpty');
   const errorEl = $('#recordsError');
+  const periodFilter = $('#periodFilter');
 
   let debounceTimer;
   let currentSearch = '';
+  let allApps = [];
 
   const fmtWeight = (w) =>
     Number(w || 0).toLocaleString('en-IN', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + ' g';
@@ -35,6 +37,33 @@
     errorEl.classList.add('hidden');
     if (which === 'empty') emptyEl.classList.remove('hidden');
     if (which === 'error') errorEl.classList.remove('hidden');
+  }
+
+  /* ---------- Period Filter ---------- */
+
+  function filterByPeriod(list) {
+    const period = periodFilter ? periodFilter.value : 'all';
+    if (period === 'all') return list;
+
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    return list.filter((a) => {
+      const d = new Date(a.loan.date || a.createdAt);
+      if (period === 'day') {
+        return d >= todayStart;
+      }
+      if (period === 'week') {
+        const dayOfWeek = now.getDay(); // 0=Sun
+        const weekStart = new Date(todayStart);
+        weekStart.setDate(weekStart.getDate() - dayOfWeek);
+        return d >= weekStart;
+      }
+      if (period === 'month') {
+        return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+      }
+      return true;
+    });
   }
 
   /* ---------- Renderers ---------- */
@@ -101,21 +130,31 @@
   }
 
   function render(list) {
-    if (!list.length) {
+    /* Apply period filter */
+    const filtered = filterByPeriod(list);
+
+    if (!filtered.length) {
       showState('empty');
+      const period = periodFilter ? periodFilter.value : 'all';
       if (currentSearch) {
         $('#emptyTitle').textContent = 'No matching records';
-        $('#emptyText').textContent = `Nothing matches “${currentSearch}”. Try a different search.`;
+        $('#emptyText').textContent = `Nothing matches "${currentSearch}". Try a different search.`;
+      } else if (period !== 'all') {
+        const labels = { day: 'today', week: 'this week', month: 'this month' };
+        $('#emptyTitle').textContent = 'No records found';
+        $('#emptyText').textContent = `No records ${labels[period] || ''}. Try changing the period filter.`;
       } else {
         $('#emptyTitle').textContent = 'No records yet';
-        $('#emptyText').textContent = 'Applications you record in the field will appear here. Tap “New Application” to begin.';
+        $('#emptyText').textContent = 'Applications you record in the field will appear here. Tap "New Application" to begin.';
       }
+      setCount(filtered, !!currentSearch);
       return;
     }
 
     showState('list');
-    cardsEl.innerHTML = list.map(cardHTML).join('');
-    tableEl.innerHTML = tableHTML(list);
+    setCount(filtered, !!currentSearch);
+    cardsEl.innerHTML = filtered.map(cardHTML).join('');
+    tableEl.innerHTML = tableHTML(filtered);
     /* make table rows clickable */
     tableEl.querySelectorAll('tr[data-href]').forEach((tr) => {
       tr.addEventListener('click', () => (location.href = tr.dataset.href));
@@ -141,8 +180,8 @@
     try {
       const data = await GM.api(`/api/applications${query}`);
       searchHint.style.display = 'none';
-      setCount(data.applications, !!search);
-      render(data.applications);
+      allApps = data.applications;
+      render(allApps);
     } catch (err) {
       searchHint.style.display = 'none';
       showState('error');
@@ -171,6 +210,13 @@
       load('');
       searchInput.focus();
     });
+
+    /* Period filter — re-render from cached results */
+    if (periodFilter) {
+      periodFilter.addEventListener('change', () => {
+        render(allApps);
+      });
+    }
 
     $('#retryBtn').addEventListener('click', () => load(currentSearch));
   });

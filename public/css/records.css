@@ -72,6 +72,51 @@
 
 .records-meta__count strong { color: var(--text-strong); font-weight: var(--fw-semibold); }
 
+/* ---------------- Period filter ---------------- */
+
+.records-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.records-filter label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.records-filter select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 8px 32px 8px 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-strong);
+  cursor: pointer;
+  transition: border-color var(--speed) ease, box-shadow var(--speed) ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  box-shadow: var(--shadow-xs);
+}
+
+.records-filter select:focus {
+  outline: none;
+  border-color: var(--gold-400);
+  box-shadow: 0 0 0 4px rgba(200, 155, 44, 0.14);
+}
+
+.records-filter select:hover {
+  border-color: var(--gold-300);
+}
+
 /* ---------------- Mobile cards ---------------- */
 
 .records-cards {
