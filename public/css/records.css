@@ -72,49 +72,92 @@
 
 .records-meta__count strong { color: var(--text-strong); font-weight: var(--fw-semibold); }
 
-/* ---------------- Period filter ---------------- */
+/* ---------------- Gallery-style period filter ---------------- */
 
 .records-filter {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
-.records-filter label {
+/* Filter pill tabs */
+.filter-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-pill {
+  padding: 7px 16px;
+  border-radius: 100px;
   font-size: var(--fs-sm);
   font-weight: var(--fw-semibold);
   color: var(--text-muted);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: all var(--speed) var(--ease-out);
   white-space: nowrap;
 }
 
-.records-filter select {
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 8px 32px 8px 14px;
+.filter-pill:hover {
+  border-color: var(--gold-300);
+  color: var(--text-strong);
+  background: var(--gold-50, #FFFBEB);
+}
+
+.filter-pill.is-active {
+  background: linear-gradient(135deg, var(--gold-400), var(--gold-500, #B8860B));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(184, 134, 11, 0.25);
+}
+
+/* Month navigator (gallery-style) */
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: var(--surface);
   border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
-  color: var(--text-strong);
-  cursor: pointer;
-  transition: border-color var(--speed) ease, box-shadow var(--speed) ease;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 14px;
+  border-radius: var(--radius-lg);
+  padding: 6px 8px;
   box-shadow: var(--shadow-xs);
+  width: fit-content;
+  animation: fadeInUp var(--speed) var(--ease-out) both;
 }
 
-.records-filter select:focus {
-  outline: none;
-  border-color: var(--gold-400);
-  box-shadow: 0 0 0 4px rgba(200, 155, 44, 0.14);
+.month-nav__btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  display: grid;
+  place-items: center;
+  color: var(--ink-400);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--speed) ease;
 }
 
-.records-filter select:hover {
-  border-color: var(--gold-300);
+.month-nav__btn:hover {
+  background: var(--gold-50, #FFFBEB);
+  color: var(--gold-600, #92400E);
+}
+
+.month-nav__btn:active {
+  transform: scale(0.9);
+}
+
+.month-nav__label {
+  min-width: 140px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--text-strong);
+  user-select: none;
 }
 
 /* ---------------- Mobile cards ---------------- */

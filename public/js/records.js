@@ -1,10 +1,11 @@
 /* ============================================
-   Gold Mitra — Records list (search + responsive render)
+   Gold Mitra — Records list (search + gallery-style period filter)
    ============================================ */
 (function () {
   'use strict';
 
   const $ = (s) => document.querySelector(s);
+  const $$ = (s) => document.querySelectorAll(s);
   const searchInput = $('#recordSearch');
   const clearBtn = $('#searchClear');
   const countEl = $('#recordsCount');
@@ -13,11 +14,28 @@
   const tableEl = $('#recordsTable');
   const emptyEl = $('#recordsEmpty');
   const errorEl = $('#recordsError');
-  const periodFilter = $('#periodFilter');
+
+  /* --- Filter elements --- */
+  const monthNav = $('#monthNav');
+  const monthLabel = $('#monthLabel');
+  const monthPrev = $('#monthPrev');
+  const monthNext = $('#monthNext');
 
   let debounceTimer;
   let currentSearch = '';
   let allApps = [];
+
+  /* --- Active filter state --- */
+  let activeFilter = 'all';   // 'all' | 'day' | 'week' | 'month'
+  let navYear = new Date().getFullYear();
+  let navMonth = new Date().getMonth(); // 0-indexed
+
+  const MONTH_NAMES = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  /* ---------- Formatters ---------- */
 
   const fmtWeight = (w) =>
     Number(w || 0).toLocaleString('en-IN', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + ' g';
@@ -39,31 +57,57 @@
     if (which === 'error') errorEl.classList.remove('hidden');
   }
 
-  /* ---------- Period Filter ---------- */
+  /* ---------- Gallery Period Filter ---------- */
+
+  function updateMonthLabel() {
+    if (monthLabel) monthLabel.textContent = `${MONTH_NAMES[navMonth]} ${navYear}`;
+  }
 
   function filterByPeriod(list) {
-    const period = periodFilter ? periodFilter.value : 'all';
-    if (period === 'all') return list;
+    if (activeFilter === 'all') return list;
 
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     return list.filter((a) => {
       const d = new Date(a.loan.date || a.createdAt);
-      if (period === 'day') {
+      if (activeFilter === 'day') {
         return d >= todayStart;
       }
-      if (period === 'week') {
+      if (activeFilter === 'week') {
         const dayOfWeek = now.getDay(); // 0=Sun
         const weekStart = new Date(todayStart);
         weekStart.setDate(weekStart.getDate() - dayOfWeek);
         return d >= weekStart;
       }
-      if (period === 'month') {
-        return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+      if (activeFilter === 'month') {
+        return d.getFullYear() === navYear && d.getMonth() === navMonth;
       }
       return true;
     });
+  }
+
+  function setActivePill(filterValue) {
+    $$('.filter-pill').forEach((pill) => {
+      pill.classList.toggle('is-active', pill.dataset.filter === filterValue);
+    });
+  }
+
+  function onFilterChange(filterValue) {
+    activeFilter = filterValue;
+    setActivePill(filterValue);
+
+    /* Show/hide month navigator */
+    if (monthNav) {
+      if (filterValue === 'month') {
+        monthNav.classList.remove('hidden');
+        updateMonthLabel();
+      } else {
+        monthNav.classList.add('hidden');
+      }
+    }
+
+    render(allApps);
   }
 
   /* ---------- Renderers ---------- */
@@ -135,14 +179,18 @@
 
     if (!filtered.length) {
       showState('empty');
-      const period = periodFilter ? periodFilter.value : 'all';
       if (currentSearch) {
         $('#emptyTitle').textContent = 'No matching records';
         $('#emptyText').textContent = `Nothing matches "${currentSearch}". Try a different search.`;
-      } else if (period !== 'all') {
-        const labels = { day: 'today', week: 'this week', month: 'this month' };
+      } else if (activeFilter === 'day') {
+        $('#emptyTitle').textContent = 'No records today';
+        $('#emptyText').textContent = 'No applications recorded today.';
+      } else if (activeFilter === 'week') {
+        $('#emptyTitle').textContent = 'No records this week';
+        $('#emptyText').textContent = 'No applications recorded this week.';
+      } else if (activeFilter === 'month') {
         $('#emptyTitle').textContent = 'No records found';
-        $('#emptyText').textContent = `No records ${labels[period] || ''}. Try changing the period filter.`;
+        $('#emptyText').textContent = `No applications in ${MONTH_NAMES[navMonth]} ${navYear}.`;
       } else {
         $('#emptyTitle').textContent = 'No records yet';
         $('#emptyText').textContent = 'Applications you record in the field will appear here. Tap "New Application" to begin.';
@@ -194,6 +242,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     load('');
 
+    /* Search */
     searchInput.addEventListener('input', () => {
       clearTimeout(debounceTimer);
       const v = searchInput.value.trim();
@@ -211,9 +260,27 @@
       searchInput.focus();
     });
 
-    /* Period filter — re-render from cached results */
-    if (periodFilter) {
-      periodFilter.addEventListener('change', () => {
+    /* Filter pills */
+    $$('.filter-pill').forEach((pill) => {
+      pill.addEventListener('click', () => {
+        onFilterChange(pill.dataset.filter);
+      });
+    });
+
+    /* Month navigator arrows */
+    if (monthPrev) {
+      monthPrev.addEventListener('click', () => {
+        navMonth--;
+        if (navMonth < 0) { navMonth = 11; navYear--; }
+        updateMonthLabel();
+        render(allApps);
+      });
+    }
+    if (monthNext) {
+      monthNext.addEventListener('click', () => {
+        navMonth++;
+        if (navMonth > 11) { navMonth = 0; navYear++; }
+        updateMonthLabel();
         render(allApps);
       });
     }

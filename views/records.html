@@ -145,14 +145,23 @@
           <span class="records-meta__count" id="recordsCount">Loading records…</span>
           <span class="badge badge--neutral" id="searchHint" style="display:none">Searching…</span>
         </div>
-        <div class="records-filter">
-          <label for="periodFilter">Period:</label>
-          <select id="periodFilter">
-            <option value="all" selected>All</option>
-            <option value="day">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-          </select>
+        <!-- Gallery-style period filter -->
+        <div class="records-filter" id="recordsFilter">
+          <div class="filter-pills">
+            <button class="filter-pill is-active" data-filter="all">All</button>
+            <button class="filter-pill" data-filter="day">Today</button>
+            <button class="filter-pill" data-filter="week">This Week</button>
+            <button class="filter-pill" data-filter="month">Monthly</button>
+          </div>
+          <div class="month-nav hidden" id="monthNav">
+            <button class="month-nav__btn" id="monthPrev" aria-label="Previous month">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span class="month-nav__label" id="monthLabel">October 2026</span>
+            <button class="month-nav__btn" id="monthNext" aria-label="Next month">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
         </div>
 
         <!-- Mobile cards -->
