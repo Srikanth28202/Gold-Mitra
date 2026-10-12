@@ -64,7 +64,8 @@ function buildApplicationFields(b) {
         ifsc: clean(b.accountDetails?.ifsc || b.loan?.accountDetails?.ifsc).toUpperCase().replace(/\s+/g, ''),
         bank: clean(b.accountDetails?.bank || b.loan?.accountDetails?.bank),
         branch: clean(b.accountDetails?.branch || b.loan?.accountDetails?.branch),
-        cash: Number(b.accountDetails?.cash || b.loan?.accountDetails?.cash || 0)
+        cash: Number(b.accountDetails?.cash || b.loan?.accountDetails?.cash || 0),
+        phonepe: clean(b.accountDetails?.phonepe || b.accountDetails?.phonepayNumber || b.loan?.accountDetails?.phonepe || b.loan?.accountDetails?.phonepayNumber)
       }
     }
   };

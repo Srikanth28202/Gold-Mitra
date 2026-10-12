@@ -62,6 +62,7 @@ const applicationSchema = new mongoose.Schema(
         bank: { type: String, default: '', trim: true },
         branch: { type: String, default: '', trim: true },
         cash: { type: Number, default: 0 },
+        phonepe: { type: String, default: '', trim: true },
         _id: false
       }
     }

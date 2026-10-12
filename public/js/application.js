@@ -87,6 +87,7 @@
   const acctBankInput = $('#acctBank');
   const acctBranchInput = $('#acctBranch');
   const acctCashInput = $('#acctCash');
+  const acctPhonepeInput = $('#acctPhonepe');
 
   const declarationInput = $('#declarationText');
 
@@ -470,7 +471,8 @@
         ifsc: acctIfscInput ? acctIfscInput.value.trim().toUpperCase() : '',
         bank: acctBankInput ? acctBankInput.value.trim() : '',
         branch: acctBranchInput ? acctBranchInput.value.trim() : '',
-        cash: acctCashInput ? acctCashInput.value.trim() : ''
+        cash: acctCashInput ? acctCashInput.value.trim() : '',
+        phonepe: acctPhonepeInput ? acctPhonepeInput.value.trim() : ''
       },
 
       loan: {
@@ -588,6 +590,7 @@
       if (acctBankInput) acctBankInput.value = ad.bank || '';
       if (acctBranchInput) acctBranchInput.value = ad.branch || '';
       if (acctCashInput) acctCashInput.value = ad.cash || '';
+      if (acctPhonepeInput) acctPhonepeInput.value = ad.phonepe || ad.phonepayNumber || ad.phonepeNumber || '';
 
       totalAmountInput.value = a.totalAmountReceived || a.loan?.amount || '';
 
